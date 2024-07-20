@@ -1,0 +1,27 @@
+host: localhost:8888
+info:
+  contact: {}
+  description: wowcollector.io API description
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: wowcollector.io
+  version: "1.0"
+paths:
+  /v1/hello-world:
+    get:
+      consumes:
+      - application/json
+      description: Get you a nice hi
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: Get a hi
+      tags:
+      - departments
+swagger: "2.0"

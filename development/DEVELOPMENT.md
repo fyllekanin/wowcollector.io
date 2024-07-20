@@ -19,6 +19,10 @@ The express UI will be accesible at **http://localhost:8081** with credentails a
 
 ### Build and start with Go
 ---------
+#### Generate swagger documentation
+```
+./back-end/generate-swagger.sh back-end
+```
 #### Build the server
 ```
 $(cd back-end && go build) 
