@@ -88,6 +88,7 @@ func (s *BattleNetHttpService) doRequest(url string, retry bool) ([]byte, error)
 func (s *BattleNetHttpService) getAccessToken() string {
 	if s.token == nil || s.token.IsExpired() {
 		s.token = resolveToken()
+		s.token.issuedAt = time.Now().UnixMilli()
 	}
 	return s.token.AccessToken
 }
