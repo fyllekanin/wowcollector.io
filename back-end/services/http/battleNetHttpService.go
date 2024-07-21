@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
@@ -16,16 +17,18 @@ import (
 )
 
 type BattleNetToken struct {
-	accessToken string `json:"access_token"`
-	expiresIn   int64  `json:"expires_in"`
-	issuedAt    int64  `json:"issued_at"`
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+	Sub         string `json:"sub"`
+	ExpiresIn   int64  `json:"expires_in"`
+	issuedAt    int64
 }
 
 func (s *BattleNetToken) IsExpired() bool {
-	if s.expiresIn == 0 {
+	if s.ExpiresIn == 0 {
 		return true
 	}
-	expirationTime := s.issuedAt + (s.expiresIn * 1000)
+	expirationTime := s.issuedAt + (s.ExpiresIn * 1000)
 	return expirationTime <= time.Now().UnixMilli()
 }
 
@@ -50,7 +53,7 @@ func (s *BattleNetHttpService) GetMountsIndex(region data.BattleNetRegion) *batt
 	}
 
 	var result battlenetEntities.BatleNetMountsIndex
-	err = response.Decode(&result)
+	err = json.Unmarshal(response, &result)
 	if err != nil {
 		fmt.Println("Error decoding mounts index:", err)
 		return nil
@@ -58,7 +61,7 @@ func (s *BattleNetHttpService) GetMountsIndex(region data.BattleNetRegion) *batt
 	return &result
 }
 
-func (s *BattleNetHttpService) doRequest(url string, retry bool) (*json.Decoder, error) {
+func (s *BattleNetHttpService) doRequest(url string, retry bool) ([]byte, error) {
 	response, err := http.Get(url + "&access_token=" + s.getAccessToken())
 	if err != nil {
 		fmt.Println("Error get request:", err)
@@ -70,48 +73,59 @@ func (s *BattleNetHttpService) doRequest(url string, retry bool) (*json.Decoder,
 		return s.doRequest(url, false)
 	}
 	if response.StatusCode == 429 && retry {
-		fmt.Printf("Error rate limit hit, sleep for 1 second and try again")
+		fmt.Println("Error rate limit hit, sleep for 1 second and try again")
 		time.Sleep(1 * time.Second)
 		return s.doRequest(url, true)
 	}
-	return json.NewDecoder(response.Body), nil
+	bodyBytes, err := io.ReadAll(response.Body)
+	if err != nil {
+		fmt.Println("Error reading bytes:", err)
+		return nil, nil
+	}
+	return bodyBytes, nil
 }
 
 func (s *BattleNetHttpService) getAccessToken() string {
 	if s.token == nil || s.token.IsExpired() {
 		s.token = resolveToken()
 	}
-	return s.token.accessToken
+	return s.token.AccessToken
 }
 
 func resolveToken() *BattleNetToken {
 	data := url.Values{}
 	data.Set("grant_type", "client_credentials")
 
+	// Create the request
 	req, err := http.NewRequest("POST", "https://oauth.battle.net/token", bytes.NewBufferString(data.Encode()))
 	if err != nil {
-		fmt.Println("Error creating access token request", err)
+		fmt.Println("Error creating access token request:", err)
 		return nil
 	}
 
+	// Set headers
 	req.Header.Set("Authorization", getBasicAuthenticationHeader(os.Getenv("BATTLE_NET_CLIENT_ID"), os.Getenv("BATTLE_NET_CLIENT_SECRET")))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
+	// Send the request
 	client := &http.Client{}
 	response, err := client.Do(req)
-
 	if err != nil {
-		fmt.Println("Error sending request for access token", err)
+		fmt.Println("Error sending request for access token:", err)
 		return nil
 	}
-
 	defer response.Body.Close()
 
+	// Check the response status
 	if response.StatusCode != http.StatusOK {
 		fmt.Printf("Request failed with status code: %d\n", response.StatusCode)
+		// Print the response body for debugging
+		bodyBytes, _ := io.ReadAll(response.Body)
+		fmt.Println("Response body:", string(bodyBytes))
 		return nil
 	}
 
+	// Read and decode the response body
 	var tokenResponse BattleNetToken
 	decoder := json.NewDecoder(response.Body)
 	err = decoder.Decode(&tokenResponse)
