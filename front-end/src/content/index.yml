@@ -1,24 +1,24 @@
-title: Landing Page
+title: WoW Collector - Home
 description: Welcome to the only World of Warcraft collection tracker you will ever need.
 
-collectables:
+collections:
   - title: Mounts
     description: See all the mounts you can and have collected in World of Warcraft.
     icon: mdi:horse-variant
     class: col-span-6 row-span-2
-    to: /collectables/mounts
+    to: /collections/mounts
   - title: Achievements
     description: Track your progress and see what you have left to complete.
     icon: mdi:trophy
     class: col-span-6 row-span-4
-    to: /collectables/achievements
+    to: /collections/achievements
   - title: Pets
     description: Find all the pets you can and have collected in World of Warcraft.
     icon: mdi:paw
     class: col-span-6 row-span-4
-    to: /collectables/pets
+    to: /collections/pets
   - title: Toys
     description: Discover all the toys you can and have collected in World of Warcraft.
     icon: game-icons:locked-chest
     class: col-span-6 row-span-2
-    to: /collectables/toys
+    to: /collections/toys

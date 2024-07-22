@@ -7,28 +7,32 @@ const links = [
     to: '/',
   },
   {
-    label: 'Collectables',
+    label: 'Collections',
     children: [
       {
         label: 'Mounts',
-        to: '/collectables/mounts',
+        to: '/collections/mounts',
       },
       {
         label: 'Achievements',
-        to: '/collectables/achievements',
+        to: '/collections/achievements',
         disabled: true,
       },
       {
         label: 'Pets',
-        to: '/collectables/pets',
+        to: '/collections/pets',
         disabled: true,
       },
       {
         label: 'Toys',
-        to: '/collectables/toys',
+        to: '/collections/toys',
         disabled: true,
       },
     ],
+  },
+  {
+    label: 'Search',
+    to: '/search',
   },
 ] as HeaderLink[];
 
@@ -38,28 +42,32 @@ const navigationTreeLinks = [
     to: '/',
   },
   {
-    label: 'Collectables',
+    label: 'Collections',
     children: [
       {
         label: 'Mounts',
-        to: '/collectables/mounts',
+        to: '/collections/mounts',
       },
       {
         label: 'Achievements',
-        to: '/collectables/achievements',
+        to: '/collections/achievements',
         disabled: true,
       },
       {
         label: 'Pets',
-        to: '/collectables/pets',
+        to: '/collections/pets',
         disabled: true,
       },
       {
         label: 'Toys',
-        to: '/collectables/toys',
+        to: '/collections/toys',
         disabled: true,
       },
     ],
+  },
+  {
+    label: 'Search',
+    to: '/search',
   },
 ] as NavigationTree[];
 </script>
@@ -75,6 +83,7 @@ const navigationTreeLinks = [
       <UButton icon="simple-icons:battledotnet" to="/login" color="gray"
         >Sign in</UButton
       >
+      <UColorModeButton />
     </template>
 
     <template #panel>

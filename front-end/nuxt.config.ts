@@ -15,4 +15,7 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
+  colorMode: {
+    preference: 'dark',
+  },
 });

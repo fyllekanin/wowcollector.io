@@ -1,8 +1,4 @@
-<script setup lang="ts">
-const route = useRoute();
-
-const currentRoute = computed(() => route.path);
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
@@ -11,7 +7,5 @@ const currentRoute = computed(() => route.path);
     <UMain>
       <slot />
     </UMain>
-
-    <AppFooter />
   </div>
 </template>
