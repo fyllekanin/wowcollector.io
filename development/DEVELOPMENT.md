@@ -46,6 +46,8 @@ docker run -p 8888:8888/tcp \
 -e DATABASE_USERNAME=admin \
 -e DATABASE_PASSWORD=admin \
 -e DATABASE_NAME=wowcollector \
+-e DATABASE_HOST=localhost \
+-e DATABASE_PORT=27017 \
 -e BATTLE_NET_CLIENT_ID=clientId \
 -e BATTLE_NET_CLIENT_SECRET=clientSecret \
 wowcollector.io-server

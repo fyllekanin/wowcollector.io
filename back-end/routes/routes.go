@@ -7,5 +7,7 @@ import (
 )
 
 func GetRoutes(r chi.Router) {
-	v1.GetRoutes(r)
+	r.Route("/api", func(r chi.Router) {
+		v1.GetRoutes(r)
+	})
 }

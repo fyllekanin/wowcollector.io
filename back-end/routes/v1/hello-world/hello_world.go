@@ -7,6 +7,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/httplog/v2"
 	"wowcollector.io/common/data"
+	"wowcollector.io/entities/documents"
+	realmrepository "wowcollector.io/repository/repositories"
 	battleNetHttp "wowcollector.io/services/http"
 )
 
@@ -15,6 +17,8 @@ func GetRoutes(r chi.Router) {
 	r.Route("/hello-world", func(r chi.Router) {
 		r.Get("/", getHelloWorld)
 		r.Get("/mounts", getMountsIndex)
+
+		r.Post("/realm", createRealm)
 	})
 
 }
@@ -26,7 +30,7 @@ func GetRoutes(r chi.Router) {
 // @produce json
 // @Security Bearer
 // @success 200
-// @router /v1/hello-world [get]
+// @router /api/v1/hello-world [get]
 func getHelloWorld(w http.ResponseWriter, r *http.Request) {
 	oplog := httplog.LogEntry(r.Context())
 	oplog.Info("We are gonna say hi")
@@ -40,7 +44,7 @@ func getHelloWorld(w http.ResponseWriter, r *http.Request) {
 // @produce json
 // @Security Bearer
 // @success 200
-// @router /v1/mounts [get]
+// @router /api/v1/mounts [get]
 func getMountsIndex(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	oplog := httplog.LogEntry(r.Context())
@@ -56,4 +60,23 @@ func getMountsIndex(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(b)
+}
+
+// @summary Create a realm
+// @description Get you a nice hi
+// @tags departments
+// @accept json
+// @produce json
+// @Security Bearer
+// @success 200
+// @router /api/v1/realm [post]
+func createRealm(w http.ResponseWriter, r *http.Request) {
+	realmRepository := realmrepository.GetRepository()
+
+	realmRepository.CreateRealm(&documents.RealmDocument{
+		Id:     1,
+		Name:   "name",
+		Slug:   "slug",
+		Region: data.EU,
+	})
 }
