@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { object, string, type InferType } from 'yup';
 import type { FormSubmitEvent } from '#ui/types';
+import type { RealmsRegions } from '~/types';
 
 const { data: page } = await useAsyncData('search', () =>
   queryContent('/search').findOne()
@@ -13,6 +14,12 @@ if (!page.value) {
     cause: 'No search page found in the content.',
   });
 }
+
+const { data: realmsRegions } = await useAsyncData<RealmsRegions>(
+  'realms-regions',
+  () => $fetch('/api/battle-net/realms-regions')
+);
+watchEffect(() => console.log(realmsRegions.value));
 
 useSeoMeta({
   title: page.value.title,
@@ -31,7 +38,7 @@ type Schema = InferType<typeof schema>;
 const state = reactive({
   name: undefined,
   realm: undefined,
-  region: undefined,
+  region: 'eu',
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -65,9 +72,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         </UFormGroup>
 
         <UFormGroup label="Region" name="region">
-          <USelect
+          <URadioGroup
+            class="[&>fieldset]:flex [&>fieldset]:gap-3"
             v-model="state.region"
-            :options="['EU', 'US', 'KR', 'TW', 'CN']"
+            :options="
+              realmsRegions?.Regions.map(({ Name, Value }) => ({
+                label: Name,
+                value: Value,
+              }))
+            "
           />
         </UFormGroup>
       </UForm>
