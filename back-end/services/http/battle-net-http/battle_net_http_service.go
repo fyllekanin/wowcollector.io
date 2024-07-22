@@ -46,10 +46,26 @@ func GetInstance() *BattleNetHttpService {
 	return instance
 }
 
+func (s *BattleNetHttpService) GetCharacter(region string, realm string, character string) *entities.BattleNetCharacter {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"?namespace=profile-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		fmt.Println("Error getting character:", err)
+		return nil
+	}
+
+	var result entities.BattleNetCharacter
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		fmt.Println("Error decoding character:", err)
+		return nil
+	}
+	return &result
+}
+
 func (s *BattleNetHttpService) GetMountsIndex(region data.BattleNetRegion) *entities.BattleNetMountsIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/mount/index?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
-		fmt.Println("Error getting mounts index", err)
+		fmt.Println("Error getting mounts index;", err)
 		return nil
 	}
 
@@ -98,7 +114,7 @@ func (s *BattleNetHttpService) doRequest(url string, retry bool) ([]byte, error)
 	response, err := http.Get(url + "&access_token=" + s.getAccessToken())
 	if err != nil {
 		fmt.Println("Error get request:", err)
-		return nil, errors.New("Failed creating request")
+		return nil, errors.New("failed creating request")
 	}
 	defer response.Body.Close()
 

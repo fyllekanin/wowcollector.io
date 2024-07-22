@@ -30,7 +30,7 @@ func getRealmsAndRegions(w http.ResponseWriter, r *http.Request) {
 
 	realms, err := realmrepository.GetRepository().GetRealms()
 	if err != nil {
-		oplog.Error("Failed fetching realms", err)
+		oplog.Error("Error fetching realms", err)
 		http.Error(w, err.Error(), 500)
 		return
 	}
@@ -40,7 +40,7 @@ func getRealmsAndRegions(w http.ResponseWriter, r *http.Request) {
 		Regions: getRegions(),
 	})
 	if err != nil {
-		oplog.Error("Failed stringify response", err)
+		oplog.Error("Error stringify response", err)
 		http.Error(w, err.Error(), 500)
 		return
 	}
