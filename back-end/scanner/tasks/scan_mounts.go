@@ -7,7 +7,7 @@ import (
 	"sync"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"wowcollector.io/common/data"
+	blizzarddata "wowcollector.io/common/data/blizzard-data"
 	battlenetEntities "wowcollector.io/entities"
 	"wowcollector.io/entities/documents"
 	mountrepository "wowcollector.io/repository/repositories/mount-repository"
@@ -15,7 +15,7 @@ import (
 	wowheadhttp "wowcollector.io/services/http/wow-head-http"
 )
 
-func ScanMounts(region data.BattleNetRegion) {
+func ScanMounts(region blizzarddata.BattleNetRegion) {
 	fmt.Printf("Starting scan of mounts for region %s\n", region)
 	repository := mountrepository.GetRepository()
 
@@ -44,7 +44,7 @@ func ScanMounts(region data.BattleNetRegion) {
 	fmt.Printf("Finished scan of realms for region %s\n", region)
 }
 
-func runMount(region data.BattleNetRegion, mountId int, existingMounts []*documents.MountDocument, repository mountrepository.MountRepository) {
+func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts []*documents.MountDocument, repository mountrepository.MountRepository) {
 	battleNetMount := battlenethttp.GetInstance().GetMount(region, mountId)
 	if battleNetMount == nil {
 		fmt.Printf("Error fetching mount with id %d\n", mountId)

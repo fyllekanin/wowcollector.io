@@ -10,7 +10,7 @@ import (
 	"github.com/robfig/cron/v3"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"wowcollector.io/common/data"
+	blizzarddata "wowcollector.io/common/data/blizzard-data"
 	"wowcollector.io/repository"
 	"wowcollector.io/scanner/tasks"
 )
@@ -36,16 +36,16 @@ func main() {
 	c := cron.New()
 
 	time.AfterFunc(1*time.Hour, func() {
-		tasks.ScanRealms(data.REGION_EU)
+		tasks.ScanRealms(blizzarddata.REGION_EU)
 		c.AddFunc("@every 24h", func() {
-			tasks.ScanRealms(data.REGION_EU)
+			tasks.ScanRealms(blizzarddata.REGION_EU)
 		})
 	})
 
 	time.AfterFunc(2*time.Hour, func() {
-		tasks.ScanMounts(data.REGION_EU)
+		tasks.ScanMounts(blizzarddata.REGION_EU)
 		c.AddFunc("@every 12h", func() {
-			tasks.ScanMounts(data.REGION_EU)
+			tasks.ScanMounts(blizzarddata.REGION_EU)
 		})
 	})
 

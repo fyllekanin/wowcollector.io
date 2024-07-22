@@ -2,15 +2,15 @@ package documents
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"wowcollector.io/common/data"
+	blizzarddata "wowcollector.io/common/data/blizzard-data"
 )
 
 type RealmDocument struct {
-	ObjectID primitive.ObjectID   `bson:"_id"`
-	Id       int                  `bson:"id"`
-	Name     string               `bson:"name"`
-	Slug     string               `bson:"slug"`
-	Region   data.BattleNetRegion `bson:"region"`
+	ObjectID primitive.ObjectID           `bson:"_id"`
+	Id       int                          `bson:"id"`
+	Name     string                       `bson:"name"`
+	Slug     string                       `bson:"slug"`
+	Region   blizzarddata.BattleNetRegion `bson:"region"`
 }
 
 func (r *RealmDocument) IsEqual(other *RealmDocument) bool {

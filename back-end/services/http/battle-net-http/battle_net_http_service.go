@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"time"
 
-	"wowcollector.io/common/data"
+	blizzarddata "wowcollector.io/common/data/blizzard-data"
 	entities "wowcollector.io/entities"
 )
 
@@ -46,7 +46,7 @@ func GetInstance() *BattleNetHttpService {
 	return instance
 }
 
-func (s *BattleNetHttpService) GetCharacter(region string, realm string, character string) *entities.BattleNetCharacter {
+func (s *BattleNetHttpService) GetCharacter(region blizzarddata.BattleNetRegion, realm string, character string) *entities.BattleNetCharacter {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		fmt.Println("Error getting character:", err)
@@ -62,7 +62,7 @@ func (s *BattleNetHttpService) GetCharacter(region string, realm string, charact
 	return &result
 }
 
-func (s *BattleNetHttpService) GetMountsIndex(region data.BattleNetRegion) *entities.BattleNetMountsIndex {
+func (s *BattleNetHttpService) GetMountsIndex(region blizzarddata.BattleNetRegion) *entities.BattleNetMountsIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/mount/index?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		fmt.Println("Error getting mounts index;", err)
@@ -78,7 +78,7 @@ func (s *BattleNetHttpService) GetMountsIndex(region data.BattleNetRegion) *enti
 	return &result
 }
 
-func (s *BattleNetHttpService) GetMount(region data.BattleNetRegion, id int) *entities.BattleNetMount {
+func (s *BattleNetHttpService) GetMount(region blizzarddata.BattleNetRegion, id int) *entities.BattleNetMount {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/mount/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		fmt.Println("Error getting mount", err)
@@ -94,7 +94,7 @@ func (s *BattleNetHttpService) GetMount(region data.BattleNetRegion, id int) *en
 	return &result
 }
 
-func (s *BattleNetHttpService) GetRealms(region data.BattleNetRegion) *entities.BattleNetRealms {
+func (s *BattleNetHttpService) GetRealms(region blizzarddata.BattleNetRegion) *entities.BattleNetRealms {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/realm/index?namespace=dynamic-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		fmt.Println("Error getting realms:", err)

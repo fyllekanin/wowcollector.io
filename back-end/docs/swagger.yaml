@@ -1,5 +1,5 @@
 definitions:
-  data.BattleNetRegion:
+  blizzarddata.BattleNetRegion:
     enum:
     - eu
     - us
@@ -7,12 +7,23 @@ definitions:
     x-enum-varnames:
     - REGION_EU
     - REGION_US
+  response.CharacterProfileResponse:
+    properties:
+      faction:
+        type: string
+      level:
+        type: integer
+      name:
+        type: string
+      realm:
+        type: string
+    type: object
   response.RealmResponse:
     properties:
       name:
         type: string
       region:
-        $ref: '#/definitions/data.BattleNetRegion'
+        $ref: '#/definitions/blizzarddata.BattleNetRegion'
       slug:
         type: string
     type: object
@@ -32,7 +43,7 @@ definitions:
       name:
         type: string
       value:
-        $ref: '#/definitions/data.BattleNetRegion'
+        $ref: '#/definitions/blizzarddata.BattleNetRegion'
     type: object
 host: localhost:8888
 info:
@@ -58,49 +69,17 @@ paths:
       summary: Fetch all realms ang regions
       tags:
       - BattleNet
-  /api/v1/hello-world:
+  /api/v1/character/{region}/{realm}/{character}:
     get:
-      consumes:
-      - application/json
-      description: Get you a nice hi
+      description: Get all the realms and regions
       produces:
       - application/json
       responses:
         "200":
           description: OK
-      security:
-      - Bearer: []
-      summary: Get a hi
+          schema:
+            $ref: '#/definitions/response.CharacterProfileResponse'
+      summary: Fetch all realms ang regions
       tags:
-      - departments
-  /api/v1/mounts:
-    get:
-      consumes:
-      - application/json
-      description: Get you a nice hi
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      security:
-      - Bearer: []
-      summary: Get all mounts
-      tags:
-      - departments
-  /api/v1/realm:
-    post:
-      consumes:
-      - application/json
-      description: Get you a nice hi
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      security:
-      - Bearer: []
-      summary: Create a realm
-      tags:
-      - departments
+      - BattleNet
 swagger: "2.0"

@@ -40,84 +40,29 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/hello-world": {
+        "/api/v1/character/{region}/{realm}/{character}": {
             "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get you a nice hi",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "Get all the realms and regions",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "departments"
+                    "BattleNet"
                 ],
-                "summary": "Get a hi",
+                "summary": "Fetch all realms ang regions",
                 "responses": {
                     "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
-        "/api/v1/mounts": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get you a nice hi",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "departments"
-                ],
-                "summary": "Get all mounts",
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
-        "/api/v1/realm": {
-            "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get you a nice hi",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "departments"
-                ],
-                "summary": "Create a realm",
-                "responses": {
-                    "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CharacterProfileResponse"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
-        "data.BattleNetRegion": {
+        "blizzarddata.BattleNetRegion": {
             "type": "string",
             "enum": [
                 "eu",
@@ -128,6 +73,23 @@ const docTemplate = `{
                 "REGION_US"
             ]
         },
+        "response.CharacterProfileResponse": {
+            "type": "object",
+            "properties": {
+                "faction": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "realm": {
+                    "type": "string"
+                }
+            }
+        },
         "response.RealmResponse": {
             "type": "object",
             "properties": {
@@ -135,7 +97,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "region": {
-                    "$ref": "#/definitions/data.BattleNetRegion"
+                    "$ref": "#/definitions/blizzarddata.BattleNetRegion"
                 },
                 "slug": {
                     "type": "string"
@@ -166,7 +128,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "value": {
-                    "$ref": "#/definitions/data.BattleNetRegion"
+                    "$ref": "#/definitions/blizzarddata.BattleNetRegion"
                 }
             }
         }

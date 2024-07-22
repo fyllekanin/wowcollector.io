@@ -1,16 +1,18 @@
 package response
 
-import "wowcollector.io/common/data"
+import (
+	blizzarddata "wowcollector.io/common/data/blizzard-data"
+)
 
 type RealmResponse struct {
-	Name   string               `json:"name"`
-	Region data.BattleNetRegion `json:"region"`
-	Slug   string               `json:"slug"`
+	Name   string                       `json:"name"`
+	Region blizzarddata.BattleNetRegion `json:"region"`
+	Slug   string                       `json:"slug"`
 }
 
 type RegionResponse struct {
-	Name  string               `json:"name"`
-	Value data.BattleNetRegion `json:"value"`
+	Name  string                       `json:"name"`
+	Value blizzarddata.BattleNetRegion `json:"value"`
 }
 
 type RegionRealmResponse struct {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/httplog/v2"
-	"wowcollector.io/common/data"
+	blizzarddata "wowcollector.io/common/data/blizzard-data"
 	"wowcollector.io/entities/documents"
 	"wowcollector.io/entities/response"
 	realmrepository "wowcollector.io/repository/repositories/realm-repository"
@@ -51,8 +51,8 @@ func getRealmsAndRegions(w http.ResponseWriter, r *http.Request) {
 
 func getRegions() []*response.RegionResponse {
 	return []*response.RegionResponse{
-		{Name: "EU", Value: data.REGION_EU},
-		{Name: "US", Value: data.REGION_US},
+		{Name: "EU", Value: blizzarddata.REGION_EU},
+		{Name: "US", Value: blizzarddata.REGION_US},
 	}
 }
 
