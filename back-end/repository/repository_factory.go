@@ -5,7 +5,8 @@ import (
 	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
-	realmrepository "wowcollector.io/repository/repositories"
+	mountrepository "wowcollector.io/repository/repositories/mount-repository"
+	realmrepository "wowcollector.io/repository/repositories/realm-repository"
 )
 
 type RepositoryFactory struct {
@@ -14,6 +15,7 @@ type RepositoryFactory struct {
 
 func (r *RepositoryFactory) init() {
 	realmrepository.Init(r.database)
+	mountrepository.Init(r.database)
 }
 
 var instance *RepositoryFactory

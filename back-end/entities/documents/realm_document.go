@@ -7,7 +7,7 @@ import (
 
 type RealmDocument struct {
 	ObjectID primitive.ObjectID   `bson:"_id"`
-	Id       int64                `bson:"id"`
+	Id       int                  `bson:"id"`
 	Name     string               `bson:"name"`
 	Slug     string               `bson:"slug"`
 	Region   data.BattleNetRegion `bson:"region"`

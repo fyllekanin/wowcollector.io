@@ -37,8 +37,15 @@ func main() {
 
 	time.AfterFunc(1*time.Hour, func() {
 		tasks.ScanRealms(data.REGION_EU)
-		c.AddFunc("@every 2h", func() {
+		c.AddFunc("@every 24h", func() {
 			tasks.ScanRealms(data.REGION_EU)
+		})
+	})
+
+	time.AfterFunc(2*time.Hour, func() {
+		tasks.ScanMounts(data.REGION_EU)
+		c.AddFunc("@every 12h", func() {
+			tasks.ScanMounts(data.REGION_EU)
 		})
 	})
 

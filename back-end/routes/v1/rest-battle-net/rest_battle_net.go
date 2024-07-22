@@ -9,7 +9,7 @@ import (
 	"wowcollector.io/common/data"
 	"wowcollector.io/entities/documents"
 	"wowcollector.io/entities/response"
-	realmrepository "wowcollector.io/repository/repositories"
+	realmrepository "wowcollector.io/repository/repositories/realm-repository"
 )
 
 func GetRoutes(r chi.Router) {

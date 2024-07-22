@@ -2,14 +2,13 @@ package tasks
 
 import (
 	"fmt"
-	"log"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"wowcollector.io/common/data"
 	battlenetEntities "wowcollector.io/entities"
 	"wowcollector.io/entities/documents"
-	realmrepository "wowcollector.io/repository/repositories"
-	battleNetHttp "wowcollector.io/services/http"
+	realmrepository "wowcollector.io/repository/repositories/realm-repository"
+	battlenethttp "wowcollector.io/services/http/battle-net-http"
 )
 
 func ScanRealms(region data.BattleNetRegion) {
@@ -22,7 +21,7 @@ func ScanRealms(region data.BattleNetRegion) {
 		return
 	}
 
-	battleNetRealms := battleNetHttp.GetInstance().GetRealms(region)
+	battleNetRealms := battlenethttp.GetInstance().GetRealms(region)
 	if battleNetRealms == nil {
 		fmt.Println("Error fetching realms from battle.net")
 		return
@@ -50,8 +49,6 @@ func ScanRealms(region data.BattleNetRegion) {
 
 			if !newRealm.IsEqual(existingRealm) {
 				repository.UpdateRealm(newRealm)
-				fmt.Println(newRealm != existingRealm)
-				log.Fatal()
 				fmt.Printf("Updated realm with id %d, slug %s for region %s\n", realm.Id, realm.Slug, region)
 			}
 		}
