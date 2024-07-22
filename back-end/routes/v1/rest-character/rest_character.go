@@ -18,10 +18,13 @@ func GetRoutes(r chi.Router) {
 	})
 }
 
-// @summary Fetch all realms ang regions
-// @description Get all the realms and regions
-// @tags BattleNet
+// @summary Fetch character profile
+// @description Get summary information about a character
+// @tags Character
 // @produce json
+// @param region path string true "Region"
+// @param realm path string true "Realm"
+// @param character path string true "Character"
 // @success 200 {object} response.CharacterProfileResponse
 // @router /api/v1/character/{region}/{realm}/{character} [get]
 func getCharacterProfile(w http.ResponseWriter, r *http.Request) {

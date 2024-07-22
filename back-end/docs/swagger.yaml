@@ -71,7 +71,23 @@ paths:
       - BattleNet
   /api/v1/character/{region}/{realm}/{character}:
     get:
-      description: Get all the realms and regions
+      description: Get summary information about a character
+      parameters:
+      - description: Region
+        in: path
+        name: region
+        required: true
+        type: string
+      - description: Realm
+        in: path
+        name: realm
+        required: true
+        type: string
+      - description: Character
+        in: path
+        name: character
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -79,7 +95,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.CharacterProfileResponse'
-      summary: Fetch all realms ang regions
+      summary: Fetch character profile
       tags:
-      - BattleNet
+      - Character
 swagger: "2.0"

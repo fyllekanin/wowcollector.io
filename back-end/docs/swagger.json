@@ -35,14 +35,37 @@
         },
         "/api/v1/character/{region}/{realm}/{character}": {
             "get": {
-                "description": "Get all the realms and regions",
+                "description": "Get summary information about a character",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "BattleNet"
+                    "Character"
                 ],
-                "summary": "Fetch all realms ang regions",
+                "summary": "Fetch character profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Region",
+                        "name": "region",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Realm",
+                        "name": "realm",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Character",
+                        "name": "character",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
