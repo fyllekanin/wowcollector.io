@@ -1,10 +1,21 @@
 package documents
 
-import "wowcollector.io/common/data"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"wowcollector.io/common/data"
+)
 
 type RealmDocument struct {
-	Id     int64
-	Name   string
-	Slug   string
-	Region data.BattleNetRegion
+	ObjectID primitive.ObjectID   `bson:"_id"`
+	Id       int64                `bson:"id"`
+	Name     string               `bson:"name"`
+	Slug     string               `bson:"slug"`
+	Region   data.BattleNetRegion `bson:"region"`
+}
+
+func (r *RealmDocument) IsEqual(other *RealmDocument) bool {
+	return r.Id == other.Id &&
+		r.Name == other.Name &&
+		r.Slug == other.Slug &&
+		r.Region == other.Region
 }

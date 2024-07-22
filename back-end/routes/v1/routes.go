@@ -2,11 +2,11 @@ package v1
 
 import (
 	"github.com/go-chi/chi/v5"
-	helloworld "wowcollector.io/routes/v1/hello-world"
+	restbattlenet "wowcollector.io/routes/v1/rest-battle-net"
 )
 
 func GetRoutes(r chi.Router) {
 	r.Route("/v1", func(r chi.Router) {
-		helloworld.GetRoutes(r)
+		restbattlenet.GetRoutes(r)
 	})
 }

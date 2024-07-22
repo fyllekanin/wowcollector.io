@@ -37,7 +37,7 @@ $(cd back-end && go build)
 ---------
 #### Build the image (root folder)
 ```
-docker build --tag=wowcollector.io-server ./back-end/
+docker build -f ./back-end/DockerfileRest --tag=wowcollector.io-server ./back-end/
 ```
 
 #### Start the image
@@ -51,4 +51,59 @@ docker run -p 8888:8888/tcp \
 -e BATTLE_NET_CLIENT_ID=clientId \
 -e BATTLE_NET_CLIENT_SECRET=clientSecret \
 wowcollector.io-server
+```
+
+## Running the scanner
+
+### Modifications
+---------
+#### Why
+As the scanner is configured to not run everything all the time there is timeouts
+before certain scans started.
+
+#### Edit a task to run directly
+- go to back-end/scanner/main.go
+- Find the task you want to run
+- Edit the time, example below for having realm scanner for EU to run on startup
+
+Before
+```
+time.AfterFunc(1*time.Hour, ....)
+```
+
+After
+```
+time.AfterFunc(1*time.Second, ....)
+```
+
+### Build and run the scanner with Go 
+---------
+#### Build the scanner (run within the back-end folder)
+```
+go build -o scanner-app ./scanner/
+```
+
+#### Start it
+```
+./scanner-app
+```
+
+### Build and run the scanner with Docker
+---------
+#### Build the image (root folder)
+```
+docker build -f ./back-end/DockerfileScanner --tag=wowcollector.io-scanner ./back-end/
+```
+
+#### Start the image
+```
+docker run -p 8888:8888/tcp \
+-e DATABASE_USERNAME=admin \
+-e DATABASE_PASSWORD=admin \
+-e DATABASE_NAME=wowcollector \
+-e DATABASE_HOST=localhost \
+-e DATABASE_PORT=27017 \
+-e BATTLE_NET_CLIENT_ID=clientId \
+-e BATTLE_NET_CLIENT_SECRET=clientSecret \
+wowcollector.io-scanner
 ```

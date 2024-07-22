@@ -1,6 +1,9 @@
 package repository
 
 import (
+	"fmt"
+	"os"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	realmrepository "wowcollector.io/repository/repositories"
 )
@@ -24,4 +27,13 @@ func InitRepositories(database *mongo.Database) {
 
 func GetRepositoryFactory() *RepositoryFactory {
 	return instance
+}
+
+func GetDatabaseUri() string {
+	username := os.Getenv("DATABASE_USERNAME")
+	password := os.Getenv("DATABASE_PASSWORD")
+	host := os.Getenv("DATABASE_HOST")
+	port := os.Getenv("DATABASE_PORT")
+
+	return fmt.Sprintf("mongodb://%s:%s@%s:%s", username, password, host, port)
 }

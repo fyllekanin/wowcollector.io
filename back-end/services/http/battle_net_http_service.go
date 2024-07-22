@@ -61,6 +61,22 @@ func (s *BattleNetHttpService) GetMountsIndex(region data.BattleNetRegion) *enti
 	return &result
 }
 
+func (s *BattleNetHttpService) GetRealms(region data.BattleNetRegion) *entities.BattleNetRealms {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/realm/index?namespace=dynamic-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		fmt.Println("Error getting realms:", err)
+		return nil
+	}
+
+	var result entities.BattleNetRealms
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		fmt.Println("Error decoding realms:", err)
+		return nil
+	}
+	return &result
+}
+
 func (s *BattleNetHttpService) doRequest(url string, retry bool) ([]byte, error) {
 	response, err := http.Get(url + "&access_token=" + s.getAccessToken())
 	if err != nil {

@@ -1,3 +1,39 @@
+definitions:
+  data.BattleNetRegion:
+    enum:
+    - eu
+    - us
+    type: string
+    x-enum-varnames:
+    - REGION_EU
+    - REGION_US
+  response.RealmResponse:
+    properties:
+      name:
+        type: string
+      region:
+        $ref: '#/definitions/data.BattleNetRegion'
+      slug:
+        type: string
+    type: object
+  response.RegionRealmResponse:
+    properties:
+      realms:
+        items:
+          $ref: '#/definitions/response.RealmResponse'
+        type: array
+      regions:
+        items:
+          $ref: '#/definitions/response.RegionResponse'
+        type: array
+    type: object
+  response.RegionResponse:
+    properties:
+      name:
+        type: string
+      value:
+        $ref: '#/definitions/data.BattleNetRegion'
+    type: object
 host: localhost:8888
 info:
   contact: {}
@@ -9,7 +45,20 @@ info:
   title: wowcollector.io
   version: "1.0"
 paths:
-  /v1/hello-world:
+  /api/v1/battle-net/realms-regions:
+    get:
+      description: Get all the realms and regions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.RegionRealmResponse'
+      summary: Fetch all realms ang regions
+      tags:
+      - BattleNet
+  /api/v1/hello-world:
     get:
       consumes:
       - application/json
@@ -22,6 +71,36 @@ paths:
       security:
       - Bearer: []
       summary: Get a hi
+      tags:
+      - departments
+  /api/v1/mounts:
+    get:
+      consumes:
+      - application/json
+      description: Get you a nice hi
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: Get all mounts
+      tags:
+      - departments
+  /api/v1/realm:
+    post:
+      consumes:
+      - application/json
+      description: Get you a nice hi
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: Create a realm
       tags:
       - departments
 swagger: "2.0"

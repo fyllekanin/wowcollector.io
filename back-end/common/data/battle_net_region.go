@@ -3,5 +3,6 @@ package data
 type BattleNetRegion string
 
 const (
-	EU BattleNetRegion = "eu"
+	REGION_EU BattleNetRegion = "eu"
+	REGION_US BattleNetRegion = "us"
 )

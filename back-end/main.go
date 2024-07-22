@@ -19,15 +19,6 @@ import (
 	"wowcollector.io/routes"
 )
 
-func getDatabaseUri() string {
-	username := os.Getenv("DATABASE_USERNAME")
-	password := os.Getenv("DATABASE_PASSWORD")
-	host := os.Getenv("DATABASE_HOST")
-	port := os.Getenv("DATABASE_PORT")
-
-	return fmt.Sprintf("mongodb://%s:%s@%s:%s", username, password, host, port)
-}
-
 // @title wowcollector.io
 // @version 1.0
 // @description wowcollector.io API description
@@ -38,7 +29,7 @@ func getDatabaseUri() string {
 
 // @host localhost:8888
 func main() {
-	clientOptions := options.Client().ApplyURI(getDatabaseUri())
+	clientOptions := options.Client().ApplyURI(repository.GetDatabaseUri())
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Fatal(err)

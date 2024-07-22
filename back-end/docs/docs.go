@@ -20,7 +20,27 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/hello-world": {
+        "/api/v1/battle-net/realms-regions": {
+            "get": {
+                "description": "Get all the realms and regions",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BattleNet"
+                ],
+                "summary": "Fetch all realms ang regions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.RegionRealmResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/hello-world": {
             "get": {
                 "security": [
                     {
@@ -42,6 +62,111 @@ const docTemplate = `{
                     "200": {
                         "description": "OK"
                     }
+                }
+            }
+        },
+        "/api/v1/mounts": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get you a nice hi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "departments"
+                ],
+                "summary": "Get all mounts",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/v1/realm": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get you a nice hi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "departments"
+                ],
+                "summary": "Create a realm",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "data.BattleNetRegion": {
+            "type": "string",
+            "enum": [
+                "eu",
+                "us"
+            ],
+            "x-enum-varnames": [
+                "REGION_EU",
+                "REGION_US"
+            ]
+        },
+        "response.RealmResponse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "region": {
+                    "$ref": "#/definitions/data.BattleNetRegion"
+                },
+                "slug": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.RegionRealmResponse": {
+            "type": "object",
+            "properties": {
+                "realms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.RealmResponse"
+                    }
+                },
+                "regions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.RegionResponse"
+                    }
+                }
+            }
+        },
+        "response.RegionResponse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "$ref": "#/definitions/data.BattleNetRegion"
                 }
             }
         }

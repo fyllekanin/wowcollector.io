@@ -15,6 +15,7 @@ require (
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
+	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/swaggo/files v1.0.1 // indirect
 	github.com/swaggo/files/v2 v2.0.0 // indirect
 	github.com/swaggo/http-swagger v1.3.4 // indirect
