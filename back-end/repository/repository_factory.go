@@ -1,10 +1,13 @@
 package repository
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	mountrepository "wowcollector.io/repository/repositories/mount-repository"
 	realmrepository "wowcollector.io/repository/repositories/realm-repository"
 )
@@ -31,7 +34,21 @@ func GetRepositoryFactory() *RepositoryFactory {
 	return instance
 }
 
-func GetDatabaseUri() string {
+func GetDatabaseClient() *mongo.Client {
+	clientOptions := options.Client().ApplyURI(getDatabaseUri())
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = client.Ping(context.TODO(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Connected to MongoDB")
+	return client
+}
+
+func getDatabaseUri() string {
 	username := os.Getenv("DATABASE_USERNAME")
 	password := os.Getenv("DATABASE_PASSWORD")
 	host := os.Getenv("DATABASE_HOST")
