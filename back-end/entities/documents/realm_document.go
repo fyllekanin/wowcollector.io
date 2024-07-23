@@ -6,11 +6,11 @@ import (
 )
 
 type RealmDocument struct {
-	ObjectID primitive.ObjectID           `bson:"_id"`
-	Id       int                          `bson:"id"`
-	Name     string                       `bson:"name"`
-	Slug     string                       `bson:"slug"`
-	Region   blizzarddata.BattleNetRegion `bson:"region"`
+	ObjectID primitive.ObjectID           `bson:"_id" json:"_id"`
+	Id       int                          `bson:"id" json:"id"`
+	Name     string                       `bson:"name" json:"name"`
+	Slug     string                       `bson:"slug" json:"slug"`
+	Region   blizzarddata.BattleNetRegion `bson:"region" json:"region"`
 }
 
 func (r *RealmDocument) IsEqual(other *RealmDocument) bool {

@@ -107,3 +107,15 @@ docker run -p 8888:8888/tcp \
 -e BATTLE_NET_CLIENT_SECRET=clientSecret \
 wowcollector.io-scanner
 ```
+
+### Build and run the migration & seeder with Go 
+---------
+#### Build the scanner (run within the back-end folder)
+```
+go build -o migration-seeder-app ./apps/migration-seeder/
+```
+
+#### Start it
+```
+./migration-seeder-app
+```
