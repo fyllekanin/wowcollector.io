@@ -1,19 +1,22 @@
-FROM golang:1.22-alpine
+# First stage: build the Go app
+FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
 
-COPY . /app
+COPY . .
 
 RUN go mod download && go mod verify
 
-RUN go build -v -o app ./scanner/
+RUN go build -v -o app ./apps/scanner/
 
 RUN mkdir /output
 RUN mv app /output/app
 
+# Second stage: create the final image
 FROM alpine:latest
 
-COPY --from=0 /output/app ./app
+COPY --from=builder /output/app ./app
+COPY ./resources /resources
 
 EXPOSE 8888
 
