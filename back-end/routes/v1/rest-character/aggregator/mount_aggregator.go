@@ -20,9 +20,34 @@ func GetMountsAggregation(character battlenetEntities.BattleNetCharacter, collec
 func getMountCategories(view documents.MountViewDocument, mounts map[int]*documents.MountDocument, collectedIds []int) []response.MountCollectionCategory {
 	var result []response.MountCollectionCategory
 	for _, element := range view.Categories {
-		result = append(result, getMountCategory(element, mounts, collectedIds))
+		func() {
+			result = append(result, getMountCategory(element, mounts, collectedIds))
+		}()
+	}
+	if view.IsUnknownIncluded {
+		result = append(result, getUnknownCategory(mounts, collectedIds))
 	}
 	return result
+}
+
+func getUnknownCategory(mounts map[int]*documents.MountDocument, collectedIds []int) response.MountCollectionCategory {
+	var mountsResult []response.MountCollectionMount
+	for _, mount := range mounts {
+		mountsResult = append(mountsResult, response.MountCollectionMount{
+			Name:            mount.Name,
+			Description:     mount.Description,
+			Id:              mount.Id,
+			IsCollected:     slices.Contains(collectedIds, mount.Id),
+			CreatureDisplay: mount.CreatureDisplay,
+			Icon:            mount.Icon,
+		})
+	}
+
+	return response.MountCollectionCategory{
+		Name:   "Unknown",
+		Order:  99999,
+		Mounts: mountsResult,
+	}
 }
 
 func getMountCategory(category documents.MountViewCategory, mounts map[int]*documents.MountDocument, collectedIds []int) response.MountCollectionCategory {
@@ -37,6 +62,7 @@ func getMountCategory(category documents.MountViewCategory, mounts map[int]*docu
 		if mount == nil {
 			continue
 		}
+		delete(mounts, categoryMount.Id)
 		mountsResult = append(mountsResult, response.MountCollectionMount{
 			Name:            mount.Name,
 			Description:     mount.Description,
