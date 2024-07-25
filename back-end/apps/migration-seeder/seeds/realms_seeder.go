@@ -10,9 +10,8 @@ import (
 	seedrepository "wowcollector.io/repository/repositories/seed-repository"
 )
 
-var seedName string = "realms"
-
 func RealmsSeeder() {
+	var seedName = "realms"
 	fmt.Println("Realms seeder started")
 	result, err := seedrepository.GetRepository().IsExisting(seedName)
 	if err == nil && result {

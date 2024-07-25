@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	mountrepository "wowcollector.io/repository/repositories/mount-repository"
+	mountviewrepository "wowcollector.io/repository/repositories/mount-view-repository"
 	realmrepository "wowcollector.io/repository/repositories/realm-repository"
 	seedrepository "wowcollector.io/repository/repositories/seed-repository"
 )
@@ -21,6 +22,7 @@ func (r *RepositoryFactory) init() {
 	realmrepository.Init(r.database)
 	mountrepository.Init(r.database)
 	seedrepository.Init(r.database)
+	mountviewrepository.Init(r.database)
 }
 
 var instance *RepositoryFactory
