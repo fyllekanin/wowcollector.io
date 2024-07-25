@@ -7,6 +7,23 @@ definitions:
     x-enum-varnames:
     - REGION_EU
     - REGION_US
+  errorcodes.ErrorCode:
+    enum:
+    - CHARACTER_NOT_FOUND
+    - LOADING_BATTLE_NET_DATA
+    - INTERNAL_ERROR
+    type: string
+    x-enum-varnames:
+    - CHARACTER_NOT_FOUND
+    - LOADING_BATTLE_NET_DATA
+    - INTERNAL_ERROR
+  errorresponse.ErrorResponse:
+    properties:
+      code:
+        $ref: '#/definitions/errorcodes.ErrorCode'
+      message:
+        type: string
+    type: object
   response.CharacterProfileResponse:
     properties:
       faction:
@@ -156,6 +173,14 @@ paths:
             items:
               $ref: '#/definitions/response.MountCollectionCategory'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
       summary: Fetch character mount collection
       tags:
       - Character

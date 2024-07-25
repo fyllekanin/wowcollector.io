@@ -2,10 +2,9 @@ package seeds
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/zap"
 	"wowcollector.io/entities/documents"
 	mountviewrepository "wowcollector.io/repository/repositories/mount-view-repository"
 	seedrepository "wowcollector.io/repository/repositories/seed-repository"
@@ -13,10 +12,10 @@ import (
 
 func MountViewsSeeder() {
 	var seedName = "mount-views"
-	fmt.Println("Mount views seeder started")
+	zap.L().Info("Mount views seeder started")
 	result, err := seedrepository.GetRepository().IsExisting(seedName)
 	if err == nil && result {
-		fmt.Println("Mount views seeder already done")
+		zap.L().Info("Mount views seeder already done")
 		return
 	}
 	byteValue, _ := GetBytesFromFile("./resources/mount-views.json")
@@ -24,7 +23,7 @@ func MountViewsSeeder() {
 	var mountViews []documents.MountViewDocument
 	err = json.Unmarshal(byteValue, &mountViews)
 	if err != nil {
-		log.Fatal("Error parsing mount-views.json")
+		zap.L().Fatal("Error parsing mount-views.json")
 	}
 
 	for _, element := range mountViews {
@@ -32,5 +31,5 @@ func MountViewsSeeder() {
 		mountviewrepository.GetRepository().CreateMountView(&element)
 	}
 	seedrepository.GetRepository().CreateSeed(seedName)
-	fmt.Println("Mount views seeder done")
+	zap.L().Info("Mount views seeder done")
 }

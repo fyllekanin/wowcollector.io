@@ -3,11 +3,11 @@ package repository
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 	mountrepository "wowcollector.io/repository/repositories/mount-repository"
 	mountviewrepository "wowcollector.io/repository/repositories/mount-view-repository"
 	realmrepository "wowcollector.io/repository/repositories/realm-repository"
@@ -42,13 +42,13 @@ func GetDatabaseClient() *mongo.Client {
 	clientOptions := options.Client().ApplyURI(getDatabaseUri())
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		zap.L().Fatal(err.Error())
 	}
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
-		log.Fatal(err)
+		zap.L().Info(err.Error())
 	}
-	fmt.Println("Connected to MongoDB")
+	zap.L().Info("Connected to MongoDB")
 	return client
 }
 

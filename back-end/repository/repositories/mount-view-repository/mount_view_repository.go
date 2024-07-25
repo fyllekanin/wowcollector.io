@@ -2,11 +2,10 @@ package mountviewrepository
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
 	"wowcollector.io/entities/documents"
 )
 
@@ -29,7 +28,7 @@ func Init(database *mongo.Database) {
 func (r *MountViewRepository) GetMountViews() ([]*documents.MountViewDocument, error) {
 	result, err := r.collection.Find(context.TODO(), bson.D{})
 	if err != nil {
-		fmt.Println("Error fetching mount view", err)
+		zap.L().Info("Error fetching mount view" + err.Error())
 		return nil, err
 	}
 	defer result.Close(context.TODO())
@@ -38,12 +37,12 @@ func (r *MountViewRepository) GetMountViews() ([]*documents.MountViewDocument, e
 		var mount *documents.MountViewDocument
 		err := result.Decode(&mount)
 		if err != nil {
-			fmt.Println("Error decoding mount view", err)
+			zap.L().Info("Error decoding mount view" + err.Error())
 		}
 		mounts = append(mounts, mount)
 	}
 	if err := result.Err(); err != nil {
-		fmt.Println("Error fetching mounts", err)
+		zap.L().Info("Error fetching mounts" + err.Error())
 	}
 	return mounts, nil
 }
@@ -51,7 +50,7 @@ func (r *MountViewRepository) GetMountViews() ([]*documents.MountViewDocument, e
 func (r *MountViewRepository) CreateMountView(document *documents.MountViewDocument) error {
 	_, err := r.collection.InsertOne(context.TODO(), document)
 	if err != nil {
-		fmt.Println("Error inserting mount view document:", err)
+		zap.L().Info("Error inserting mount view document:" + err.Error())
 		return err
 	}
 	return nil
@@ -64,10 +63,10 @@ func (r *MountViewRepository) GetDefaultMountView() (*documents.MountViewDocumen
 	err := r.collection.FindOne(context.TODO(), filter).Decode(&mount)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			fmt.Println("No default mount view found")
+			zap.L().Info("No default mount view found")
 			return nil, nil
 		}
-		fmt.Println("Error fetching default mount view", err)
+		zap.L().Info("Error fetching default mount view" + err.Error())
 		return nil, err
 	}
 
@@ -81,7 +80,7 @@ func (r *MountViewRepository) UpdateMountView(document *documents.MountViewDocum
 		{"$set", document},
 	})
 	if err != nil {
-		fmt.Println("Error updating mount view document:", err)
+		zap.L().Info("Error updating mount view document:" + err.Error())
 		return err
 	}
 	return nil
@@ -96,7 +95,7 @@ func (r *MountViewRepository) createNameIndex() {
 
 	_, err := r.collection.Indexes().CreateOne(context.TODO(), nameIndexModel)
 	if err != nil {
-		log.Fatal(err)
+		zap.L().Error(err.Error())
 	}
 }
 
@@ -109,6 +108,6 @@ func (r *MountViewRepository) createIsDefaultIndex() {
 
 	_, err := r.collection.Indexes().CreateOne(context.TODO(), isDefaultIndexModel)
 	if err != nil {
-		log.Fatal(err)
+		zap.L().Error(err.Error())
 	}
 }

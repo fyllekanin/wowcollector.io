@@ -2,18 +2,20 @@ package main
 
 import (
 	"context"
-	"log"
 	"os"
 
+	"go.uber.org/zap"
 	"wowcollector.io/apps/migration-seeder/seeds"
 	"wowcollector.io/repository"
 )
 
 func main() {
+	logger, _ := zap.NewProduction()
+	zap.ReplaceGlobals(logger)
 	client := repository.GetDatabaseClient()
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
-			log.Fatal(err)
+			zap.L().Fatal(err.Error())
 		}
 	}()
 	repository.InitRepositories(client.Database(os.Getenv("DATABASE_NAME")))

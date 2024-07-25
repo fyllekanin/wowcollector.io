@@ -2,11 +2,10 @@ package mountrepository
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
 	"wowcollector.io/entities/documents"
 )
 
@@ -28,7 +27,7 @@ func Init(database *mongo.Database) {
 func (r *MountRepository) GetMounts() ([]*documents.MountDocument, error) {
 	result, err := r.collection.Find(context.TODO(), bson.D{})
 	if err != nil {
-		fmt.Println("Error fetching mounts", err)
+		zap.L().Info("Error fetching mounts" + err.Error())
 		return nil, err
 	}
 	defer result.Close(context.TODO())
@@ -37,12 +36,12 @@ func (r *MountRepository) GetMounts() ([]*documents.MountDocument, error) {
 		var mount *documents.MountDocument
 		err := result.Decode(&mount)
 		if err != nil {
-			fmt.Println("Error decoding mount", err)
+			zap.L().Info("Error decoding mount" + err.Error())
 		}
 		mounts = append(mounts, mount)
 	}
 	if err := result.Err(); err != nil {
-		fmt.Println("Error fetching mounts", err)
+		zap.L().Info("Error fetching mounts" + err.Error())
 	}
 	return mounts, nil
 }
@@ -50,7 +49,7 @@ func (r *MountRepository) GetMounts() ([]*documents.MountDocument, error) {
 func (r *MountRepository) CreateMount(document *documents.MountDocument) error {
 	_, err := r.collection.InsertOne(context.TODO(), document)
 	if err != nil {
-		fmt.Println("Error inserting mount document:", err)
+		zap.L().Info("Error inserting mount document:" + err.Error())
 		return err
 	}
 	return nil
@@ -63,7 +62,7 @@ func (r *MountRepository) UpdateMount(document *documents.MountDocument) error {
 		{"$set", document},
 	})
 	if err != nil {
-		fmt.Println("Error updating mount document:", err)
+		zap.L().Info("Error updating mount document:" + err.Error())
 		return err
 	}
 	return nil
@@ -78,6 +77,6 @@ func (r *MountRepository) createIndexes() {
 
 	_, err := r.collection.Indexes().CreateOne(context.TODO(), indexModel)
 	if err != nil {
-		log.Fatal(err)
+		zap.L().Error(err.Error())
 	}
 }

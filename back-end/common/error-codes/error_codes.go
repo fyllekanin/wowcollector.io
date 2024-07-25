@@ -1,0 +1,10 @@
+package errorcodes
+
+type ErrorCode string
+
+const (
+	CHARACTER_NOT_FOUND     ErrorCode = "CHARACTER_NOT_FOUND"
+	LOADING_BATTLE_NET_DATA ErrorCode = "LOADING_BATTLE_NET_DATA"
+	INTERNAL_ERROR          ErrorCode = "INTERNAL_ERROR"
+	NO_DEFAULT_MOUNT_VIEW   ErrorCode = "NO_DEFAULT_MOUNT_VIEW"
+)

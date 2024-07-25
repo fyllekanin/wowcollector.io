@@ -5,10 +5,12 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/httplog/v2"
+	"go.uber.org/zap"
 	blizzarddata "wowcollector.io/common/data/blizzard-data"
+	errorcodes "wowcollector.io/common/error-codes"
 	"wowcollector.io/entities/documents"
 	"wowcollector.io/entities/response"
+	errorresponse "wowcollector.io/entities/response/error"
 	realmrepository "wowcollector.io/repository/repositories/realm-repository"
 )
 
@@ -23,15 +25,16 @@ func GetRoutes(r chi.Router) {
 // @tags BattleNet
 // @produce json
 // @success 200 {object} response.RegionRealmResponse
+// @failure 400 {object} errorresponse.ErrorResponse
+// @failure 404 {object} errorresponse.ErrorResponse
 // @router /api/v1/battle-net/realms-regions [get]
 func getRealmsAndRegions(w http.ResponseWriter, r *http.Request) {
-	oplog := httplog.LogEntry(r.Context())
-	oplog.Info("Fetching realms")
-
+	zap.L().Info("Fetching collection of all realms and regions")
 	realms, err := realmrepository.GetRepository().GetRealms()
 	if err != nil {
-		oplog.Error("Error fetching realms", err)
-		http.Error(w, err.Error(), 500)
+		zap.L().Error("Failed fetching realms")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.INTERNAL_ERROR, "Failed fetching realms"))
 		return
 	}
 
@@ -40,13 +43,15 @@ func getRealmsAndRegions(w http.ResponseWriter, r *http.Request) {
 		Regions: getRegions(),
 	})
 	if err != nil {
-		oplog.Error("Error stringify response", err)
-		http.Error(w, err.Error(), 500)
+		zap.L().Error("Failed to stringify response body")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.INTERNAL_ERROR, "Invalid JSON body"))
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
+	zap.L().Info("Responded with realms and regions collection")
 }
 
 func getRegions() []*response.RegionResponse {

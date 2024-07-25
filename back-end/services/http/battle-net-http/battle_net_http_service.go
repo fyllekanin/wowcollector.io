@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"time"
 
+	"go.uber.org/zap"
 	blizzarddata "wowcollector.io/common/data/blizzard-data"
 	entities "wowcollector.io/entities"
 )
@@ -49,14 +50,14 @@ func GetInstance() *BattleNetHttpService {
 func (s *BattleNetHttpService) GetCharacter(region blizzarddata.BattleNetRegion, realm string, character string) *entities.BattleNetCharacter {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
-		fmt.Println("Error getting character:", err)
+		zap.L().Info("Error getting character:" + err.Error())
 		return nil
 	}
 
 	var result entities.BattleNetCharacter
 	err = json.Unmarshal(response, &result)
 	if err != nil {
-		fmt.Println("Error decoding character:", err)
+		zap.L().Info("Error decoding character:" + err.Error())
 		return nil
 	}
 	return &result
@@ -65,14 +66,14 @@ func (s *BattleNetHttpService) GetCharacter(region blizzarddata.BattleNetRegion,
 func (s *BattleNetHttpService) GetCharacterMountCollection(region blizzarddata.BattleNetRegion, realm string, character string) *entities.BattleNetCharacterMountCollection {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/collections/mounts?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
-		fmt.Println("Error getting character mount collection:", err)
+		zap.L().Info("Error getting character mount collection:" + err.Error())
 		return nil
 	}
 
 	var result entities.BattleNetCharacterMountCollection
 	err = json.Unmarshal(response, &result)
 	if err != nil {
-		fmt.Println("Error decoding character mount collection:", err)
+		zap.L().Info("Error decoding character mount collection:" + err.Error())
 		return nil
 	}
 	return &result
@@ -81,14 +82,14 @@ func (s *BattleNetHttpService) GetCharacterMountCollection(region blizzarddata.B
 func (s *BattleNetHttpService) GetMountsIndex(region blizzarddata.BattleNetRegion) *entities.BattleNetMountsIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/mount/index?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
-		fmt.Println("Error getting mounts index;", err)
+		zap.L().Info("Error getting mounts index;" + err.Error())
 		return nil
 	}
 
 	var result entities.BattleNetMountsIndex
 	err = json.Unmarshal(response, &result)
 	if err != nil {
-		fmt.Println("Error decoding mounts index:", err)
+		zap.L().Info("Error decoding mounts index:" + err.Error())
 		return nil
 	}
 	return &result
@@ -97,14 +98,14 @@ func (s *BattleNetHttpService) GetMountsIndex(region blizzarddata.BattleNetRegio
 func (s *BattleNetHttpService) GetMount(region blizzarddata.BattleNetRegion, id int) *entities.BattleNetMount {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/mount/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
-		fmt.Println("Error getting mount", err)
+		zap.L().Info("Error getting mount" + err.Error())
 		return nil
 	}
 
 	var result entities.BattleNetMount
 	err = json.Unmarshal(response, &result)
 	if err != nil {
-		fmt.Println("Error decoding mount:", err)
+		zap.L().Info("Error decoding mount:" + err.Error())
 		return nil
 	}
 	return &result
@@ -113,14 +114,14 @@ func (s *BattleNetHttpService) GetMount(region blizzarddata.BattleNetRegion, id 
 func (s *BattleNetHttpService) GetRealms(region blizzarddata.BattleNetRegion) *entities.BattleNetRealms {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/realm/index?namespace=dynamic-"+string(region)+"&locale=en_US", true)
 	if err != nil {
-		fmt.Println("Error getting realms:", err)
+		zap.L().Info("Error getting realms:" + err.Error())
 		return nil
 	}
 
 	var result entities.BattleNetRealms
 	err = json.Unmarshal(response, &result)
 	if err != nil {
-		fmt.Println("Error decoding realms:", err)
+		zap.L().Info("Error decoding realms:" + err.Error())
 		return nil
 	}
 	return &result
@@ -129,7 +130,7 @@ func (s *BattleNetHttpService) GetRealms(region blizzarddata.BattleNetRegion) *e
 func (s *BattleNetHttpService) doRequest(url string, retry bool) ([]byte, error) {
 	response, err := http.Get(url + "&access_token=" + s.getAccessToken())
 	if err != nil {
-		fmt.Println("Error get request:", err)
+		zap.L().Info("Error get request:" + err.Error())
 		return nil, errors.New("failed creating request")
 	}
 	defer response.Body.Close()
@@ -138,13 +139,13 @@ func (s *BattleNetHttpService) doRequest(url string, retry bool) ([]byte, error)
 		return s.doRequest(url, false)
 	}
 	if response.StatusCode == 429 && retry {
-		fmt.Println("Error rate limit hit, sleep for 1 second and try again")
+		zap.L().Info("Error rate limit hit, sleep for 1 second and try again")
 		time.Sleep(1 * time.Second)
 		return s.doRequest(url, true)
 	}
 	bodyBytes, err := io.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println("Error reading bytes:", err)
+		zap.L().Info("Error reading bytes:" + err.Error())
 		return nil, nil
 	}
 	return bodyBytes, nil
@@ -165,7 +166,7 @@ func resolveToken() *BattleNetToken {
 	// Create the request
 	req, err := http.NewRequest("POST", "https://oauth.battle.net/token", bytes.NewBufferString(data.Encode()))
 	if err != nil {
-		fmt.Println("Error creating access token request:", err)
+		zap.L().Info("Error creating access token request:" + err.Error())
 		return nil
 	}
 
@@ -177,17 +178,17 @@ func resolveToken() *BattleNetToken {
 	client := &http.Client{}
 	response, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Error sending request for access token:", err)
+		zap.L().Info("Error sending request for access token:" + err.Error())
 		return nil
 	}
 	defer response.Body.Close()
 
 	// Check the response status
 	if response.StatusCode != http.StatusOK {
-		fmt.Printf("Request failed with status code: %d\n", response.StatusCode)
+		zap.L().Info(fmt.Sprintf("Request failed with status code: %d", response.StatusCode))
 		// Print the response body for debugging
 		bodyBytes, _ := io.ReadAll(response.Body)
-		fmt.Println("Response body:", string(bodyBytes))
+		zap.L().Info("Response body:" + string(bodyBytes))
 		return nil
 	}
 
@@ -196,7 +197,7 @@ func resolveToken() *BattleNetToken {
 	decoder := json.NewDecoder(response.Body)
 	err = decoder.Decode(&tokenResponse)
 	if err != nil {
-		fmt.Println("Error decoding access token:", err)
+		zap.L().Info("Error decoding access token:" + err.Error())
 		return nil
 	}
 

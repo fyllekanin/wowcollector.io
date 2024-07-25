@@ -125,6 +125,18 @@ const docTemplate = `{
                                 "$ref": "#/definitions/response.MountCollectionCategory"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -141,6 +153,30 @@ const docTemplate = `{
                 "REGION_EU",
                 "REGION_US"
             ]
+        },
+        "errorcodes.ErrorCode": {
+            "type": "string",
+            "enum": [
+                "CHARACTER_NOT_FOUND",
+                "LOADING_BATTLE_NET_DATA",
+                "INTERNAL_ERROR"
+            ],
+            "x-enum-varnames": [
+                "CHARACTER_NOT_FOUND",
+                "LOADING_BATTLE_NET_DATA",
+                "INTERNAL_ERROR"
+            ]
+        },
+        "errorresponse.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "$ref": "#/definitions/errorcodes.ErrorCode"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
         },
         "response.CharacterProfileResponse": {
             "type": "object",

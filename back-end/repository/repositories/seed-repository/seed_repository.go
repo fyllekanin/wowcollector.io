@@ -2,12 +2,11 @@ package seedrepository
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
 	"wowcollector.io/entities/documents"
 )
 
@@ -32,7 +31,7 @@ func (r *SeedRepository) CreateSeed(name string) error {
 		Name:     name,
 	})
 	if err != nil {
-		fmt.Println("Error inserting seed document:", err)
+		zap.L().Info("Error inserting seed document:" + err.Error())
 		return err
 	}
 	return nil
@@ -47,7 +46,7 @@ func (r *SeedRepository) IsExisting(name string) (bool, error) {
 		if err == mongo.ErrNoDocuments {
 			return false, nil
 		}
-		fmt.Println("Error finding seed document:", err)
+		zap.L().Info("Error finding seed document:" + err.Error())
 		return false, err
 	}
 	return true, nil
@@ -62,6 +61,6 @@ func (r *SeedRepository) createIndexes() {
 
 	_, err := r.collection.Indexes().CreateOne(context.TODO(), indexModel)
 	if err != nil {
-		log.Fatal(err)
+		zap.L().Error(err.Error())
 	}
 }

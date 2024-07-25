@@ -2,11 +2,10 @@ package realmrepository
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
 	"wowcollector.io/entities/documents"
 )
 
@@ -28,7 +27,7 @@ func Init(database *mongo.Database) {
 func (r *RealmRepository) GetRealms() ([]*documents.RealmDocument, error) {
 	result, err := r.collection.Find(context.TODO(), bson.D{})
 	if err != nil {
-		fmt.Println("Error fetching realms", err)
+		zap.L().Info("Error fetching realms" + err.Error())
 		return nil, err
 	}
 	defer result.Close(context.TODO())
@@ -37,12 +36,12 @@ func (r *RealmRepository) GetRealms() ([]*documents.RealmDocument, error) {
 		var realm *documents.RealmDocument
 		err := result.Decode(&realm)
 		if err != nil {
-			fmt.Println("Error decoding realm", err)
+			zap.L().Info("Error decoding realm" + err.Error())
 		}
 		realms = append(realms, realm)
 	}
 	if err := result.Err(); err != nil {
-		fmt.Println("Error fetching realms", err)
+		zap.L().Info("Error fetching realms" + err.Error())
 	}
 	return realms, nil
 }
@@ -50,7 +49,7 @@ func (r *RealmRepository) GetRealms() ([]*documents.RealmDocument, error) {
 func (r *RealmRepository) CreateRealm(document *documents.RealmDocument) error {
 	_, err := r.collection.InsertOne(context.TODO(), document)
 	if err != nil {
-		fmt.Println("Error inserting realm document:", err)
+		zap.L().Info("Error inserting realm document:" + err.Error())
 		return err
 	}
 	return nil
@@ -63,7 +62,7 @@ func (r *RealmRepository) UpdateRealm(document *documents.RealmDocument) error {
 		{"$set", document},
 	})
 	if err != nil {
-		fmt.Println("Error updating realm document:", err)
+		zap.L().Info("Error updating realm document:" + err.Error())
 		return err
 	}
 	return nil
@@ -79,6 +78,6 @@ func (r *RealmRepository) createIndexes() {
 
 	_, err := r.collection.Indexes().CreateOne(context.TODO(), indexModel)
 	if err != nil {
-		log.Fatal(err)
+		zap.L().Error(err.Error())
 	}
 }

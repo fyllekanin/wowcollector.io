@@ -6,9 +6,11 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/httplog/v2"
+	"go.uber.org/zap"
 	blizzarddata "wowcollector.io/common/data/blizzard-data"
+	errorcodes "wowcollector.io/common/error-codes"
 	"wowcollector.io/entities/response"
+	errorresponse "wowcollector.io/entities/response/error"
 	mountviewrepository "wowcollector.io/repository/repositories/mount-view-repository"
 	"wowcollector.io/routes/v1/rest-character/aggregator"
 	battlenethttp "wowcollector.io/services/http/battle-net-http"
@@ -29,18 +31,20 @@ func GetRoutes(r chi.Router) {
 // @param realm path string true "Realm"
 // @param character path string true "Character"
 // @success 200 {object} response.CharacterProfileResponse
+// @failure 400 {object} errorresponse.ErrorResponse
+// @failure 404 {object} errorresponse.ErrorResponse
 // @router /api/v1/character/{region}/{realm}/{character} [get]
 func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
-	oplog := httplog.LogEntry(r.Context())
 	region := chi.URLParam(r, "region")
 	realm := chi.URLParam(r, "realm")
 	character := chi.URLParam(r, "character")
-	oplog.Info(fmt.Sprintf("Fetching character %s in region %s on realm %s", character, region, realm))
+	zap.L().Info(fmt.Sprintf("Fetching character profile for %s on realm %s in region %s", character, realm, region))
 
 	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
 	if item == nil {
-		oplog.Error("Error fetching character")
-		http.Error(w, "Character not found", 404)
+		zap.L().Error("Could not find the character at blizzard")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, fmt.Sprintf("Character %s on realm %s in region %s not found", character, realm, region)))
 		return
 	}
 
@@ -51,13 +55,15 @@ func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
 		Faction: item.GetFaction(),
 	})
 	if err != nil {
-		oplog.Error("Error stringify response", err)
-		http.Error(w, err.Error(), 500)
+		zap.L().Error("Could not stringify response body")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.INTERNAL_ERROR, "Invalid JSON body"))
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
+	zap.L().Info("Responded with character profile")
 }
 
 // @summary Fetch character mount collection
@@ -68,30 +74,34 @@ func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
 // @param realm path string true "Realm"
 // @param character path string true "Character"
 // @success 200 {object} []response.MountCollectionCategory
+// @failure 400 {object} errorresponse.ErrorResponse
+// @failure 404 {object} errorresponse.ErrorResponse
 // @router /api/v1/character/{region}/{realm}/{character}/mounts [get]
 func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
-	oplog := httplog.LogEntry(r.Context())
 	region := chi.URLParam(r, "region")
 	realm := chi.URLParam(r, "realm")
 	character := chi.URLParam(r, "character")
-	oplog.Info(fmt.Sprintf("Fetching character %s in region %s on realm %s", character, region, realm))
+	zap.L().Info(fmt.Sprintf("Fetching mount collection for %s on realm %s in region %s", character, realm, region))
 
 	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
 	if item == nil {
-		oplog.Error("Error fetching character")
-		http.Error(w, "Character not found", 404)
+		zap.L().Error("Error finding character")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, fmt.Sprintf("Character %s on realm %s in region %s not found", character, realm, region)))
 		return
 	}
 	collection := battlenethttp.GetInstance().GetCharacterMountCollection(blizzarddata.FromString(region), realm, character)
 	if collection == nil {
-		oplog.Error("Error fetching character mount collection")
-		http.Error(w, "Character mount collection not found", 400)
+		zap.L().Error("Error getting characters mount collection")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, "Character mount collection not found for character"))
 		return
 	}
 	view, _ := mountviewrepository.GetRepository().GetDefaultMountView()
 	if view == nil {
-		oplog.Error("Error fetching mount view")
-		http.Error(w, "Mount view not found", 400)
+		zap.L().Error("Error finding default mount view")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_DEFAULT_MOUNT_VIEW, "No default mount view available"))
 		return
 	}
 	// Call aggregator
@@ -101,11 +111,13 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 		*view,
 	))
 	if err != nil {
-		oplog.Error("Error stringify response", err)
-		http.Error(w, err.Error(), 500)
+		zap.L().Error("Error stringifying response body")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.INTERNAL_ERROR, "Invalid JSON body"))
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
+	zap.L().Info("Responded with mount collection")
 }

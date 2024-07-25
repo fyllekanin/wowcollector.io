@@ -3,7 +3,6 @@ package wowheadhttp
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"regexp"
@@ -11,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"go.uber.org/zap"
 	entities "wowcollector.io/entities"
 )
 
@@ -43,7 +43,7 @@ func (s *WowHeadHttpService) GetMountIcon(id int) *entities.WowHeadTooltip {
 
 	response, err := client.Get("https://www.wowhead.com/mount/" + strconv.Itoa(id))
 	if err != nil {
-		fmt.Println("Error get request:", err)
+		zap.L().Info("Error get request:" + err.Error())
 		return nil
 	}
 	defer response.Body.Close()
@@ -62,14 +62,14 @@ func (s *WowHeadHttpService) GetMountIcon(id int) *entities.WowHeadTooltip {
 func (s *WowHeadHttpService) GetWowHeadTooltip(tooltipType string, id string) *entities.WowHeadTooltip {
 	response, err := s.doRequest("https://nether.wowhead.com/tooltip/"+tooltipType+"/"+id+"?dataEnv=1&locale=0", true)
 	if err != nil {
-		fmt.Println("Error getting wowhead tooltip:", err)
+		zap.L().Info("Error getting wowhead tooltip:" + err.Error())
 		return nil
 	}
 
 	var result entities.WowHeadTooltip
 	err = json.Unmarshal(response, &result)
 	if err != nil {
-		fmt.Println("Error decoding wowhead tooltip:", err)
+		zap.L().Info("Error decoding wowhead tooltip:" + err.Error())
 		return nil
 	}
 	return &result
@@ -78,19 +78,19 @@ func (s *WowHeadHttpService) GetWowHeadTooltip(tooltipType string, id string) *e
 func (s *WowHeadHttpService) doRequest(url string, retry bool) ([]byte, error) {
 	response, err := http.Get(url)
 	if err != nil {
-		fmt.Println("Error get request:", err)
+		zap.L().Info("Error get request:" + err.Error())
 		return nil, errors.New("failed creating request")
 	}
 	defer response.Body.Close()
 
 	if response.StatusCode == 429 && retry {
-		fmt.Println("Error rate limit hit, sleep for 1 second and try again")
+		zap.L().Info("Error rate limit hit, sleep for 1 second and try again")
 		time.Sleep(1 * time.Second)
 		return s.doRequest(url, true)
 	}
 	bodyBytes, err := io.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println("Error reading bytes:", err)
+		zap.L().Info("Error reading bytes:" + err.Error())
 		return nil, nil
 	}
 	return bodyBytes, nil

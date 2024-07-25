@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/zap"
 	blizzarddata "wowcollector.io/common/data/blizzard-data"
 	battlenetEntities "wowcollector.io/entities"
 	"wowcollector.io/entities/documents"
@@ -16,18 +17,18 @@ import (
 )
 
 func ScanMounts(region blizzarddata.BattleNetRegion) {
-	fmt.Printf("Starting scan of mounts for region %s\n", region)
+	zap.L().Info(fmt.Sprintf("Starting scan of mounts for region %s\n", region))
 	repository := mountrepository.GetRepository()
 
 	existingMounts, err := repository.GetMounts()
 	if err != nil {
-		fmt.Println("Error fetching existing mounts:", err)
+		zap.L().Error("Error fetching existing mounts:" + err.Error())
 		return
 	}
 
 	battleNetMountsIndex := battlenethttp.GetInstance().GetMountsIndex(region)
 	if battleNetMountsIndex == nil {
-		fmt.Println("Error fetching mounts index from battle.net")
+		zap.L().Error("Error fetching mounts index from battle.net")
 		return
 	}
 
@@ -41,13 +42,13 @@ func ScanMounts(region blizzarddata.BattleNetRegion) {
 	}
 
 	wg.Wait()
-	fmt.Printf("Finished scan of mounts for region %s\n", region)
+	zap.L().Info(fmt.Sprintf("Finished scan of mounts for region %s\n", region))
 }
 
 func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts []*documents.MountDocument, repository mountrepository.MountRepository) {
 	battleNetMount := battlenethttp.GetInstance().GetMount(region, mountId)
 	if battleNetMount == nil {
-		fmt.Printf("Error fetching mount with id %d\n", mountId)
+		zap.L().Info(fmt.Sprintf("Error fetching mount with id %d\n", mountId))
 		return
 	}
 	existingMount := getExistingMount(existingMounts, *battleNetMount)
@@ -66,7 +67,7 @@ func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts [
 			IsUnobtainable:  battleNetMount.ShouldExcludeIfUncollected,
 			Icon:            tooltip.Icon,
 		})
-		fmt.Printf("Added new mount with id %d\n", mountId)
+		zap.L().Info(fmt.Sprintf("Added new mount with id %d\n", mountId))
 	} else {
 		newMount := &documents.MountDocument{
 			ObjectID:        existingMount.ObjectID,
@@ -82,7 +83,7 @@ func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts [
 
 		if !newMount.IsEqual(existingMount) {
 			repository.UpdateMount(newMount)
-			fmt.Printf("Updated mount with id %d\n", newMount.Id)
+			zap.L().Info(fmt.Sprintf("Updated mount with id %d\n", newMount.Id))
 		}
 	}
 }

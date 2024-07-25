@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/zap"
 	blizzarddata "wowcollector.io/common/data/blizzard-data"
 	battlenetEntities "wowcollector.io/entities"
 	"wowcollector.io/entities/documents"
@@ -12,18 +13,18 @@ import (
 )
 
 func ScanRealms(region blizzarddata.BattleNetRegion) {
-	fmt.Printf("Starting scan of realms for region %s\n", region)
+	zap.L().Info(fmt.Sprintf("Starting scan of realms for region %s", region))
 	repository := realmrepository.GetRepository()
 
 	existingRealms, err := repository.GetRealms()
 	if err != nil {
-		fmt.Println("Error fetching existing realms", err)
+		zap.L().Error("Error fetching existing realms:" + err.Error())
 		return
 	}
 
 	battleNetRealms := battlenethttp.GetInstance().GetRealms(region)
 	if battleNetRealms == nil {
-		fmt.Println("Error fetching realms from battle.net")
+		zap.L().Error("Error fetching realms from battle.net")
 		return
 	}
 
@@ -37,7 +38,7 @@ func ScanRealms(region blizzarddata.BattleNetRegion) {
 				Slug:     realm.Slug,
 				Region:   region,
 			})
-			fmt.Printf("Added new realm with id %d, slug %s for region %s\n", realm.Id, realm.Slug, region)
+			zap.L().Info(fmt.Sprintf("Added new realm with id %d, slug %s for region %s", realm.Id, realm.Slug, region))
 		} else {
 			newRealm := &documents.RealmDocument{
 				ObjectID: existingRealm.ObjectID,
@@ -49,12 +50,12 @@ func ScanRealms(region blizzarddata.BattleNetRegion) {
 
 			if !newRealm.IsEqual(existingRealm) {
 				repository.UpdateRealm(newRealm)
-				fmt.Printf("Updated realm with id %d, slug %s for region %s\n", realm.Id, realm.Slug, region)
+				zap.L().Info(fmt.Sprintf("Updated realm with id %d, slug %s for region %s", realm.Id, realm.Slug, region))
 			}
 		}
 	}
 
-	fmt.Printf("Finished scan of realms for region %s\n", region)
+	zap.L().Info(fmt.Sprintf("Finished scan of realms for region %s", region))
 }
 
 func getExistingRealm(realms []*documents.RealmDocument, realm battlenetEntities.BattleNetRealm, region blizzarddata.BattleNetRegion) *documents.RealmDocument {
