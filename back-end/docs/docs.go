@@ -36,6 +36,18 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/response.RegionRealmResponse"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -78,6 +90,18 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.CharacterProfileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
                         }
                     }
                 }
@@ -122,7 +146,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/response.MountCollectionCategory"
+                                "$ref": "#/definitions/response.MountCollectionCategorySwagger"
                             }
                         }
                     },
@@ -159,12 +183,14 @@ const docTemplate = `{
             "enum": [
                 "CHARACTER_NOT_FOUND",
                 "LOADING_BATTLE_NET_DATA",
-                "INTERNAL_ERROR"
+                "INTERNAL_ERROR",
+                "NO_DEFAULT_MOUNT_VIEW"
             ],
             "x-enum-varnames": [
                 "CHARACTER_NOT_FOUND",
                 "LOADING_BATTLE_NET_DATA",
-                "INTERNAL_ERROR"
+                "INTERNAL_ERROR",
+                "NO_DEFAULT_MOUNT_VIEW"
             ]
         },
         "errorresponse.ErrorResponse": {
@@ -195,13 +221,13 @@ const docTemplate = `{
                 }
             }
         },
-        "response.MountCollectionCategory": {
+        "response.MountCollectionCategorySwagger": {
             "type": "object",
             "properties": {
                 "categories": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/response.MountCollectionCategory"
+                        "type": "object"
                     }
                 },
                 "mounts": {

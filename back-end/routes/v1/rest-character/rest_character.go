@@ -73,7 +73,7 @@ func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
 // @param region path string true "Region"
 // @param realm path string true "Realm"
 // @param character path string true "Character"
-// @success 200 {object} []response.MountCollectionCategory
+// @success 200 {object} []response.MountCollectionCategorySwagger
 // @failure 400 {object} errorresponse.ErrorResponse
 // @failure 404 {object} errorresponse.ErrorResponse
 // @router /api/v1/character/{region}/{realm}/{character}/mounts [get]

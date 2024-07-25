@@ -12,11 +12,13 @@ definitions:
     - CHARACTER_NOT_FOUND
     - LOADING_BATTLE_NET_DATA
     - INTERNAL_ERROR
+    - NO_DEFAULT_MOUNT_VIEW
     type: string
     x-enum-varnames:
     - CHARACTER_NOT_FOUND
     - LOADING_BATTLE_NET_DATA
     - INTERNAL_ERROR
+    - NO_DEFAULT_MOUNT_VIEW
   errorresponse.ErrorResponse:
     properties:
       code:
@@ -35,11 +37,11 @@ definitions:
       realm:
         type: string
     type: object
-  response.MountCollectionCategory:
+  response.MountCollectionCategorySwagger:
     properties:
       categories:
         items:
-          $ref: '#/definitions/response.MountCollectionCategory'
+          type: object
         type: array
       mounts:
         items:
@@ -113,6 +115,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.RegionRealmResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
       summary: Fetch all realms ang regions
       tags:
       - BattleNet
@@ -142,6 +152,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.CharacterProfileResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
       summary: Fetch character profile
       tags:
       - Character
@@ -171,7 +189,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/response.MountCollectionCategory'
+              $ref: '#/definitions/response.MountCollectionCategorySwagger'
             type: array
         "400":
           description: Bad Request
