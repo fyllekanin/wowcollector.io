@@ -4,7 +4,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type MountDocument struct {
 	ObjectID        primitive.ObjectID `bson:"_id" json:"_id"`
-	Id              int                `bson:"id json:"id"`
+	Id              int                `bson:"id" json:"id"`
 	Name            string             `bson:"name" json:"name"`
 	Description     string             `bson:"description" json:"description"`
 	Source          string             `bson:"source" json:"source"`
