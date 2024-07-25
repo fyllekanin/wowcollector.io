@@ -163,18 +163,15 @@ func resolveToken() *BattleNetToken {
 	data := url.Values{}
 	data.Set("grant_type", "client_credentials")
 
-	// Create the request
 	req, err := http.NewRequest("POST", "https://oauth.battle.net/token", bytes.NewBufferString(data.Encode()))
 	if err != nil {
 		zap.L().Info("Error creating access token request:" + err.Error())
 		return nil
 	}
 
-	// Set headers
 	req.Header.Set("Authorization", getBasicAuthenticationHeader(os.Getenv("BATTLE_NET_CLIENT_ID"), os.Getenv("BATTLE_NET_CLIENT_SECRET")))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	// Send the request
 	client := &http.Client{}
 	response, err := client.Do(req)
 	if err != nil {
@@ -183,16 +180,11 @@ func resolveToken() *BattleNetToken {
 	}
 	defer response.Body.Close()
 
-	// Check the response status
 	if response.StatusCode != http.StatusOK {
 		zap.L().Info(fmt.Sprintf("Request failed with status code: %d", response.StatusCode))
-		// Print the response body for debugging
-		bodyBytes, _ := io.ReadAll(response.Body)
-		zap.L().Info("Response body:" + string(bodyBytes))
 		return nil
 	}
 
-	// Read and decode the response body
 	var tokenResponse BattleNetToken
 	decoder := json.NewDecoder(response.Body)
 	err = decoder.Decode(&tokenResponse)
