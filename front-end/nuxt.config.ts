@@ -14,7 +14,12 @@ export default defineNuxtConfig({
   srcDir: 'src',
   serverDir: 'server',
   extends: ['@nuxt/ui-pro'],
-  modules: ['@nuxt/ui', '@nuxt/content'],
+  modules: [
+    '@nuxt/ui',
+    '@nuxt/content',
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
+  ],
   components: [
     {
       path: '~/components',

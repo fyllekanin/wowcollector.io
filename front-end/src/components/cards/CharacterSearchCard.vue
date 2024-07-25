@@ -16,13 +16,21 @@ useSeoMeta({
   description: page.value.description,
 });
 
-function onSuccess() {
-  console.log('Success');
-}
+defineEmits(['success']);
+
+const { isMobile } = useScreenSize();
 </script>
 
 <template>
   <UContainer class="w-full flex items-center justify-center">
-    <CharacterSearchCard @success="onSuccess" />
+    <UCard
+      class="w-96"
+      :ui="{
+        ring: isMobile ? '' : 'ring-1 ring-gray-200 dark:ring-gray-800',
+        shadow: isMobile ? 'shadow-none' : 'shadow',
+      }"
+    >
+      <CharacterSearchForm @success="() => $emit('success')" />
+    </UCard>
   </UContainer>
 </template>

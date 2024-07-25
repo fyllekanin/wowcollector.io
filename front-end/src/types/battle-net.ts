@@ -1,15 +1,15 @@
 interface Realm {
-  Name: string;
-  Region: string;
-  Slug: string;
+  name: string;
+  region: string;
+  slug: string;
 }
 
 interface Region {
-  Name: string;
-  Value: string;
+  name: string;
+  value: string;
 }
 
 export interface RealmsRegions {
-  Realms: Realm[];
-  Regions: Region[];
+  realms: Realm[];
+  regions: Region[];
 }

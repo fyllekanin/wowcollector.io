@@ -7,18 +7,22 @@ collections:
     icon: mdi:horse-variant
     class: col-span-6 row-span-2
     to: /collections/mounts
+    color: primary
   - title: Achievements
     description: Track your progress and see what you have left to complete.
     icon: mdi:trophy
     class: col-span-6 row-span-4
     to: /collections/achievements
+    color: yellow
   - title: Pets
     description: Find all the pets you can and have collected in World of Warcraft.
     icon: mdi:paw
     class: col-span-6 row-span-4
     to: /collections/pets
+    color: green
   - title: Toys
     description: Discover all the toys you can and have collected in World of Warcraft.
     icon: game-icons:locked-chest
     class: col-span-6 row-span-2
     to: /collections/toys
+    color: blue
