@@ -67,7 +67,7 @@ func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
 // @param region path string true "Region"
 // @param realm path string true "Realm"
 // @param character path string true "Character"
-// @success 200 {list} response.MountCollectionCategory
+// @success 200 {object} []response.MountCollectionCategory
 // @router /api/v1/character/{region}/{realm}/{character}/mounts [get]
 func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 	oplog := httplog.LogEntry(r.Context())

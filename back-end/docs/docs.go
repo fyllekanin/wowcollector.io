@@ -120,7 +120,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "list"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.MountCollectionCategory"
+                            }
                         }
                     }
                 }
@@ -152,6 +155,52 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "realm": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.MountCollectionCategory": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.MountCollectionCategory"
+                    }
+                },
+                "mounts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.MountCollectionMount"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.MountCollectionMount": {
+            "type": "object",
+            "properties": {
+                "creatureDisplay": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isCollected": {
+                    "type": "boolean"
+                },
+                "name": {
                     "type": "string"
                 }
             }

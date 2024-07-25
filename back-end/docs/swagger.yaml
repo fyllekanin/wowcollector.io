@@ -18,6 +18,36 @@ definitions:
       realm:
         type: string
     type: object
+  response.MountCollectionCategory:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/response.MountCollectionCategory'
+        type: array
+      mounts:
+        items:
+          $ref: '#/definitions/response.MountCollectionMount'
+        type: array
+      name:
+        type: string
+      order:
+        type: integer
+    type: object
+  response.MountCollectionMount:
+    properties:
+      creatureDisplay:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      isCollected:
+        type: boolean
+      name:
+        type: string
+    type: object
   response.RealmResponse:
     properties:
       name:
@@ -123,7 +153,9 @@ paths:
         "200":
           description: OK
           schema:
-            type: list
+            items:
+              $ref: '#/definitions/response.MountCollectionCategory'
+            type: array
       summary: Fetch character mount collection
       tags:
       - Character
