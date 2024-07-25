@@ -2,11 +2,15 @@ package documents
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
+type MountViewCategoryMount struct {
+	Id int `json:"id"`
+}
+
 type MountViewCategory struct {
-	Name       string              `json:"name"`
-	Order      int                 `json:"Order"`
-	Mounts     []int               `json:"mount"`
-	Categories []MountViewCategory `json:"categories"`
+	Name       string                   `json:"name"`
+	Order      int                      `json:"Order"`
+	Mounts     []MountViewCategoryMount `json:"mounts"`
+	Categories []MountViewCategory      `json:"categories"`
 }
 
 type MountViewDocument struct {

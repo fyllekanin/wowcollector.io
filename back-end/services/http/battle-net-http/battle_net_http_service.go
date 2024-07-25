@@ -62,6 +62,22 @@ func (s *BattleNetHttpService) GetCharacter(region blizzarddata.BattleNetRegion,
 	return &result
 }
 
+func (s *BattleNetHttpService) GetCharacterMountCollection(region blizzarddata.BattleNetRegion, realm string, character string) *entities.BattleNetCharacterMountCollection {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/collections/mounts?namespace=profile-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		fmt.Println("Error getting character mount collection:", err)
+		return nil
+	}
+
+	var result entities.BattleNetCharacterMountCollection
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		fmt.Println("Error decoding character mount collection:", err)
+		return nil
+	}
+	return &result
+}
+
 func (s *BattleNetHttpService) GetMountsIndex(region blizzarddata.BattleNetRegion) *entities.BattleNetMountsIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/mount/index?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {

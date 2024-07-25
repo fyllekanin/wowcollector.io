@@ -30,7 +30,7 @@ func main() {
 		})
 	})
 
-	time.AfterFunc(2*time.Hour, func() {
+	time.AfterFunc(2*time.Second, func() {
 		tasks.ScanMounts(blizzarddata.REGION_EU)
 		c.AddFunc("@every 12h", func() {
 			tasks.ScanMounts(blizzarddata.REGION_EU)

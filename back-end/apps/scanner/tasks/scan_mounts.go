@@ -41,7 +41,7 @@ func ScanMounts(region blizzarddata.BattleNetRegion) {
 	}
 
 	wg.Wait()
-	fmt.Printf("Finished scan of realms for region %s\n", region)
+	fmt.Printf("Finished scan of mounts for region %s\n", region)
 }
 
 func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts []*documents.MountDocument, repository mountrepository.MountRepository) {

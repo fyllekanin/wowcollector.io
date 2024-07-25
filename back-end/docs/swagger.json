@@ -75,6 +75,49 @@
                     }
                 }
             }
+        },
+        "/api/v1/character/{region}/{realm}/{character}/mounts": {
+            "get": {
+                "description": "Get mount collection for character",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character"
+                ],
+                "summary": "Fetch character mount collection",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Region",
+                        "name": "region",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Realm",
+                        "name": "realm",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Character",
+                        "name": "character",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "list"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

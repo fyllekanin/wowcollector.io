@@ -29,4 +29,5 @@ func runMigrations() {
 func runSeeds() {
 	seeds.RealmsSeeder()
 	seeds.MountViewsSeeder()
+	seeds.MountsSeeder()
 }

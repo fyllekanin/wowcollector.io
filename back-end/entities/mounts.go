@@ -23,3 +23,16 @@ type BattleNetMount struct {
 	CreatureDisplays           []*BattleNetEntityDisplay `json:"creature_displays"`
 	ShouldExcludeIfUncollected bool                      `json:"should_exclude_if_uncollected"`
 }
+
+type BattleNetCharacterMountDetails struct {
+	Name string `json:"name"`
+	Id   int    `json:"id"`
+}
+
+type BattleNetCharacterMount struct {
+	Mount *BattleNetCharacterMountDetails `json:"mount"`
+}
+
+type BattleNetCharacterMountCollection struct {
+	Mounts []*BattleNetCharacterMount `json:"mounts"`
+}
