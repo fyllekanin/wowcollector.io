@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { object, string, type InferType } from 'yup';
-import type { FormError, FormSubmitEvent } from '#ui/types';
+import type { FormSubmitEvent } from '#ui/types';
 import type { RealmsRegions } from '~/types';
 
 const { data: page } = await useAsyncData('search', () =>
@@ -57,9 +57,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   loading.value = true;
 
   try {
+    const mounts = await $fetch(
+      `/api/character/${state.region}/${state.realm}/${state.name}/mounts`
+    );
+    console.log('mounts', mounts);
+
     emit('success');
   } catch (error) {
     console.error(error);
+    emit('error');
   } finally {
     loading.value = false;
   }

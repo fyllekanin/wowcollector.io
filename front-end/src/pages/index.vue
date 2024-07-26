@@ -44,7 +44,7 @@ function onSearch(to: string) {
       :description="card.description"
       :to="character ? card.to : undefined"
       :color="card.color"
-      @click="character ? undefined : () => onSearch(card.to)"
+      @click="character ? undefined : onSearch(card.to)"
     />
   </ULandingGrid>
 </template>
