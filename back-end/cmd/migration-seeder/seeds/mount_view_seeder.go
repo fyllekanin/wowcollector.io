@@ -18,7 +18,7 @@ func MountViewsSeeder() {
 		zap.L().Info("Mount views seeder already done")
 		return
 	}
-	byteValue, _ := GetBytesFromFile("./resources/mount-views.json")
+	byteValue, _ := GetBytesFromFile("./resources/seeds/mount-views.json")
 
 	var mountViews []documents.MountViewDocument
 	err = json.Unmarshal(byteValue, &mountViews)

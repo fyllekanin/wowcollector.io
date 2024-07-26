@@ -16,7 +16,7 @@ RUN mv app /output/app
 FROM alpine:latest
 
 COPY --from=builder /output/app ./app
-COPY ./resources /resources
+COPY ./resources/seeds /resources/seeds
 
 EXPOSE 8888
 

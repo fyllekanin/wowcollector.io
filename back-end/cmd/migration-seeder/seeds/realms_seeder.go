@@ -17,7 +17,7 @@ func RealmsSeeder() {
 		zap.L().Info("Realms seeder already done")
 		return
 	}
-	byteValue, _ := GetBytesFromFile("./resources/realms.json")
+	byteValue, _ := GetBytesFromFile("./resources/seeds/realms.json")
 
 	var realms []documents.RealmDocument
 	err = json.Unmarshal(byteValue, &realms)
