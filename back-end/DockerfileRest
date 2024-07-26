@@ -6,7 +6,7 @@ COPY . /app
 
 RUN go mod download && go mod verify
 
-RUN go build -v -o app ./apps/web/
+RUN go build -v -o app ./cmd/web/
 
 RUN mkdir /output
 RUN mv app /output/app

@@ -7,7 +7,7 @@ COPY . .
 
 RUN go mod download && go mod verify
 
-RUN go build -v -o app ./apps/scanner/
+RUN go build -v -o app ./apcmdps/scanner/
 
 RUN mkdir /output
 RUN mv app /output/app

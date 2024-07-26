@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "apps/scanner/main.go"
+            "program": "cmd/scanner/main.go"
         }
     ]
 }

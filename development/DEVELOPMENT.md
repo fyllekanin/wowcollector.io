@@ -25,7 +25,7 @@ The express UI will be accesible at **http://localhost:8081** with credentails a
 ```
 #### Build the server
 ```
-$(cd back-end && go build -v -o web-app ./apps/web/)
+$(cd back-end && go build -v -o web-app ./cmd/web/)
 ```
 
 #### Start the server
@@ -62,7 +62,7 @@ As the scanner is configured to not run everything all the time there is timeout
 before certain scans started.
 
 #### Edit a task to run directly
-- go to back-end/apps/scanner/main.go
+- go to back-end/cmd/scanner/main.go
 - Find the task you want to run
 - Edit the time, example below for having realm scanner for EU to run on startup
 
@@ -80,7 +80,7 @@ time.AfterFunc(1*time.Second, ....)
 ---------
 #### Build the scanner (run within the back-end folder)
 ```
-go build -o scanner-app ./apps/scanner/
+go build -o scanner-app ./cmd/scanner/
 ```
 
 #### Start it
@@ -112,7 +112,7 @@ wowcollector.io-scanner
 ---------
 #### Build the scanner (run within the back-end folder)
 ```
-go build -o migration-seeder-app ./apps/migration-seeder/
+go build -o migration-seeder-app ./cmd/migration-seeder/
 ```
 
 #### Start it
