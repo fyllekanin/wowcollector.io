@@ -6,6 +6,8 @@ COPY . /app
 
 RUN go mod download && go mod verify
 
+RUN apk add --no-cache --upgrade bash
+RUN ./generate-swagger.sh
 RUN go build -v -o app ./cmd/web/
 
 RUN mkdir /output
