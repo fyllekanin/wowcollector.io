@@ -46,6 +46,7 @@ func ScanMounts(region blizzarddata.BattleNetRegion) {
 }
 
 func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts []*documents.MountDocument, repository mountrepository.MountRepository) {
+	zap.L().Info(fmt.Sprintf("Scanning mount id %d", mountId))
 	battleNetMount := battlenethttp.GetInstance().GetMount(region, mountId)
 	if battleNetMount == nil {
 		zap.L().Info(fmt.Sprintf("Error fetching mount with id %d\n", mountId))

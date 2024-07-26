@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"time"
 
+	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
 	blizzarddata "wowcollector.io/common/data/blizzard-data"
 	entities "wowcollector.io/entities"
@@ -35,14 +36,17 @@ func (s *BattleNetToken) IsExpired() bool {
 }
 
 type BattleNetHttpService struct {
-	token *BattleNetToken
+	token       *BattleNetToken
+	rateLimiter ratelimit.Limiter
 }
 
 var instance *BattleNetHttpService
 
 func GetInstance() *BattleNetHttpService {
 	if instance == nil {
-		instance = &BattleNetHttpService{}
+		instance = &BattleNetHttpService{
+			rateLimiter: ratelimit.New(100),
+		}
 	}
 	return instance
 }
@@ -128,6 +132,7 @@ func (s *BattleNetHttpService) GetRealms(region blizzarddata.BattleNetRegion) *e
 }
 
 func (s *BattleNetHttpService) doRequest(url string, retry bool) ([]byte, error) {
+	s.rateLimiter.Take()
 	response, err := http.Get(url + "&access_token=" + s.getAccessToken())
 	if err != nil {
 		zap.L().Info("Error get request:" + err.Error())
