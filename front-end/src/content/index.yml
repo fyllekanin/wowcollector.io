@@ -7,7 +7,7 @@ collections:
     icon: mdi:horse-variant
     class: col-span-6 row-span-2
     to: /collections/mounts
-    color: primary
+    color: purple
   - title: Achievements
     description: Track your progress and see what you have left to complete.
     icon: mdi:trophy

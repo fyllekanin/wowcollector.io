@@ -1,3 +1,11 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const slideoverOpen = ref<boolean>(false);
 
-<template></template>
+const mountsStore = useMountsStore();
+</script>
+
+<template>
+  <UContainer>
+    <MountFilter v-model="slideoverOpen" />
+  </UContainer>
+</template>

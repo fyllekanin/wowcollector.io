@@ -1,7 +1,12 @@
 <script lang="ts" setup>
 import { object, string, type InferType } from 'yup';
 import type { FormSubmitEvent } from '#ui/types';
-import type { RealmsRegions } from '~/types';
+
+import type {
+  RealmsRegions,
+  CollectionInformationResponse,
+  MountCategory,
+} from '~/types';
 
 const { data: page } = await useAsyncData('search', () =>
   queryContent('/search').findOne()
@@ -24,6 +29,8 @@ useSeoMeta({
   title: page.value.title,
   description: page.value.description,
 });
+const characterStore = useCharacterStore();
+const mountsStore = useMountsStore();
 
 const emit = defineEmits(['success', 'error']);
 
@@ -46,6 +53,9 @@ const realms = computed(() =>
     .filter(({ region }) => state.region === region)
     .map(({ name, slug }) => ({ label: name, value: slug }))
 );
+console.log(
+  realmsRegions.value?.realms.filter((realm) => realm.name === 'Draenor')
+);
 const regions = computed(() =>
   realmsRegions.value?.regions.map(({ name, value }) => ({
     label: name,
@@ -56,16 +66,24 @@ const regions = computed(() =>
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   loading.value = true;
 
+  const { data: character } = event;
+
   try {
-    const mounts = await $fetch(
-      `/api/character/${state.region}/${state.realm}/${state.name}/mounts`
+    const mounts = await $fetch<CollectionInformationResponse<MountCategory>>(
+      `/api/character/${character.region}/${character.realm}/${character.name}/mounts`
     );
-    console.log('mounts', mounts);
+
+    if (!mounts) {
+      throw new Error('Character not found');
+    }
+
+    characterStore.setCharacter(character);
+    mountsStore.setMounts(mounts);
 
     emit('success');
   } catch (error) {
     console.error(error);
-    emit('error');
+    emit('error', error);
   } finally {
     loading.value = false;
   }
@@ -83,7 +101,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     </UFormGroup>
 
     <UFormGroup label="Realm" name="realm">
-      <USelectMenu
+      <UInputMenu
         v-model="state.realm"
         searchable
         value-attribute="value"
