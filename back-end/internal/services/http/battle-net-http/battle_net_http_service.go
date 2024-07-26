@@ -67,6 +67,54 @@ func (s *BattleNetHttpService) GetCharacter(region blizzarddata.BattleNetRegion,
 	return &result
 }
 
+func (s *BattleNetHttpService) GetAchievementCategoryIndex(region blizzarddata.BattleNetRegion) *httpresponses.BattleNetAchievementCategoryIndex {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/achievement-category/index?namespace=static-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting achievement category index:" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetAchievementCategoryIndex
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding achievement category index:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
+func (s *BattleNetHttpService) GetAchievementCategory(region blizzarddata.BattleNetRegion, categoryId int) *httpresponses.BattleNetAchievementIndex {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/achievement-category/"+strconv.Itoa(categoryId)+"?namespace=static-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting achievement category:" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetAchievementIndex
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding achievement category:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
+func (s *BattleNetHttpService) GetAchievement(region blizzarddata.BattleNetRegion, id int) *httpresponses.BattleNetAchievement {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/achievement/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting achievement:" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetAchievement
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding achievement:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
 func (s *BattleNetHttpService) GetCharacterMountCollection(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetCharacterMountCollection {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/collections/mounts?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
