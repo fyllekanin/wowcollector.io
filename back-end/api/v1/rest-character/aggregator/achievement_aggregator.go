@@ -18,9 +18,8 @@ func GetAchievementAggregation(character httpresponses.BattleNetCharacter, colle
 	achievementCategories, _ := achievementcategoryrepository.GetRepository().GetAchievementCategories()
 	var items []response.AchievementCollectionCategory
 
-	var mu sync.Mutex
 	var wg sync.WaitGroup
-	ch := make(chan response.AchievementCollectionCategory)
+	ch := make(chan response.AchievementCollectionCategory, len(achievementCategories))
 
 	for _, element := range achievementCategories {
 		if !element.IsRootCategory {
@@ -39,9 +38,7 @@ func GetAchievementAggregation(character httpresponses.BattleNetCharacter, colle
 	}()
 
 	for result := range ch {
-		mu.Lock()
 		items = append(items, result)
-		mu.Unlock()
 	}
 
 	return items
@@ -49,7 +46,6 @@ func GetAchievementAggregation(character httpresponses.BattleNetCharacter, colle
 
 func getCategoryResponse(category *documents.AchievementCategoryDocument, categories []*documents.AchievementCategoryDocument, collectedIds []int) response.AchievementCollectionCategory {
 	var subCategories []response.AchievementCollectionCategory
-	var mu sync.Mutex
 	var wg sync.WaitGroup
 	ch := make(chan response.AchievementCollectionCategory, len(categories))
 
@@ -58,8 +54,7 @@ func getCategoryResponse(category *documents.AchievementCategoryDocument, catego
 			wg.Add(1)
 			go func(element *documents.AchievementCategoryDocument) {
 				defer wg.Done()
-				result := getCategoryResponse(element, categories, collectedIds)
-				ch <- result
+				ch <- getCategoryResponse(element, categories, collectedIds)
 			}(element)
 		}
 	}
@@ -70,9 +65,7 @@ func getCategoryResponse(category *documents.AchievementCategoryDocument, catego
 	}()
 
 	for result := range ch {
-		mu.Lock()
 		subCategories = append(subCategories, result)
-		mu.Unlock()
 	}
 
 	return response.AchievementCollectionCategory{
@@ -91,7 +84,6 @@ func getAchievementsForCategory(category *documents.AchievementCategoryDocument,
 	}
 
 	var items []response.AchievementCollectionAchievement
-	var mu sync.Mutex
 	var wg sync.WaitGroup
 	ch := make(chan response.AchievementCollectionAchievement, len(achievements))
 
@@ -117,9 +109,7 @@ func getAchievementsForCategory(category *documents.AchievementCategoryDocument,
 	}()
 
 	for result := range ch {
-		mu.Lock()
 		items = append(items, result)
-		mu.Unlock()
 	}
 
 	return items
