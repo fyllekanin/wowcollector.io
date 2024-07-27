@@ -24,7 +24,6 @@ const { data: realmsRegions } = await useAsyncData<RealmsRegions>(
   'realms-regions',
   () => $fetch('/api/battle-net/realms-regions')
 );
-
 useSeoMeta({
   title: page.value.title,
   description: page.value.description,
@@ -52,9 +51,6 @@ const realms = computed(() =>
   realmsRegions.value?.realms
     .filter(({ region }) => state.region === region)
     .map(({ name, slug }) => ({ label: name, value: slug }))
-);
-console.log(
-  realmsRegions.value?.realms.filter((realm) => realm.name === 'Draenor')
 );
 const regions = computed(() =>
   realmsRegions.value?.regions.map(({ name, value }) => ({

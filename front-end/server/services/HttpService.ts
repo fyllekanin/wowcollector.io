@@ -19,17 +19,7 @@ export const http = () => {
         return config;
       }
 
-      // const auth = LocalStorageHelper.getItem(LOCAL_STORAGE.AUTH);
-      // if (!auth) {
-      //   return config;
-      // }
-
-      // const { accessToken } = JSON.parse(auth);
-      // if (!accessToken) {
-      //   return config;
-      // }
-
-      // config.headers.Authorization = `Bearer ${accessToken}`;
+      // Token logic here
 
       return config;
     },
