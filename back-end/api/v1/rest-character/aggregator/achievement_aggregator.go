@@ -13,7 +13,7 @@ import (
 	achievementrepository "wowcollector.io/internal/repository/repositories/achievement-repository"
 )
 
-func GetAchievementAggregation(character httpresponses.BattleNetCharacter, collection httpresponses.BattleNetCharacterAchievements) []response.AchievementCollectionCategory {
+func GetAchievementAggregation(character httpresponses.BattleNetCharacter, collection httpresponses.BattleNetCharacterAchievements, rootCategory string) []response.AchievementCollectionCategory {
 	collectedIds := getCollectedAchievementIds(collection)
 	achievementCategories, _ := achievementcategoryrepository.GetRepository().GetAchievementCategories()
 	var items []response.AchievementCollectionCategory
@@ -23,6 +23,9 @@ func GetAchievementAggregation(character httpresponses.BattleNetCharacter, colle
 
 	for _, element := range achievementCategories {
 		if !element.IsRootCategory {
+			continue
+		}
+		if rootCategory != "" && element.Name != rootCategory {
 			continue
 		}
 		wg.Add(1)

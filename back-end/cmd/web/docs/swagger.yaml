@@ -214,6 +214,10 @@ paths:
         name: character
         required: true
         type: string
+      - description: Root category to include
+        in: query
+        name: rootCategory
+        type: string
       produces:
       - application/json
       responses:
