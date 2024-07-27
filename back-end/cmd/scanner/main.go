@@ -39,6 +39,13 @@ func main() {
 		})
 	})
 
+	time.AfterFunc(4*time.Second, func() {
+		tasks.ScanAchievements(blizzarddata.REGION_EU)
+		c.AddFunc("@every 24h", func() {
+			tasks.ScanAchievements(blizzarddata.REGION_EU)
+		})
+	})
+
 	c.Start()
 
 	select {}

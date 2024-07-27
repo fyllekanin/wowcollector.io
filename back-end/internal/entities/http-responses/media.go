@@ -6,6 +6,15 @@ type BattleNetAsset struct {
 }
 
 type BattleNetMedia struct {
-	Assets []BattleNetAsset `json:"assets"`
-	Id     int              `json:"id"`
+	Assets []*BattleNetAsset `json:"assets"`
+	Id     int               `json:"id"`
+}
+
+func (m *BattleNetMedia) GetIconAsset() string {
+	for _, element := range m.Assets {
+		if element.Key == "icon" {
+			return element.Value
+		}
+	}
+	return ""
 }

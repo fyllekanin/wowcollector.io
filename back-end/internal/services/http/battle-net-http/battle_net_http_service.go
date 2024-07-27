@@ -115,6 +115,22 @@ func (s *BattleNetHttpService) GetAchievement(region blizzarddata.BattleNetRegio
 	return &result
 }
 
+func (s *BattleNetHttpService) GetAchievementMedia(region blizzarddata.BattleNetRegion, id int) *httpresponses.BattleNetMedia {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/media/achievement/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting achievement media:" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetMedia
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding achievement media:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
 func (s *BattleNetHttpService) GetCharacterMountCollection(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetCharacterMountCollection {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/collections/mounts?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {

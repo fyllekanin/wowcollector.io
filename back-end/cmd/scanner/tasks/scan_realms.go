@@ -30,26 +30,21 @@ func ScanRealms(region blizzarddata.BattleNetRegion) {
 
 	for _, realm := range battleNetRealms.Realms {
 		existingRealm := getExistingRealm(existingRealms, realm, region)
+		document := &documents.RealmDocument{
+			Id:     realm.Id,
+			Name:   realm.Name,
+			Slug:   realm.Slug,
+			Region: region,
+		}
+
 		if existingRealm == nil {
-			repository.CreateRealm(&documents.RealmDocument{
-				ObjectID: primitive.NewObjectID(),
-				Id:       realm.Id,
-				Name:     realm.Name,
-				Slug:     realm.Slug,
-				Region:   region,
-			})
+			document.ObjectID = primitive.NewObjectID()
+			repository.CreateRealm(document)
 			zap.L().Info(fmt.Sprintf("Added new realm with id %d, slug %s for region %s", realm.Id, realm.Slug, region))
 		} else {
-			newRealm := &documents.RealmDocument{
-				ObjectID: existingRealm.ObjectID,
-				Id:       realm.Id,
-				Name:     realm.Name,
-				Slug:     realm.Slug,
-				Region:   region,
-			}
-
-			if !newRealm.IsEqual(existingRealm) {
-				repository.UpdateRealm(newRealm)
+			document.ObjectID = existingRealm.ObjectID
+			if !document.IsEqual(existingRealm) {
+				repository.UpdateRealm(document)
 				zap.L().Info(fmt.Sprintf("Updated realm with id %d, slug %s for region %s", realm.Id, realm.Slug, region))
 			}
 		}

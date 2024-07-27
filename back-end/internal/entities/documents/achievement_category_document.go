@@ -16,6 +16,5 @@ func (r *AchievementCategoryDocument) IsEqual(other *AchievementCategoryDocument
 		r.Name == other.Name &&
 		r.IsRootCategory == other.IsRootCategory &&
 		r.RootCategoryId == other.RootCategoryId &&
-		r.RootCategoryId == other.RootCategoryId &&
 		r.DisplayOrder == other.DisplayOrder
 }

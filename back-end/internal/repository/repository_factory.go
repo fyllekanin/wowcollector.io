@@ -8,6 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
+	achievementcategoryrepository "wowcollector.io/internal/repository/repositories/achievement-category-repository"
+	achievementrepository "wowcollector.io/internal/repository/repositories/achievement-repository"
 	mountrepository "wowcollector.io/internal/repository/repositories/mount-repository"
 	mountviewrepository "wowcollector.io/internal/repository/repositories/mount-view-repository"
 	realmrepository "wowcollector.io/internal/repository/repositories/realm-repository"
@@ -23,6 +25,8 @@ func (r *RepositoryFactory) init() {
 	mountrepository.Init(r.database)
 	seedrepository.Init(r.database)
 	mountviewrepository.Init(r.database)
+	achievementrepository.Init(r.database)
+	achievementcategoryrepository.Init(r.database)
 }
 
 var instance *RepositoryFactory

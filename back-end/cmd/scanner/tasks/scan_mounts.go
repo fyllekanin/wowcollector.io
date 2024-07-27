@@ -55,36 +55,26 @@ func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts [
 	existingMount := getExistingMount(existingMounts, *battleNetMount)
 	asset := getCreatureDisplay(battleNetMount)
 	tooltip := wowheadhttp.GetInstance().GetMountIcon(mountId)
+	document := &documents.MountDocument{
+		Id:              battleNetMount.Id,
+		Name:            battleNetMount.Name,
+		Description:     battleNetMount.Description,
+		Source:          getSourceType(battleNetMount.Source),
+		Faction:         getFactionType(battleNetMount.Faction),
+		CreatureDisplay: asset,
+		IsUnobtainable:  battleNetMount.ShouldExcludeIfUncollected,
+		Icon:            tooltip.Icon,
+	}
 
 	if existingMount == nil {
-		repository.CreateMount(&documents.MountDocument{
-			ObjectID:        primitive.NewObjectID(),
-			Id:              battleNetMount.Id,
-			Name:            battleNetMount.Name,
-			Description:     battleNetMount.Description,
-			Source:          getSourceType(battleNetMount.Source),
-			Faction:         getFactionType(battleNetMount.Faction),
-			CreatureDisplay: asset,
-			IsUnobtainable:  battleNetMount.ShouldExcludeIfUncollected,
-			Icon:            tooltip.Icon,
-		})
+		document.ObjectID = primitive.NewObjectID()
+		repository.CreateMount(document)
 		zap.L().Info(fmt.Sprintf("Added new mount with id %d\n", mountId))
 	} else {
-		newMount := &documents.MountDocument{
-			ObjectID:        existingMount.ObjectID,
-			Id:              battleNetMount.Id,
-			Name:            battleNetMount.Name,
-			Description:     battleNetMount.Description,
-			Source:          getSourceType(battleNetMount.Source),
-			Faction:         getFactionType(battleNetMount.Faction),
-			CreatureDisplay: asset,
-			IsUnobtainable:  battleNetMount.ShouldExcludeIfUncollected,
-			Icon:            tooltip.Icon,
-		}
-
-		if !newMount.IsEqual(existingMount) {
-			repository.UpdateMount(newMount)
-			zap.L().Info(fmt.Sprintf("Updated mount with id %d\n", newMount.Id))
+		document.ObjectID = existingMount.ObjectID
+		if !document.IsEqual(existingMount) {
+			repository.UpdateMount(document)
+			zap.L().Info(fmt.Sprintf("Updated mount with id %d\n", document.Id))
 		}
 	}
 }
