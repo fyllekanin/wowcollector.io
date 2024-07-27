@@ -51,6 +51,13 @@ func GetInstance() *BattleNetHttpService {
 	return instance
 }
 
+func (s *BattleNetHttpService) Ping() {
+	_, err := s.doRequest("https://eu.api.blizzard.com/data/wow/region/index?namespace=static-eu&locale=en_US", true)
+	if err != nil {
+		zap.L().Fatal("Failed ping (region index):" + err.Error())
+	}
+}
+
 func (s *BattleNetHttpService) GetCharacter(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetCharacter {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
@@ -126,6 +133,22 @@ func (s *BattleNetHttpService) GetAchievementMedia(region blizzarddata.BattleNet
 	err = json.Unmarshal(response, &result)
 	if err != nil {
 		zap.L().Info("Error decoding achievement media:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
+func (s *BattleNetHttpService) GetCharacterAchievementCollection(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetCharacterAchievements {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/achievements?namespace=profile-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting character achievement collection:" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetCharacterAchievements
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding character achievement collection:" + err.Error())
 		return nil
 	}
 	return &result

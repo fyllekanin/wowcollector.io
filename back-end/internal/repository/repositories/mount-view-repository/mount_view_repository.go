@@ -58,9 +58,9 @@ func (r *MountViewRepository) CreateMountView(document *documents.MountViewDocum
 
 func (r *MountViewRepository) GetDefaultMountView() (*documents.MountViewDocument, error) {
 	filter := bson.D{{"isDefault", true}}
-	var mount *documents.MountViewDocument
+	var mountView *documents.MountViewDocument
 
-	err := r.collection.FindOne(context.TODO(), filter).Decode(&mount)
+	err := r.collection.FindOne(context.TODO(), filter).Decode(&mountView)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			zap.L().Info("No default mount view found")
@@ -70,7 +70,7 @@ func (r *MountViewRepository) GetDefaultMountView() (*documents.MountViewDocumen
 		return nil, err
 	}
 
-	return mount, nil
+	return mountView, nil
 }
 
 func (r *MountViewRepository) UpdateMountView(document *documents.MountViewDocument) error {

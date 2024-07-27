@@ -10,7 +10,7 @@ import (
 )
 
 func GetMountsAggregation(character httpresponses.BattleNetCharacter, collection httpresponses.BattleNetCharacterMountCollection, view documents.MountViewDocument) []response.MountCollectionCategory {
-	collectedIds := getCollectedIds(collection)
+	collectedIds := getCollectedMountIds(collection)
 	mounts, _ := mountrepository.GetRepository().GetMounts()
 	filteredMounts := getFilteredMounts(character, mounts, collectedIds)
 
@@ -81,7 +81,7 @@ func getMountCategory(category documents.MountViewCategory, mounts map[int]*docu
 	}
 }
 
-func getCollectedIds(collection httpresponses.BattleNetCharacterMountCollection) []int {
+func getCollectedMountIds(collection httpresponses.BattleNetCharacterMountCollection) []int {
 	var result []int
 	for _, element := range collection.Mounts {
 		result = append(result, element.Mount.Id)

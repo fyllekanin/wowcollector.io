@@ -34,3 +34,12 @@ type BattleNetAchievement struct {
 	Media         BattleNetAchievementMedia `json:"media"`
 	DisplayOrder  int                       `json:"display_order"`
 }
+
+type BattleNetCharacterAchievement struct {
+	Id                 int   `json:"id"`
+	CompletedTimestamp int64 `json:"completed_timestamp"`
+}
+
+type BattleNetCharacterAchievements struct {
+	Achievements []*BattleNetCharacterAchievement `json:"achievements"`
+}

@@ -107,6 +107,64 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/character/{region}/{realm}/{character}/achievements": {
+            "get": {
+                "description": "Get achievement collection for character",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character"
+                ],
+                "summary": "Fetch character achievement collection",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Region",
+                        "name": "region",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Realm",
+                        "name": "realm",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Character",
+                        "name": "character",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.AchievementCollectionCategorySwagger"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/character/{region}/{realm}/{character}/mounts": {
             "get": {
                 "description": "Get mount collection for character",
@@ -200,6 +258,55 @@ const docTemplate = `{
                     "$ref": "#/definitions/errorcodes.ErrorCode"
                 },
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.AchievementCollectionAchievement": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "displayOrder": {
+                    "type": "integer"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isCompleted": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "points": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.AchievementCollectionCategorySwagger": {
+            "type": "object",
+            "properties": {
+                "achievements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.AchievementCollectionAchievement"
+                    }
+                },
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "displayOrder": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }
