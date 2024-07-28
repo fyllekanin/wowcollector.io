@@ -16,6 +16,7 @@ export interface MountFilters {
 export type ViewStyle = 'grid' | 'list' | 'grid-compact';
 
 export type Sort =
+  | 'Default'
   | 'Not Collected'
   | 'Collected'
   | 'Name Ascending'

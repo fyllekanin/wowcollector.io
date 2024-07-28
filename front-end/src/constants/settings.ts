@@ -19,6 +19,7 @@ export const RENDER_TYPES = {
 };
 
 export const SORT_TYPES: Sort[] = [
+  'Default',
   'Collected',
   'Not Collected',
   'Name Ascending',
