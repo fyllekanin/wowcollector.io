@@ -20,9 +20,7 @@ func GetMountsAggregation(character httpresponses.BattleNetCharacter, collection
 func getMountCategories(view documents.MountViewDocument, mounts map[int]*documents.MountDocument, collectedIds []int) []response.MountCollectionCategory {
 	var result []response.MountCollectionCategory
 	for _, element := range view.Categories {
-		func() {
-			result = append(result, getMountCategory(element, mounts, collectedIds))
-		}()
+		result = append(result, getMountCategory(element, mounts, collectedIds))
 	}
 	if view.IsUnknownIncluded {
 		result = append(result, getUnknownCategory(mounts, collectedIds))
@@ -93,7 +91,7 @@ func getFilteredMounts(character httpresponses.BattleNetCharacter, mounts []*doc
 	var result = make(map[int]*documents.MountDocument)
 
 	for _, element := range mounts {
-		if element.Faction != character.GetFaction() {
+		if element.Faction != "" && element.Faction != character.GetFaction() {
 			continue
 		}
 

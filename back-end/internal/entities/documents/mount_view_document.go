@@ -3,14 +3,14 @@ package documents
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type MountViewCategoryMount struct {
-	Id int `json:"id"`
+	Id int `bson:"id" json:"id"`
 }
 
 type MountViewCategory struct {
-	Name       string                   `json:"name"`
-	Order      int                      `json:"Order"`
-	Mounts     []MountViewCategoryMount `json:"mounts"`
-	Categories []MountViewCategory      `json:"categories"`
+	Name       string                   `bson:"name" json:"name"`
+	Order      int                      `bson:"order" json:"order"`
+	Mounts     []MountViewCategoryMount `bson:"mounts" json:"mounts"`
+	Categories []MountViewCategory      `bson:"categories" json:"categories"`
 }
 
 type MountViewDocument struct {
