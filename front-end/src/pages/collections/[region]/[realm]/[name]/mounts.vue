@@ -30,7 +30,10 @@ const percentageMountsCollected = computed(() => {
         <p
           class="text-center text-xs sm:text-sm text-nowrap text-gray-500 self-end pt-1"
         >
-          1001 out of 1100 mounts collected ({{ percentageMountsCollected }}%)
+          {{ collectedMounts.length }} out of
+          {{ availableMounts.length }} mounts collected ({{
+            percentageMountsCollected
+          }}%)
         </p>
       </div>
       <MountFilterSlideover />
