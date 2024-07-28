@@ -4,7 +4,7 @@
   <div>
     <AppHeader />
 
-    <UMain class="pt-16 lg:pt-24">
+    <UMain class="pt-4">
       <slot />
     </UMain>
   </div>

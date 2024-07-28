@@ -3,8 +3,6 @@ definePageMeta({
   middleware: 'mounts',
 });
 
-const slideoverOpen = ref<boolean>(false);
-
 const mountsStore = useMountsStore();
 const { mounts, mountFilters } = storeToRefs(mountsStore);
 
@@ -20,18 +18,26 @@ const percentageMountsCollected = computed(() => {
   if (!mounts.value) return 0;
   const flattenedMounts = flatMapMounts(mounts.value);
   const collectedMounts = flattenedMounts.filter((mount) => mount.isCollected);
-  return (collectedMounts.length / flattenedMounts.length) * 100;
+  return Math.round((collectedMounts.length / flattenedMounts.length) * 100);
 });
 </script>
 
 <template>
-  <UContainer class="flex flex-col gap-8">
-    <div class="flex flex-col">
-      <h2 class="text-lg font-bold self-center">Total mounts collected</h2>
-      <UProgress :value="percentageMountsCollected" indicator :max="[]" />
+  <UContainer class="flex flex-col gap-4">
+    <div class="flex grow gap-8 items-center">
+      <div class="flex flex-col w-full">
+        <UProgress :value="percentageMountsCollected" />
+        <p
+          class="text-center text-xs sm:text-sm text-nowrap text-gray-500 self-end pt-1"
+        >
+          1001 out of 1100 mounts collected ({{ percentageMountsCollected }}%)
+        </p>
+      </div>
+      <MountFilterSlideover />
     </div>
-    <div class="flex flex-grow gap-4">
-      <MountFilter v-model="slideoverOpen" />
+    <UDivider />
+    <div class="flex grow flex-wrap items-end gap-5">
+      <MountFilterRow class="hidden sm:flex" />
     </div>
   </UContainer>
 </template>

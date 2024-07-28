@@ -1,9 +1,4 @@
-<script lang="ts" setup>
-const slideoverOpen = defineModel<boolean>();
-
-// const { isCustomXL } = useScreenSize();
-// console.log(isCustomXL.value);
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <UCard class="max-w-xs">
@@ -16,21 +11,4 @@ const slideoverOpen = defineModel<boolean>();
 
     <slot />
   </UCard>
-  <!-- <USlideover v-else v-model="slideoverOpen">
-    <UCard
-      class="flex flex-col flex-1"
-      :ui="{
-        body: { base: 'flex-1' },
-        ring: '',
-        divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-      }"
-    >
-      <template #header>
-        <UIcon name="filter" />
-        <span>Filters</span>
-      </template>
-
-      <slot />
-    </UCard>
-  </USlideover> -->
 </template>

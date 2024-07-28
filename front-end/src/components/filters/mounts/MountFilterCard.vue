@@ -20,7 +20,7 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
   <FilterCard v-model="slideoverOpen">
     <div class="flex flex-col gap-5">
       <UInput
-        v-model="mountFilters.search"
+        v-model="mountFilters.search as string"
         placeholder="Search for a mount"
         icon="i-heroicons-magnifying-glass-20-solid"
         variant="none"

@@ -36,7 +36,7 @@ function onSearch(to: string) {
 </script>
 
 <template>
-  <ULandingGrid class="max-w-[1200px] mx-4 lg:mx-auto">
+  <ULandingGrid class="max-w-[1200px] mx-4 lg:mx-auto pt-12">
     <ULandingCard
       v-for="(card, index) in page?.collections"
       class="cursor-pointer"

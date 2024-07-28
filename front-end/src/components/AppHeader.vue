@@ -71,7 +71,7 @@ const links = [
 
     <template #right>
       <UButton icon="simple-icons:battledotnet" to="/login" color="gray"
-        >Sign in</UButton
+        >Sign In</UButton
       >
       <UColorModeButton />
     </template>
