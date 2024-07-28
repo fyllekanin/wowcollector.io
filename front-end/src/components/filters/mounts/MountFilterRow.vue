@@ -65,13 +65,16 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
         :options="misc"
       ></UInputMenu>
     </div>
-    <USelect
-      class="self-end"
-      v-model="mountFilters.sortType"
-      :options="SORT_TYPES"
-      icon="material-symbols:sort"
-      placeholder="Sort by"
-    />
+    <div class="flex flex-col gap-1">
+      <span class="text-sm">Sort</span>
+      <USelect
+        class="self-end"
+        v-model="mountFilters.sortType"
+        :options="SORT_TYPES"
+        icon="material-symbols:sort"
+        placeholder="Sort by"
+      />
+    </div>
     <UButton
       class="h-min self-end"
       variant="ghost"
