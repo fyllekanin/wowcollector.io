@@ -1,5 +1,24 @@
 <script lang="ts" setup>
-import type { HeaderLink, NavigationTree } from '@nuxt/ui-pro/types';
+import CharacterSearchModal from './modals/CharacterSearchModal.vue';
+
+import type { HeaderLink } from '@nuxt/ui-pro/types';
+
+const characterStore = useCharacterStore();
+const { character } = storeToRefs(characterStore);
+
+const modal = useModal();
+const router = useRouter();
+
+function onSearch(to: string) {
+  modal.open(CharacterSearchModal, {
+    onSuccess: () => {
+      router.push(
+        `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/${to}`
+      );
+      modal.close();
+    },
+  });
+}
 
 const links = [
   {
@@ -11,65 +30,36 @@ const links = [
     children: [
       {
         label: 'Mounts',
-        to: '/collections/mounts',
+        to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/mounts`,
+        disabled: !character.value,
+        click: () => {
+          if (!character.value) {
+            onSearch('mounts');
+          }
+        },
       },
       {
         label: 'Achievements',
-        to: '/collections/achievements',
+        to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/achievements`,
         disabled: true,
       },
       {
         label: 'Pets',
-        to: '/collections/pets',
+        to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/pets`,
         disabled: true,
       },
       {
         label: 'Toys',
-        to: '/collections/toys',
+        to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/toys`,
         disabled: true,
       },
     ],
   },
   {
-    label: 'Search',
+    label: 'Character Search',
     to: '/search',
   },
 ] as HeaderLink[];
-
-const navigationTreeLinks = [
-  {
-    label: 'Home',
-    to: '/',
-  },
-  {
-    label: 'Collections',
-    children: [
-      {
-        label: 'Mounts',
-        to: '/collections/mounts',
-      },
-      {
-        label: 'Achievements',
-        to: '/collections/achievements',
-        disabled: true,
-      },
-      {
-        label: 'Pets',
-        to: '/collections/pets',
-        disabled: true,
-      },
-      {
-        label: 'Toys',
-        to: '/collections/toys',
-        disabled: true,
-      },
-    ],
-  },
-  {
-    label: 'Search',
-    to: '/search',
-  },
-] as NavigationTree[];
 </script>
 
 <template>
@@ -87,7 +77,7 @@ const navigationTreeLinks = [
     </template>
 
     <template #panel>
-      <UNavigationTree :links="navigationTreeLinks" default-open />
+      <UNavigationTree :links="links" default-open />
     </template>
   </UHeader>
 </template>

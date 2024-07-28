@@ -18,14 +18,17 @@ useSeoMeta({
   description: page.value.description,
 });
 
-const { character } = useCharacterStore();
+const characterStore = useCharacterStore();
+const { character } = storeToRefs(characterStore);
 const modal = useModal();
 const router = useRouter();
 
 function onSearch(to: string) {
   modal.open(CharacterSearchModal, {
     onSuccess: () => {
-      router.push(to);
+      router.push(
+        `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/${to}`
+      );
       modal.close();
     },
   });
@@ -42,8 +45,18 @@ function onSearch(to: string) {
       :icon="card.icon"
       :title="card.title"
       :description="card.description"
-      :to="character ? card.to : undefined"
+      :to="
+        character
+          ? `/collections/${character.region}/${character.realm}/${character.name}/${card.to}`
+          : undefined
+      "
       :color="card.color"
+      :ui="{
+        // hack to fix the hover effect on the cards until it's fixed in Nuxt UI.
+        to: character
+          ? `hover:ring-${card.color}-500 dark:hover:ring-${card.color}-400 transition-shadow duration-200`
+          : `hover:ring-${card.color}-500 dark:hover:ring-${card.color}-400 transition-shadow duration-200`,
+      }"
       @click="character ? undefined : onSearch(card.to)"
     />
   </ULandingGrid>

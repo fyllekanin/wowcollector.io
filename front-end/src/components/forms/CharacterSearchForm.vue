@@ -19,17 +19,37 @@ if (!page.value) {
     cause: 'No search page found in the content.',
   });
 }
-
-const { data: realmsRegions } = await useAsyncData<RealmsRegions>(
-  'realms-regions',
-  () => $fetch('/api/battle-net/realms-regions')
-);
 useSeoMeta({
   title: page.value.title,
   description: page.value.description,
 });
+
 const characterStore = useCharacterStore();
 const mountsStore = useMountsStore();
+const realmsRegionsStore = useRealmsRegionsStore();
+const { realms, regions } = storeToRefs(realmsRegionsStore);
+
+if (!realms.value || !regions.value) {
+  const { data: realmsRegions, error } = await useAsyncData<RealmsRegions>(
+    'realms-regions',
+    () => $fetch('/api/battle-net/realms-regions')
+  );
+
+  if (!realmsRegions.value) {
+    throw createError({
+      statusCode: error.value?.statusCode || 500,
+      statusMessage:
+        error.value?.statusMessage ||
+        error.value?.message ||
+        'Internal Server Error',
+      fatal: true,
+      cause: error,
+    });
+  }
+
+  realmsRegionsStore.setRealms(realmsRegions.value?.realms);
+  realmsRegionsStore.setRegions(realmsRegions.value?.regions);
+}
 
 const emit = defineEmits(['success', 'error']);
 
@@ -47,13 +67,13 @@ const state = reactive({
 });
 const loading = ref(false);
 
-const realms = computed(() =>
-  realmsRegions.value?.realms
-    .filter(({ region }) => state.region === region)
+const realmsMapped = computed(() =>
+  realms.value
+    ?.filter(({ region }) => state.region === region)
     .map(({ name, slug }) => ({ label: name, value: slug }))
 );
-const regions = computed(() =>
-  realmsRegions.value?.regions.map(({ name, value }) => ({
+const regionsMapped = computed(() =>
+  regions.value?.map(({ name, value }) => ({
     label: name,
     value,
   }))
@@ -101,7 +121,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         v-model="state.realm"
         searchable
         value-attribute="value"
-        :options="realms"
+        :options="realmsMapped"
       />
     </UFormGroup>
 
@@ -109,7 +129,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <URadioGroup
         class="[&>fieldset]:flex [&>fieldset]:gap-3"
         v-model="state.region"
-        :options="regions"
+        :options="regionsMapped"
       />
     </UFormGroup>
 
