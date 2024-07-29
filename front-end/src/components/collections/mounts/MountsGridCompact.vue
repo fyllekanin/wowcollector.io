@@ -29,7 +29,7 @@ const { mounts, mountFilters } = storeToRefs(mountsStore);
                   ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
                   : '',
               ]"
-              width="32"
+              width="38"
               :on-error="(e: any) => (e.target.src = mount.creatureDisplay)"
               @error="
                 mount.assets.smallIcon =
@@ -70,7 +70,7 @@ const { mounts, mountFilters } = storeToRefs(mountsStore);
                         : '',
                       'mount-icon',
                     ]"
-                    width="32"
+                    width="38"
                     :on-error="(e: any) => (e.target.src = mount.creatureDisplay)"
                     @error="
                       mount.assets.smallIcon =
