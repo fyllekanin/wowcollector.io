@@ -24,6 +24,7 @@ useSeoMeta({
   description: page.value.description,
 });
 
+const toast = useToast();
 const characterStore = useCharacterStore();
 const mountsStore = useMountsStore();
 const realmsRegionsStore = useRealmsRegionsStore();
@@ -99,6 +100,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     emit('success');
   } catch (error) {
     console.error(error);
+    loading.value = false;
+
+    toast.add({
+      title: 'Error',
+      // @ts-expect-error - error is an instance of Error
+      description: error.message,
+      color: 'red',
+    });
+
     emit('error', error);
   }
 }

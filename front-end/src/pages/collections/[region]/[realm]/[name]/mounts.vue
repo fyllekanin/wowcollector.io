@@ -2,6 +2,14 @@
 definePageMeta({
   middleware: 'mounts',
 });
+useHead({
+  script: [
+    {
+      src: 'https://wow.zamimg.com/js/tooltips.js',
+      async: true,
+    },
+  ],
+});
 
 const mountsStore = useMountsStore();
 const { mounts } = storeToRefs(mountsStore);
