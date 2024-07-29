@@ -4,7 +4,11 @@ export interface MountInformation {
   id: number;
   isCollected: boolean;
   creatureDisplay: string;
-  icon: string;
+  assets: {
+    display: string;
+    smallIcon: string;
+    largeIcon: string;
+  };
 }
 
 export interface MountCategory {

@@ -24,12 +24,12 @@ console.log(mounts.value);
             :data-wowhead="`mount=${mount.id}`"
           >
             <img
-              :src="mount.icon"
+              :src="mount.assets.smallIcon"
               :class="[!mount.isCollected ? 'not-collected' : '', 'mount-icon']"
               width="32"
               :on-error="(e: any) => (e.target.src = mount.creatureDisplay)"
               @error="
-                mount.icon =
+                mount.assets.smallIcon =
                   'https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg'
               "
             />
@@ -60,7 +60,7 @@ console.log(mounts.value);
                   :data-wowhead="`mount=${mount.id}`"
                 >
                   <img
-                    :src="mount.icon"
+                    :src="mount.assets.smallIcon"
                     :class="[
                       !mount.isCollected ? 'not-collected' : '',
                       'mount-icon',
@@ -68,7 +68,7 @@ console.log(mounts.value);
                     width="32"
                     :on-error="(e: any) => (e.target.src = mount.creatureDisplay)"
                     @error="
-                      mount.icon =
+                      mount.assets.smallIcon =
                         'https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg'
                     "
                   />
