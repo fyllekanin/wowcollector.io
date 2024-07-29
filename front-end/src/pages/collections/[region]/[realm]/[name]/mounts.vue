@@ -32,7 +32,9 @@ const percentageMountsCollected = computed(() => {
 
 <template>
   <UContainer class="flex flex-col gap-4">
-    <div class="flex grow gap-8 items-center">
+    <div
+      class="flex flex-col grow gap-4 sticky top-[64px] py-10 items-center z-[5] border-b border-gray-700 dark:bg-slate-900"
+    >
       <div class="flex flex-col w-full">
         <UProgress :value="percentageMountsCollected" />
         <p
@@ -45,10 +47,7 @@ const percentageMountsCollected = computed(() => {
         </p>
       </div>
       <MountFilterSlideover />
-    </div>
-    <div class="flex grow flex-wrap items-end gap-5 sticky top-[64px] pt-4">
       <MountFilterRow class="hidden sm:flex" />
-      <UDivider />
     </div>
     <MountsGridCompact />
   </UContainer>
