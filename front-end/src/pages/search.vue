@@ -16,8 +16,15 @@ useSeoMeta({
   description: page.value.description,
 });
 
+const router = useRouter();
+const characterStore = useCharacterStore();
+
+const { character } = storeToRefs(characterStore);
+
 function onSuccess() {
-  console.log('Success');
+  router.push({
+    path: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/mounts`,
+  });
 }
 </script>
 

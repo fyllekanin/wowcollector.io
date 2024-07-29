@@ -2,7 +2,6 @@
 const mountsStore = useMountsStore();
 
 const { mounts, mountFilters } = storeToRefs(mountsStore);
-console.log(mounts.value);
 </script>
 
 <template>
@@ -24,7 +23,7 @@ console.log(mounts.value);
             :data-wowhead="`mount=${mount.id}`"
           >
             <img
-              :src="mount.assets.smallIcon"
+              :src="mount.assets.largeIcon"
               :class="[!mount.isCollected ? 'not-collected' : '', 'mount-icon']"
               width="32"
               :on-error="(e: any) => (e.target.src = mount.creatureDisplay)"
@@ -60,7 +59,7 @@ console.log(mounts.value);
                   :data-wowhead="`mount=${mount.id}`"
                 >
                   <img
-                    :src="mount.assets.smallIcon"
+                    :src="mount.assets.largeIcon"
                     :class="[
                       !mount.isCollected ? 'not-collected' : '',
                       'mount-icon',
