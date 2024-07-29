@@ -79,7 +79,7 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
       variant="ghost"
       color="gray"
       icon="codicon:collapse-all"
-      :disabled="mountFilters.renderType === 'grid'"
+      :disabled="mountFilters.renderType !== 'list'"
       >Collapse all</UButton
     >
     <UButtonGroup class="h-min lg:self-end" size="sm">

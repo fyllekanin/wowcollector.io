@@ -24,7 +24,11 @@ const { mounts, mountFilters } = storeToRefs(mountsStore);
           >
             <img
               :src="mount.assets.largeIcon"
-              :class="[!mount.isCollected ? '' : '']"
+              :class="[
+                !mount.isCollected
+                  ? 'brightness-50 grayscale hover:grayscale-0 hover:brightness-100 hover:ring-1 hover:ring-primary'
+                  : '',
+              ]"
               width="32"
               :on-error="(e: any) => (e.target.src = mount.creatureDisplay)"
               @error="
@@ -61,7 +65,9 @@ const { mounts, mountFilters } = storeToRefs(mountsStore);
                   <img
                     :src="mount.assets.largeIcon"
                     :class="[
-                      !mount.isCollected ? 'not-collected' : '',
+                      !mount.isCollected
+                        ? 'brightness-50 grayscale hover:grayscale-0 hover:brightness-100 hover:ring-1 hover:ring-primary'
+                        : '',
                       'mount-icon',
                     ]"
                     width="32"
