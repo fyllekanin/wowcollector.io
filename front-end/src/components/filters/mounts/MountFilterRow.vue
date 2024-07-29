@@ -2,7 +2,6 @@
 import { RENDER_TYPES, SORT_TYPES } from '~/constants';
 
 const mountsStore = useMountsStore();
-
 const { mountFilters } = storeToRefs(mountsStore);
 
 const baseCategories = computed(
@@ -80,6 +79,7 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
       variant="ghost"
       color="gray"
       icon="codicon:collapse-all"
+      :disabled="mountFilters.renderType === 'grid'"
       >Collapse all</UButton
     >
     <UButtonGroup class="h-min lg:self-end" size="sm">

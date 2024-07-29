@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 const mountsStore = useMountsStore();
-const { mounts, mountFilters } = storeToRefs(mountsStore);
+const { mounts } = storeToRefs(mountsStore);
 
 const availableMounts = computed(() => {
   if (!mounts.value) return [];
@@ -38,9 +38,10 @@ const percentageMountsCollected = computed(() => {
       </div>
       <MountFilterSlideover />
     </div>
-    <UDivider />
-    <div class="flex grow flex-wrap items-end gap-5">
+    <div class="flex grow flex-wrap items-end gap-5 sticky top-[64px] pt-4">
       <MountFilterRow class="hidden sm:flex" />
+      <UDivider />
     </div>
+    <MountsGridCompact />
   </UContainer>
 </template>

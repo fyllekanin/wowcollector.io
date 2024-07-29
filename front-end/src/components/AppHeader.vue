@@ -66,18 +66,19 @@ const links = [
   <UHeader :links="links">
     <template #logo>
       <Logo width="48px" height="48px" />
-      <p class="self-center mt-1">WoW Collector</p>
+      <p class="self-center mt-1">WOW Collector</p>
     </template>
 
     <template #right>
       <UButton icon="simple-icons:battledotnet" to="/login" color="gray"
         >Sign In</UButton
       >
-      <UColorModeButton />
+      <UColorModeButton class="hidden lg:flex" />
     </template>
 
     <template #panel>
       <UNavigationTree :links="links" default-open />
+      <UColorModeSelect class="lg:hidden pt-5" />
     </template>
   </UHeader>
 </template>
