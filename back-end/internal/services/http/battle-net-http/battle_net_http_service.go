@@ -52,7 +52,7 @@ func GetInstance() *BattleNetHttpService {
 }
 
 func (s *BattleNetHttpService) Ping() {
-	_, err := s.doRequest("https://eu.api.blizzard.com/data/wow/region/index?namespace=static-eu&locale=en_US", true)
+	_, err := s.doRequest("https://eu.api.blizzard.com/data/wow/region/index?namespace=dynamic-eu&locale=en_US", true)
 	if err != nil {
 		zap.L().Fatal("Failed ping (region index):" + err.Error())
 	}
@@ -234,6 +234,10 @@ func (s *BattleNetHttpService) doRequest(url string, retry bool) ([]byte, error)
 		zap.L().Info("Error rate limit hit, sleep for 1 second and try again")
 		time.Sleep(1 * time.Second)
 		return s.doRequest(url, true)
+	}
+	if response.StatusCode == 404 {
+		zap.L().Info(fmt.Sprintf("Error not found result for url: %s", url))
+		return nil, errors.New("not found error")
 	}
 	bodyBytes, err := io.ReadAll(response.Body)
 	if err != nil {
