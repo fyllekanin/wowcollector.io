@@ -119,3 +119,37 @@ go build -o migration-seeder-app ./cmd/migration-seeder/
 ```
 ./migration-seeder-app
 ```
+
+## Running the web
+
+### Build and start with Node
+---------
+#### Build the server
+```
+$(cd front-end && npm install)
+```
+
+#### Start the server
+```
+cd front-end && npm run dev
+```
+
+### Build and start with Docker
+---------
+#### Build the image (root folder)
+```
+docker build -f ./front-end/DockerfileNuxt --tag=wowcollector.io-ui ./front-end/
+```
+
+#### Start the image
+```
+docker run -p 8888:8888/tcp \
+-e DATABASE_USERNAME=admin \
+-e DATABASE_PASSWORD=admin \
+-e DATABASE_NAME=wowcollector \
+-e DATABASE_HOST=localhost \
+-e DATABASE_PORT=27017 \
+-e BATTLE_NET_CLIENT_ID=clientId \
+-e BATTLE_NET_CLIENT_SECRET=clientSecret \
+wowcollector.io-server
+```

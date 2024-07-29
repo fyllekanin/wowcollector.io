@@ -20,8 +20,5 @@
     "pinia": "^2.1.7",
     "vue": "^3.4.31",
     "yup": "^1.4.0"
-  },
-  "overrides": {
-    "vue": "latest"
   }
 }
