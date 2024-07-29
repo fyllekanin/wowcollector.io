@@ -25,5 +25,7 @@ func (r *MountDocument) IsEqual(other *MountDocument) bool {
 		r.Description == other.Description &&
 		r.Source == other.Source &&
 		r.Faction == other.Faction &&
-		r.Assets == other.Assets
+		r.Assets.Display == other.Assets.Display &&
+		r.Assets.SmallIcon == other.Assets.SmallIcon &&
+		r.Assets.LargeIcon == other.Assets.LargeIcon
 }
