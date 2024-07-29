@@ -33,7 +33,7 @@ const percentageMountsCollected = computed(() => {
 <template>
   <UContainer class="flex flex-col gap-4">
     <div
-      class="flex flex-col grow gap-4 sticky top-[64px] py-10 items-center z-[5] border-b border-gray-700 dark:bg-slate-900"
+      class="flex flex-col grow gap-2 sticky top-[64px] py-5 items-center z-[5] border-b border-gray-700 dark:bg-slate-900"
     >
       <div class="flex flex-col w-full">
         <UProgress :value="percentageMountsCollected" />
