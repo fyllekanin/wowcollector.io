@@ -100,8 +100,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   } catch (error) {
     console.error(error);
     emit('error', error);
-  } finally {
-    loading.value = false;
   }
 }
 </script>

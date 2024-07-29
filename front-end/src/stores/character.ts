@@ -11,6 +11,6 @@ export const useCharacterStore = defineStore('character', {
   },
   persist: {
     paths: ['character'],
-    storage: persistedState.localStorage,
+    storage: persistedState.sessionStorage,
   },
 });

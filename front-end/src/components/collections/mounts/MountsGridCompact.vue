@@ -24,7 +24,7 @@ const { mounts, mountFilters } = storeToRefs(mountsStore);
           >
             <img
               :src="mount.assets.largeIcon"
-              :class="[!mount.isCollected ? 'not-collected' : '', 'mount-icon']"
+              :class="[!mount.isCollected ? '' : '']"
               width="32"
               :on-error="(e: any) => (e.target.src = mount.creatureDisplay)"
               @error="
