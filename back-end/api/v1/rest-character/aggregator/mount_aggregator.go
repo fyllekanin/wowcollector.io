@@ -32,12 +32,15 @@ func getUnknownCategory(mounts map[int]*documents.MountDocument, collectedIds []
 	var mountsResult []response.MountCollectionMount
 	for _, mount := range mounts {
 		mountsResult = append(mountsResult, response.MountCollectionMount{
-			Name:            mount.Name,
-			Description:     mount.Description,
-			Id:              mount.Id,
-			IsCollected:     slices.Contains(collectedIds, mount.Id),
-			CreatureDisplay: mount.CreatureDisplay,
-			Icon:            mount.Icon,
+			Name:        mount.Name,
+			Description: mount.Description,
+			Id:          mount.Id,
+			IsCollected: slices.Contains(collectedIds, mount.Id),
+			Assets: &response.MountCollectionMountAssets{
+				Display:   mount.Assets.Display,
+				SmallIcon: mount.Assets.SmallIcon,
+				LargeIcon: mount.Assets.LargeIcon,
+			},
 		})
 	}
 
@@ -62,12 +65,15 @@ func getMountCategory(category documents.MountViewCategory, mounts map[int]*docu
 		}
 		delete(mounts, categoryMount.Id)
 		mountsResult = append(mountsResult, response.MountCollectionMount{
-			Name:            mount.Name,
-			Description:     mount.Description,
-			Id:              mount.Id,
-			IsCollected:     slices.Contains(collectedIds, categoryMount.Id),
-			CreatureDisplay: mount.CreatureDisplay,
-			Icon:            mount.Icon,
+			Name:        mount.Name,
+			Description: mount.Description,
+			Id:          mount.Id,
+			IsCollected: slices.Contains(collectedIds, categoryMount.Id),
+			Assets: &response.MountCollectionMountAssets{
+				Display:   mount.Assets.Display,
+				SmallIcon: mount.Assets.SmallIcon,
+				LargeIcon: mount.Assets.LargeIcon,
+			},
 		})
 	}
 

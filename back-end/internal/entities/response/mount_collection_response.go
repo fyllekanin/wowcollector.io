@@ -1,12 +1,17 @@
 package response
 
+type MountCollectionMountAssets struct {
+	Display   string `json:"display"`
+	SmallIcon string `json:"smallIcon"`
+	LargeIcon string `json:"largeIcon"`
+}
+
 type MountCollectionMount struct {
-	Name            string `json:"name"`
-	Description     string `json:"description"`
-	Id              int    `json:"id"`
-	IsCollected     bool   `json:"isCollected"`
-	CreatureDisplay string `json:"creatureDisplay"`
-	Icon            string `json:"icon"`
+	Name        string                      `json:"name"`
+	Description string                      `json:"description"`
+	Id          int                         `json:"id"`
+	IsCollected bool                        `json:"isCollected"`
+	Assets      *MountCollectionMountAssets `json:"assets"`
 }
 
 type MountCollectionCategory struct {

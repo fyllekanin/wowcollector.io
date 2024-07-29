@@ -32,14 +32,14 @@ func main() {
 		})
 	})
 
-	time.AfterFunc(2*time.Hour, func() {
+	time.AfterFunc(2*time.Second, func() {
 		tasks.ScanMounts(blizzarddata.REGION_EU)
 		c.AddFunc("@every 12h", func() {
 			tasks.ScanMounts(blizzarddata.REGION_EU)
 		})
 	})
 
-	time.AfterFunc(4*time.Second, func() {
+	time.AfterFunc(4*time.Hour, func() {
 		tasks.ScanAchievements(blizzarddata.REGION_EU)
 		c.AddFunc("@every 24h", func() {
 			tasks.ScanAchievements(blizzarddata.REGION_EU)

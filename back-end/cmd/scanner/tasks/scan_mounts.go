@@ -16,6 +16,9 @@ import (
 	wowheadhttp "wowcollector.io/internal/services/http/wow-head-http"
 )
 
+var largeIconUrl = "https://wow.zamimg.com/images/wow/icons/large/{name}.jpg"
+var smallIconUrl = "https://wow.zamimg.com/images/wow/icons/small/{name}.jpg"
+
 func ScanMounts(region blizzarddata.BattleNetRegion) {
 	zap.L().Info(fmt.Sprintf("Starting scan of mounts for region %s\n", region))
 	repository := mountrepository.GetRepository()
@@ -56,14 +59,17 @@ func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts [
 	asset := getCreatureDisplay(battleNetMount)
 	tooltip := wowheadhttp.GetInstance().GetMountIcon(mountId)
 	document := &documents.MountDocument{
-		Id:              battleNetMount.Id,
-		Name:            battleNetMount.Name,
-		Description:     battleNetMount.Description,
-		Source:          getSourceType(battleNetMount.Source),
-		Faction:         getFactionType(battleNetMount.Faction),
-		CreatureDisplay: asset,
-		IsUnobtainable:  battleNetMount.ShouldExcludeIfUncollected,
-		Icon:            tooltip.Icon,
+		Id:             battleNetMount.Id,
+		Name:           battleNetMount.Name,
+		Description:    battleNetMount.Description,
+		Source:         getSourceType(battleNetMount.Source),
+		Faction:        getFactionType(battleNetMount.Faction),
+		IsUnobtainable: battleNetMount.ShouldExcludeIfUncollected,
+		Assets: &documents.MountDocumentAssets{
+			Display:   asset,
+			SmallIcon: getSmallIcon(tooltip.Icon),
+			LargeIcon: getLargeIcon(tooltip.Icon),
+		},
 	}
 
 	if existingMount == nil {
@@ -107,4 +113,12 @@ func getExistingMount(mounts []*documents.MountDocument, mount httpresponses.Bat
 		}
 	}
 	return nil
+}
+
+func getSmallIcon(name string) string {
+	return strings.Replace(smallIconUrl, "{name}", name, 1)
+}
+
+func getLargeIcon(name string) string {
+	return strings.Replace(largeIconUrl, "{name}", name, 1)
 }
