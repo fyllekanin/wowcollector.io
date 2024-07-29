@@ -26,7 +26,7 @@ const { mounts, mountFilters } = storeToRefs(mountsStore);
               :src="mount.assets.largeIcon"
               :class="[
                 !mount.isCollected
-                  ? 'brightness-50 grayscale hover:grayscale-0 hover:brightness-100 hover:ring-1 hover:ring-primary'
+                  ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
                   : '',
               ]"
               width="32"
@@ -66,7 +66,7 @@ const { mounts, mountFilters } = storeToRefs(mountsStore);
                     :src="mount.assets.largeIcon"
                     :class="[
                       !mount.isCollected
-                        ? 'brightness-50 grayscale hover:grayscale-0 hover:brightness-100 hover:ring-1 hover:ring-primary'
+                        ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
                         : '',
                       'mount-icon',
                     ]"
