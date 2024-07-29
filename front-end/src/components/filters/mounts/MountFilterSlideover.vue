@@ -101,7 +101,8 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
             placeholder="Sort by"
           />
         </div>
-        <div class="flex justify-evenly">
+        <!-- Upcoming Feature -->
+        <!-- <div class="flex justify-evenly">
           <UButton
             variant="ghost"
             color="gray"
@@ -125,7 +126,7 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
               />
             </UTooltip>
           </UButtonGroup>
-        </div>
+        </div> -->
       </div>
     </UCard>
   </USlideover>

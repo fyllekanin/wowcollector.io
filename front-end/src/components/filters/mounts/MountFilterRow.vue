@@ -74,7 +74,8 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
         placeholder="Sort by"
       />
     </div>
-    <UButton
+    <!-- Upcoming Feature -->
+    <!-- <UButton
       class="h-min self-end"
       variant="ghost"
       color="gray"
@@ -97,6 +98,6 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
           @click="mountsStore.setMountFilters({ renderType: value })"
         />
       </UTooltip>
-    </UButtonGroup>
+    </UButtonGroup> -->
   </div>
 </template>
