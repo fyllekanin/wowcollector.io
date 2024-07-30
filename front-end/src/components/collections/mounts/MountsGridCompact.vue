@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 const mountsStore = useMountsStore();
 
-const { mounts, mountFilters } = storeToRefs(mountsStore);
+const { mounts } = storeToRefs(mountsStore);
+
+watchEffect(() => {
+  console.log(mounts.value);
+});
 </script>
 
 <template>

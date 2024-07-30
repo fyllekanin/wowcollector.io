@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 const mountsStore = useMountsStore();
 
-const { mountFilters } = storeToRefs(mountsStore);
+const { filters } = storeToRefs(mountsStore);
 
 const slideoverOpen = defineModel<boolean>();
 
 const baseCategories = computed(
-  () => mountFilters.value.baseCategories ?? []
+  () => filters.value.rootCategories ?? []
 ) as ComputedRef<string[]>;
 const subCategories = computed(
-  () => mountFilters.value.subCategories ?? []
+  () => filters.value.subCategories ?? []
 ) as ComputedRef<string[]>;
-const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
+const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
   string[]
 >;
 </script>
@@ -20,7 +20,7 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
   <FilterCard v-model="slideoverOpen">
     <div class="flex flex-col gap-5">
       <UInput
-        v-model="mountFilters.search as string"
+        v-model="filters.search as string"
         placeholder="Search for a mount"
         icon="i-heroicons-magnifying-glass-20-solid"
         variant="none"
@@ -32,7 +32,7 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
       >
         <template #trailing>
           <UButton
-            v-show="mountFilters.search !== ''"
+            v-show="filters.search !== ''"
             color="gray"
             variant="link"
             icon="i-heroicons-x-mark-20-solid"
@@ -44,20 +44,20 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
       <div class="flex flex-col gap-1">
         <span class="text-sm">Base Categories</span>
         <UInputMenu
-          v-model="mountFilters.baseCategories"
+          v-model="filters.rootCategories"
           :options="baseCategories"
         ></UInputMenu>
       </div>
       <div class="flex flex-col gap-1">
         <span class="text-sm">Sub Categories</span>
         <UInputMenu
-          v-model="mountFilters.subCategories"
+          v-model="filters.subCategories"
           :options="subCategories"
         ></UInputMenu>
       </div>
       <div class="flex flex-col gap-1">
         <span class="text-sm">Misc</span>
-        <UInputMenu v-model="mountFilters.misc" :options="misc"></UInputMenu>
+        <UInputMenu v-model="filters.miscFilters" :options="misc"></UInputMenu>
       </div>
     </div>
   </FilterCard>

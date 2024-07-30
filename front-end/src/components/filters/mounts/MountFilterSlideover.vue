@@ -4,17 +4,17 @@ import { RENDER_TYPES, SORT_TYPES } from '~/constants';
 const slideoverOpen = ref<boolean>(false);
 
 const mountsStore = useMountsStore();
-const { mountFilters } = storeToRefs(mountsStore);
+const { filters } = storeToRefs(mountsStore);
 
-const baseCategories = computed(
-  () => mountFilters.value.rootCategories ?? []
+const rootCategories = computed(
+  () => filters.value.rootCategories ?? []
 ) as ComputedRef<string[]>;
 const subCategories = computed(
-  () => mountFilters.value.subCategories ?? []
+  () => filters.value.subCategories ?? []
 ) as ComputedRef<string[]>;
-const misc = computed(
-  () => mountFilters.value.miscFilters ?? []
-) as ComputedRef<string[]>;
+const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
+  string[]
+>;
 </script>
 
 <template>
@@ -53,7 +53,7 @@ const misc = computed(
 
       <div class="flex flex-col gap-5">
         <UInput
-          v-model="mountFilters.search as string"
+          v-model="filters.search as string"
           placeholder="Search for a mount"
           icon="i-heroicons-magnifying-glass-20-solid"
           variant="none"
@@ -65,7 +65,7 @@ const misc = computed(
         >
           <template #trailing>
             <UButton
-              v-show="mountFilters.search !== ''"
+              v-show="filters.search !== ''"
               color="gray"
               variant="link"
               icon="i-heroicons-x-mark-20-solid"
@@ -77,28 +77,28 @@ const misc = computed(
         <div class="flex flex-col gap-1">
           <span class="text-sm">Base Categories</span>
           <UInputMenu
-            v-model="mountFilters.rootCategories"
-            :options="baseCategories"
+            v-model="filters.rootCategories"
+            :options="rootCategories"
           ></UInputMenu>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-sm">Sub Categories</span>
           <UInputMenu
-            v-model="mountFilters.subCategories"
+            v-model="filters.subCategories"
             :options="subCategories"
           ></UInputMenu>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-sm">Misc</span>
           <UInputMenu
-            v-model="mountFilters.miscFilters"
+            v-model="filters.miscFilters"
             :options="misc"
           ></UInputMenu>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-sm">Sort By</span>
           <USelect
-            v-model="mountFilters.sort"
+            v-model="filters.sort"
             :options="SORT_TYPES"
             icon="material-symbols:sort"
             placeholder="Sort by"
@@ -112,7 +112,7 @@ const misc = computed(
             variant="ghost"
             color="gray"
             icon="codicon:collapse-all"
-            :disabled="mountFilters.viewStyle !== 'grid'"
+            :disabled="filters.viewStyle !== 'grid'"
             >Collapse all</UButton
           >
           <UButtonGroup size="sm">
@@ -122,10 +122,10 @@ const misc = computed(
               :key="index"
             >
               <UButton
-                v-model="mountFilters.viewStyle"
+                v-model="filters.viewStyle"
                 :value="value"
                 :icon="icon"
-                :color="mountFilters.viewStyle === value ? 'primary' : 'light'"
+                :color="filters.viewStyle === value ? 'primary' : 'light'"
                 variant="outline"
                 @click="mountsStore.setMountFilters({ viewStyle: value })"
               />
