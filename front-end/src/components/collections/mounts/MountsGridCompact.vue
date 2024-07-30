@@ -16,28 +16,7 @@ const { mounts, mountFilters } = storeToRefs(mountsStore);
       class="flex flex-wrap w-full self-start px-0 lg:px-0 sm:px-0 mx-0 gap-4"
     >
       <div v-for="(mount, j) in category.mounts" :key="j">
-        <Lazy>
-          <a
-            :href="`https://www.wowhead.com/mount/${mount.id}`"
-            target="_blank"
-            :data-wowhead="`mount=${mount.id}`"
-          >
-            <img
-              :src="mount.assets.largeIcon"
-              :class="[
-                !mount.isCollected
-                  ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
-                  : '',
-              ]"
-              width="38"
-              :on-error="(e: any) => (e.target.src = mount.creatureDisplay)"
-              @error="
-                mount.assets.smallIcon =
-                  'https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg'
-              "
-            />
-          </a>
-        </Lazy>
+        <MountIcon :mount="mount" />
       </div>
     </UContainer>
     <UContainer
@@ -56,29 +35,7 @@ const { mounts, mountFilters } = storeToRefs(mountsStore);
             class="flex grow flex-wrap gap-2 px-0 lg:px-0 sm:px-0 mx-0"
           >
             <div v-for="(mount, k) in subCategory.mounts" :key="k">
-              <Lazy>
-                <a
-                  :href="`https://www.wowhead.com/mount/${mount.id}`"
-                  target="_blank"
-                  :data-wowhead="`mount=${mount.id}`"
-                >
-                  <img
-                    :src="mount.assets.largeIcon"
-                    :class="[
-                      !mount.isCollected
-                        ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
-                        : '',
-                      'mount-icon',
-                    ]"
-                    width="38"
-                    :on-error="(e: any) => (e.target.src = mount.creatureDisplay)"
-                    @error="
-                      mount.assets.smallIcon =
-                        'https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg'
-                    "
-                  />
-                </a>
-              </Lazy>
+              <MountIcon :mount="mount" />
             </div>
           </UContainer>
         </div>
