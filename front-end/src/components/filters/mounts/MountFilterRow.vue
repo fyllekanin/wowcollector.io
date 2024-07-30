@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import { RENDER_TYPES, SORT_TYPES } from '~/constants';
+import { SORT_TYPES } from '~/constants';
 
 const mountsStore = useMountsStore();
 const { mountFilters } = storeToRefs(mountsStore);
 
 const baseCategories = computed(
-  () => mountFilters.value.baseCategories ?? []
+  () => mountFilters.value.rootCategories ?? []
 ) as ComputedRef<string[]>;
 const subCategories = computed(
   () => mountFilters.value.subCategories ?? []
 ) as ComputedRef<string[]>;
-const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
-  string[]
->;
+const misc = computed(
+  () => mountFilters.value.miscFilters ?? []
+) as ComputedRef<string[]>;
 </script>
 
 <template>
@@ -43,7 +43,7 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
     <div class="flex flex-col gap-1">
       <span class="text-sm">Base Categories</span>
       <UInputMenu
-        v-model="mountFilters.baseCategories"
+        v-model="mountFilters.rootCategories"
         class="w-[150px]"
         :options="baseCategories"
       ></UInputMenu>
@@ -59,7 +59,7 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
     <div class="flex flex-col gap-1">
       <span class="text-sm">Misc</span>
       <UInputMenu
-        v-model="mountFilters.misc"
+        v-model="mountFilters.miscFilters"
         class="w-[150px]"
         :options="misc"
       ></UInputMenu>
@@ -68,19 +68,21 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
       <span class="text-sm">Sort</span>
       <USelect
         class="self-end"
-        v-model="mountFilters.sortType"
+        v-model="mountFilters.sort"
         :options="SORT_TYPES"
         icon="material-symbols:sort"
         placeholder="Sort by"
       />
     </div>
+
     <!-- Upcoming Feature -->
+
     <!-- <UButton
       class="h-min self-end"
       variant="ghost"
       color="gray"
       icon="codicon:collapse-all"
-      :disabled="mountFilters.renderType !== 'list'"
+      :disabled="mountFilters.viewStyle !== 'list'"
       >Collapse all</UButton
     >
     <UButtonGroup class="h-min lg:self-end" size="sm">
@@ -90,12 +92,12 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
         :key="index"
       >
         <UButton
-          v-model="mountFilters.renderType"
+          v-model="mountFilters.viewStyle"
           :value="value"
           :icon="icon"
-          :color="mountFilters.renderType === value ? 'primary' : 'light'"
+          :color="mountFilters.viewStyle === value ? 'primary' : 'light'"
           variant="outline"
-          @click="mountsStore.setMountFilters({ renderType: value })"
+          @click="mountsStore.setMountFilters({ viewStyle: value })"
         />
       </UTooltip>
     </UButtonGroup> -->

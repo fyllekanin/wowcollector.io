@@ -7,14 +7,14 @@ const mountsStore = useMountsStore();
 const { mountFilters } = storeToRefs(mountsStore);
 
 const baseCategories = computed(
-  () => mountFilters.value.baseCategories ?? []
+  () => mountFilters.value.rootCategories ?? []
 ) as ComputedRef<string[]>;
 const subCategories = computed(
   () => mountFilters.value.subCategories ?? []
 ) as ComputedRef<string[]>;
-const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
-  string[]
->;
+const misc = computed(
+  () => mountFilters.value.miscFilters ?? []
+) as ComputedRef<string[]>;
 </script>
 
 <template>
@@ -77,7 +77,7 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
         <div class="flex flex-col gap-1">
           <span class="text-sm">Base Categories</span>
           <UInputMenu
-            v-model="mountFilters.baseCategories"
+            v-model="mountFilters.rootCategories"
             :options="baseCategories"
           ></UInputMenu>
         </div>
@@ -90,24 +90,29 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-sm">Misc</span>
-          <UInputMenu v-model="mountFilters.misc" :options="misc"></UInputMenu>
+          <UInputMenu
+            v-model="mountFilters.miscFilters"
+            :options="misc"
+          ></UInputMenu>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-sm">Sort By</span>
           <USelect
-            v-model="mountFilters.sortType"
+            v-model="mountFilters.sort"
             :options="SORT_TYPES"
             icon="material-symbols:sort"
             placeholder="Sort by"
           />
         </div>
+
         <!-- Upcoming Feature -->
+
         <!-- <div class="flex justify-evenly">
           <UButton
             variant="ghost"
             color="gray"
             icon="codicon:collapse-all"
-            :disabled="mountFilters.renderType !== 'grid'"
+            :disabled="mountFilters.viewStyle !== 'grid'"
             >Collapse all</UButton
           >
           <UButtonGroup size="sm">
@@ -117,12 +122,12 @@ const misc = computed(() => mountFilters.value.misc ?? []) as ComputedRef<
               :key="index"
             >
               <UButton
-                v-model="mountFilters.renderType"
+                v-model="mountFilters.viewStyle"
                 :value="value"
                 :icon="icon"
-                :color="mountFilters.renderType === value ? 'primary' : 'light'"
+                :color="mountFilters.viewStyle === value ? 'primary' : 'light'"
                 variant="outline"
-                @click="mountsStore.setMountFilters({ renderType: value })"
+                @click="mountsStore.setMountFilters({ viewStyle: value })"
               />
             </UTooltip>
           </UButtonGroup>

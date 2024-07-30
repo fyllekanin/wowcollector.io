@@ -11,6 +11,7 @@ export interface MountFilters {
   subCategories: string[];
   miscFilters: string[];
   sort: Sort;
+  viewStyle: ViewStyle;
 }
 
 export type ViewStyle = 'grid' | 'list' | 'grid-compact';
