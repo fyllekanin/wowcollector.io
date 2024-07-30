@@ -51,12 +51,6 @@ function onSearch(to: string) {
           : undefined
       "
       :color="card.color"
-      :ui="{
-        // hack to fix the hover effect on the cards until it's fixed in Nuxt UI.
-        to: character
-          ? `hover:ring-${card.color}-500 dark:hover:ring-${card.color}-400 transition-shadow duration-200`
-          : `hover:ring-${card.color}-500 dark:hover:ring-${card.color}-400 transition-shadow duration-200`,
-      }"
       @click="character ? undefined : onSearch(card.to)"
     />
   </ULandingGrid>
