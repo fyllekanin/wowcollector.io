@@ -20,7 +20,7 @@ var largeIconUrl = "https://wow.zamimg.com/images/wow/icons/large/{name}.jpg"
 var smallIconUrl = "https://wow.zamimg.com/images/wow/icons/small/{name}.jpg"
 
 func ScanMounts(region blizzarddata.BattleNetRegion) {
-	zap.L().Info(fmt.Sprintf("Starting scan of mounts for region %s\n", region))
+	zap.L().Info(fmt.Sprintf("Starting scan of mounts for region %s", region))
 	repository := mountrepository.GetRepository()
 
 	existingMounts, err := repository.GetMounts()
@@ -45,16 +45,17 @@ func ScanMounts(region blizzarddata.BattleNetRegion) {
 	}
 
 	wg.Wait()
-	zap.L().Info(fmt.Sprintf("Finished scan of mounts for region %s\n", region))
+	zap.L().Info(fmt.Sprintf("Finished scan of mounts for region %s", region))
 }
 
 func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts []*documents.MountDocument, repository mountrepository.MountRepository) {
 	zap.L().Info(fmt.Sprintf("Scanning mount id %d", mountId))
 	battleNetMount := battlenethttp.GetInstance().GetMount(region, mountId)
 	if battleNetMount == nil {
-		zap.L().Info(fmt.Sprintf("Error fetching mount with id %d\n", mountId))
+		zap.L().Error(fmt.Sprintf("Error fetching mount with id %d", mountId))
 		return
 	}
+
 	existingMount := getExistingMount(existingMounts, *battleNetMount)
 	asset := getCreatureDisplay(battleNetMount)
 	tooltip := wowheadhttp.GetInstance().GetMountIcon(mountId)
@@ -75,17 +76,17 @@ func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts [
 	if existingMount == nil {
 		document.ObjectID = primitive.NewObjectID()
 		repository.CreateMount(document)
-		zap.L().Info(fmt.Sprintf("Added new mount with id %d\n", mountId))
+		zap.L().Info(fmt.Sprintf("Added new mount with id %d", mountId))
 	} else {
 		document.ObjectID = existingMount.ObjectID
 		if !document.IsEqual(existingMount) {
 			repository.UpdateMount(document)
-			zap.L().Info(fmt.Sprintf("Updated mount with id %d\n", document.Id))
+			zap.L().Info(fmt.Sprintf("Updated mount with id %d", document.Id))
 		}
 	}
 }
 
-func getSourceType(item *httpresponses.BattleNetMountSource) string {
+func getSourceType(item *httpresponses.BattleNetSource) string {
 	if item != nil {
 		return item.Type
 	}

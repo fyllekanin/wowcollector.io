@@ -14,6 +14,7 @@ import (
 	mountviewrepository "wowcollector.io/internal/repository/repositories/mount-view-repository"
 	realmrepository "wowcollector.io/internal/repository/repositories/realm-repository"
 	seedrepository "wowcollector.io/internal/repository/repositories/seed-repository"
+	toyrepository "wowcollector.io/internal/repository/repositories/toy-repository"
 )
 
 type RepositoryFactory struct {
@@ -27,6 +28,7 @@ func (r *RepositoryFactory) init() {
 	mountviewrepository.Init(r.database)
 	achievementrepository.Init(r.database)
 	achievementcategoryrepository.Init(r.database)
+	toyrepository.Init(r.database)
 }
 
 var instance *RepositoryFactory

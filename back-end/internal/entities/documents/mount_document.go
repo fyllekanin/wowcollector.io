@@ -5,7 +5,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 type MountDocumentAssets struct {
 	Display   string `bson:"display" json:"display"`
 	SmallIcon string `bson:"smallIcon" json:"smallIcon"`
-	LargeIcon string `bson:"largeIcon"json:"largeIcon"`
+	LargeIcon string `bson:"largeIcon" json:"largeIcon"`
 }
 
 type MountDocument struct {

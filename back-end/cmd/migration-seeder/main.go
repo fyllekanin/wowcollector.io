@@ -34,4 +34,5 @@ func runSeeds() {
 	seeds.MountsSeeder()
 	seeds.AchievementsSeeder()
 	seeds.AchievementCategoriesSeeder()
+	seeds.ToysSeeder()
 }

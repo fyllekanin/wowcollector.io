@@ -122,17 +122,17 @@ func (s *BattleNetHttpService) GetAchievement(region blizzarddata.BattleNetRegio
 	return &result
 }
 
-func (s *BattleNetHttpService) GetAchievementMedia(region blizzarddata.BattleNetRegion, id int) *httpresponses.BattleNetMedia {
-	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/media/achievement/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
+func (s *BattleNetHttpService) GetMedia(region blizzarddata.BattleNetRegion, kind string, id int) *httpresponses.BattleNetMedia {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/media/"+kind+"/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
-		zap.L().Info("Error getting achievement media:" + err.Error())
+		zap.L().Info("Error getting media:" + err.Error())
 		return nil
 	}
 
 	var result httpresponses.BattleNetMedia
 	err = json.Unmarshal(response, &result)
 	if err != nil {
-		zap.L().Info("Error decoding achievement media:" + err.Error())
+		zap.L().Info("Error decoding media:" + err.Error())
 		return nil
 	}
 	return &result
@@ -197,6 +197,38 @@ func (s *BattleNetHttpService) GetMount(region blizzarddata.BattleNetRegion, id 
 	err = json.Unmarshal(response, &result)
 	if err != nil {
 		zap.L().Info("Error decoding mount:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
+func (s *BattleNetHttpService) GetToysIndex(region blizzarddata.BattleNetRegion) *httpresponses.BattleNetToysIndex {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/toy/index?namespace=static-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting toys index;" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetToysIndex
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding toys index:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
+func (s *BattleNetHttpService) GetToy(region blizzarddata.BattleNetRegion, id int) *httpresponses.BattleNetToy {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/toy/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting toy;" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetToy
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding toy:" + err.Error())
 		return nil
 	}
 	return &result

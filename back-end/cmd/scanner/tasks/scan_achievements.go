@@ -16,7 +16,7 @@ import (
 )
 
 func ScanAchievements(region blizzarddata.BattleNetRegion) {
-	zap.L().Info(fmt.Sprintf("Starting scan of achievements for region %s\n", region))
+	zap.L().Info(fmt.Sprintf("Starting scan of achievements for region %s", region))
 	index := battlenethttp.GetInstance().GetAchievementCategoryIndex(region)
 	allCategories := slices.Concat(index.Categories, index.RootCategories)
 
@@ -41,7 +41,7 @@ func ScanAchievements(region blizzarddata.BattleNetRegion) {
 	}
 	wg.Wait()
 
-	zap.L().Info(fmt.Sprintf("Finished scan of achievements for region %s\n", region))
+	zap.L().Info(fmt.Sprintf("Finished scan of achievements for region %s", region))
 }
 
 func runCategory(region blizzarddata.BattleNetRegion, category *httpresponses.BattleNetAchievementCategory,
@@ -101,7 +101,7 @@ func runAchievement(region blizzarddata.BattleNetRegion, category *httpresponses
 		zap.L().Info(fmt.Sprintf("Could not get achievement %d", achievementIndex.Id))
 		return
 	}
-	achievementMedia := battlenethttp.GetInstance().GetAchievementMedia(region, achievement.Id)
+	achievementMedia := battlenethttp.GetInstance().GetMedia(region, "achievement", achievement.Id)
 	if achievementMedia == nil {
 		zap.L().Info(fmt.Sprintf("Error fetching media for achievement %d", achievement.Id))
 		return

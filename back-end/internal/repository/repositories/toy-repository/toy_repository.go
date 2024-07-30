@@ -1,4 +1,4 @@
-package mountrepository
+package toyrepository
 
 import (
 	"context"
@@ -9,66 +9,66 @@ import (
 	"wowcollector.io/internal/entities/documents"
 )
 
-type MountRepository struct {
+type ToyRepository struct {
 	collection *mongo.Collection
 }
 
-var instance *MountRepository
+var instance *ToyRepository
 
-func GetRepository() *MountRepository {
+func GetRepository() *ToyRepository {
 	return instance
 }
 
 func Init(database *mongo.Database) {
-	instance = &MountRepository{collection: database.Collection("mounts")}
+	instance = &ToyRepository{collection: database.Collection("toys")}
 	instance.createIndexes()
 }
 
-func (r *MountRepository) GetMounts() ([]*documents.MountDocument, error) {
+func (r *ToyRepository) GetToys() ([]*documents.ToyDocument, error) {
 	result, err := r.collection.Find(context.TODO(), bson.D{})
 	if err != nil {
-		zap.L().Info("Error fetching mounts" + err.Error())
+		zap.L().Info("Error fetching toys" + err.Error())
 		return nil, err
 	}
 	defer result.Close(context.TODO())
-	var mounts []*documents.MountDocument
+	var toys []*documents.ToyDocument
 	for result.Next(context.TODO()) {
-		var mount *documents.MountDocument
-		err := result.Decode(&mount)
+		var toy *documents.ToyDocument
+		err := result.Decode(&toy)
 		if err != nil {
-			zap.L().Info("Error decoding mount" + err.Error())
+			zap.L().Info("Error decoding toy" + err.Error())
 		}
-		mounts = append(mounts, mount)
+		toys = append(toys, toy)
 	}
 	if err := result.Err(); err != nil {
-		zap.L().Info("Error fetching mounts" + err.Error())
+		zap.L().Info("Error fetching toys" + err.Error())
 	}
-	return mounts, nil
+	return toys, nil
 }
 
-func (r *MountRepository) CreateMount(document *documents.MountDocument) error {
+func (r *ToyRepository) CreateToy(document *documents.ToyDocument) error {
 	_, err := r.collection.InsertOne(context.TODO(), document)
 	if err != nil {
-		zap.L().Info("Error inserting mount document:" + err.Error())
+		zap.L().Info("Error inserting toy document:" + err.Error())
 		return err
 	}
 	return nil
 }
 
-func (r *MountRepository) UpdateMount(document *documents.MountDocument) error {
+func (r *ToyRepository) UpdateToy(document *documents.ToyDocument) error {
 	filter := bson.D{{"_id", document.ObjectID}}
 
 	_, err := r.collection.UpdateOne(context.TODO(), filter, bson.D{
 		{"$set", document},
 	})
 	if err != nil {
-		zap.L().Info("Error updating mount document:" + err.Error())
+		zap.L().Info("Error updating toy document:" + err.Error())
 		return err
 	}
 	return nil
 }
 
-func (r *MountRepository) createIndexes() {
+func (r *ToyRepository) createIndexes() {
 	indexModel := mongo.IndexModel{
 		Keys: bson.D{
 			{Key: "id", Value: 1},
