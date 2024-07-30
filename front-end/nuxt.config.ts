@@ -19,7 +19,11 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
+    '@nuxt/icon',
   ],
+  icon: {
+    provider: 'server',
+  },
   components: [
     {
       path: '~/components',
