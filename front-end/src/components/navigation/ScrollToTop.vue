@@ -21,18 +21,36 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="showButton" class="fixed bottom-20 right-14 z-50">
-    <UTooltip text="Scroll to top">
-      <UButton
-        color="primary"
-        variant="solid"
-        size="xl"
-        :ui="{
-          rounded: 'rounded-full',
-        }"
-        icon="i-heroicons-arrow-up-20-solid"
-        @click="scrollToTop"
-      />
-    </UTooltip>
-  </div>
+  <Transition name="slide-fade">
+    <div v-if="showButton" class="fixed bottom-20 right-14 z-50">
+      <UTooltip text="Scroll to top">
+        <UButton
+          color="primary"
+          variant="solid"
+          size="xl"
+          :ui="{
+            rounded: 'rounded-full',
+          }"
+          icon="i-heroicons-arrow-up-20-solid"
+          @click="scrollToTop"
+        />
+      </UTooltip>
+    </div>
+  </Transition>
 </template>
+
+<style>
+.slide-fade-enter-active {
+  transition: all 0.2s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.2s ease-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+</style>
