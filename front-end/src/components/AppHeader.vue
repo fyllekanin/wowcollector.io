@@ -66,7 +66,7 @@ const links = [
   <UHeader :links="links">
     <template #logo>
       <Logo width="48px" height="48px" />
-      <p class="self-center mt-1">WOW Collector</p>
+      <p class="hidden min-[375px]:block self-center mt-1">WOW Collector</p>
     </template>
 
     <template #right>
