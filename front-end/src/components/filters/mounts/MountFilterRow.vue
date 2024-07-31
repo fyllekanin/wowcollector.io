@@ -13,7 +13,7 @@ const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
 <template>
   <div class="flex grow flex-wrap gap-4 items-end">
     <UInput
-      v-model="filters.search as string"
+      v-model="filters.search"
       class="self-end"
       placeholder="Search for a mount"
       icon="i-heroicons-magnifying-glass-20-solid"
@@ -37,37 +37,77 @@ const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
     </UInput>
     <div class="flex flex-col gap-1">
       <span class="text-sm">Base Categories</span>
-      <USelectMenu
-        v-model="filters.rootCategories"
-        class="w-[150px]"
-        searchable
-        clear-search-on-close
-        multiple
-        :options="rootCategoryNames"
-      >
-      </USelectMenu>
+      <UButtonGroup>
+        <USelectMenu
+          v-model="filters.rootCategories"
+          class="w-[150px]"
+          searchable
+          clear-search-on-close
+          multiple
+          :options="rootCategoryNames"
+        >
+        </USelectMenu>
+        <!--  clear all button -->
+        <UTooltip
+          text="Clear all"
+          :prevent="filters.rootCategories.length === 0"
+        >
+          <UButton
+            color="gray"
+            icon="i-heroicons-x-mark-20-solid"
+            :disabled="filters.rootCategories.length === 0"
+            :padded="false"
+            @click="mountsStore.setMountFilters({ rootCategories: [] })"
+          />
+        </UTooltip>
+      </UButtonGroup>
     </div>
     <div class="flex flex-col gap-1">
       <span class="text-sm">Sub Categories</span>
-      <USelectMenu
-        v-model="filters.subCategories"
-        class="w-[150px]"
-        searchable
-        clear-search-on-close
-        multiple
-        :options="subCategoryNames"
-      ></USelectMenu>
+      <UButtonGroup>
+        <USelectMenu
+          v-model="filters.subCategories"
+          class="w-[150px]"
+          searchable
+          clear-search-on-close
+          multiple
+          :options="subCategoryNames"
+        ></USelectMenu>
+        <UTooltip
+          text="Clear all"
+          :prevent="filters.subCategories.length === 0"
+        >
+          <UButton
+            color="gray"
+            icon="i-heroicons-x-mark-20-solid"
+            :disabled="filters.subCategories.length === 0"
+            :padded="false"
+            @click="mountsStore.setMountFilters({ subCategories: [] })"
+          />
+        </UTooltip>
+      </UButtonGroup>
     </div>
     <div class="flex flex-col gap-1">
       <span class="text-sm">Misc</span>
-      <USelectMenu
-        v-model="filters.miscFilters"
-        class="w-[150px]"
-        searchable
-        clear-search-on-close
-        multiple
-        :options="misc"
-      ></USelectMenu>
+      <UButtonGroup>
+        <USelectMenu
+          v-model="filters.miscFilters"
+          class="w-[150px]"
+          searchable
+          clear-search-on-close
+          multiple
+          :options="misc"
+        ></USelectMenu>
+        <UTooltip text="Clear all" :prevent="filters.miscFilters.length === 0">
+          <UButton
+            color="gray"
+            icon="i-heroicons-x-mark-20-solid"
+            :disabled="filters.miscFilters.length === 0"
+            :padded="false"
+            @click="mountsStore.setMountFilters({ miscFilters: [] })"
+          />
+        </UTooltip>
+      </UButtonGroup>
     </div>
     <div class="flex flex-col gap-1">
       <span class="text-sm">Sort</span>

@@ -32,21 +32,24 @@ const percentageMountsCollected = computed(() => {
 
 <template>
   <UContainer class="flex flex-col gap-4">
-    <div class="flex flex-col grow gap-2 py-5 items-center">
-      <div class="flex flex-col w-full">
-        <UProgress :value="percentageMountsCollected" />
-        <p
-          class="text-center text-xs sm:text-sm text-nowrap text-gray-500 self-end pt-1"
-        >
-          {{ collectedMounts.length }} out of
-          {{ availableMounts.length }} mounts collected ({{
-            percentageMountsCollected
-          }}%)
-        </p>
+    <div class="flex flex-col gap-4">
+      <div class="flex grow gap-2 items-center w-full">
+        <div class="flex flex-col w-full">
+          <UProgress :value="percentageMountsCollected" />
+          <p
+            class="text-center text-xs sm:text-sm text-nowrap text-gray-500 self-end pt-1"
+          >
+            {{ collectedMounts.length }} out of
+            {{ availableMounts.length }} mounts collected ({{
+              percentageMountsCollected
+            }}%)
+          </p>
+        </div>
+        <MountFilterSlideover />
       </div>
-      <MountFilterSlideover />
       <MountFilterRow class="hidden sm:flex" />
     </div>
+
     <MountsGridCompact />
   </UContainer>
   <ScrollToTop />

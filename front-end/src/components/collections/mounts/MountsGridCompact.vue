@@ -8,12 +8,12 @@ const { mounts } = storeToRefs(mountsStore);
   <UContainer
     v-for="(category, i) in mounts"
     :key="i"
-    class="flex flex-col w-full px-0 lg:px-0 sm:px-0 mx-0 gap-2"
+    class="flex flex-col w-full justify-center md:justify-start px-0 lg:px-0 sm:px-0 mx-0 gap-2"
   >
     <h2 class="text-lg">{{ category.name }}</h2>
     <UContainer
       v-if="category.mounts?.length"
-      class="flex flex-wrap w-full self-start px-0 lg:px-0 sm:px-0 mx-0 gap-4"
+      class="flex flex-wrap w-full justify-center md:justify-start px-0 lg:px-0 sm:px-0 mx-0 gap-4"
     >
       <div v-for="(mount, j) in category.mounts" :key="j">
         <MountIcon :mount="mount" />

@@ -97,7 +97,6 @@ export const useMountsStore = defineStore('mounts', {
         .map((category) => traverseSort(category, state.filters.sort));
 
       // Root Categories
-      // getRootCategoryNames(result);
       if (state.filters.rootCategories.length)
         result = result.filter((category) =>
           state.filters.rootCategories.includes(category.name)
@@ -113,7 +112,6 @@ export const useMountsStore = defineStore('mounts', {
         }
         return category;
       };
-      // getSubCategoryNames(result);
       if (state.filters.subCategories.length)
         result = result.map(subCategoryFilter);
 
