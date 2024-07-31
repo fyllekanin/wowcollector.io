@@ -8,7 +8,6 @@ export function mapNavigationLinks(links: HeaderLink[]): NavigationTree[] {
   }));
 }
 
-// Recursively flatten the mount categories
 export function flatMapMounts(
   mountCategories: MountCategory[]
 ): MountInformation[] {
@@ -17,4 +16,24 @@ export function flatMapMounts(
     if (category.categories) acc.push(...flatMapMounts(category.categories));
     return acc;
   }, [] as MountInformation[]);
+}
+
+export function getRootCategoryNames(
+  mountCategories: MountCategory[]
+): string[] {
+  return mountCategories.map((category) => category.name);
+}
+
+export function getSubCategoryNames(
+  mountCategories: MountCategory[]
+): string[] {
+  return [
+    ...new Set(
+      mountCategories.reduce((acc, category) => {
+        if (category.categories)
+          acc.push(...getRootCategoryNames(category.categories));
+        return acc;
+      }, [] as string[])
+    ),
+  ];
 }

@@ -50,10 +50,85 @@ export const useMountsStore = defineStore('mounts', {
         );
 
       // Sort
+      const sortMounts = (
+        a: MountInformation,
+        b: MountInformation,
+        sortType: string
+      ) => {
+        switch (sortType) {
+          case 'Name Ascending':
+            return a.name.localeCompare(b.name);
+          case 'Name Descending':
+            return b.name.localeCompare(a.name);
+          case 'Collected':
+            if (a.isCollected && !b.isCollected) return -1;
+            if (!a.isCollected && b.isCollected) return 1;
+            return 0;
+          case 'Not Collected':
+            if (!a.isCollected && b.isCollected) return -1;
+            if (a.isCollected && !b.isCollected) return 1;
+            return 0;
+          default:
+            return 0;
+        }
+      };
+
+      const traverseSort = (category: MountCategory, sortType: string) => {
+        if (category.categories) {
+          category.categories = category.categories.map((cat) =>
+            traverseSort(cat, sortType)
+          );
+          if (sortType === 'Default' && category.order) {
+            category.categories.sort((a, b) => b.order - a.order);
+          }
+        }
+
+        if (category.mounts) {
+          category.mounts.sort((a, b) => sortMounts(a, b, sortType));
+        }
+
+        return category;
+      };
+
+      result = result
+        .sort((a, b) =>
+          state.filters.sort === 'Default' ? b.order - a.order : 0
+        )
+        .map((category) => traverseSort(category, state.filters.sort));
+
       // Root Categories
+      // getRootCategoryNames(result);
+      if (state.filters.rootCategories.length)
+        result = result.filter((category) =>
+          state.filters.rootCategories.includes(category.name)
+        );
+
       // Sub Categories
+      const subCategoryFilter = (category: MountCategory) => {
+        if (category.categories) {
+          category.categories = category.categories.filter((subCategory) =>
+            state.filters.subCategories.includes(subCategory.name)
+          );
+          category.categories = category.categories.map(subCategoryFilter);
+        }
+        return category;
+      };
+      // getSubCategoryNames(result);
+      if (state.filters.subCategories.length)
+        result = result.map(subCategoryFilter);
+
       // Misc Filters
       return result;
+    },
+    rootCategoryNames(state) {
+      return getRootCategoryNames(state._mounts || []).sort((a, b) =>
+        a.localeCompare(b)
+      );
+    },
+    subCategoryNames(state) {
+      return getSubCategoryNames(state._mounts || []).sort((a, b) =>
+        a.localeCompare(b)
+      );
     },
   },
   actions: {
@@ -84,7 +159,7 @@ export const useMountsStore = defineStore('mounts', {
     },
   },
   persist: {
-    paths: ['_mounts', 'filters'],
+    paths: ['_mounts'],
     storage: persistedState.sessionStorage,
   },
 });

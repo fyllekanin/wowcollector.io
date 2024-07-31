@@ -2,10 +2,6 @@
 const mountsStore = useMountsStore();
 
 const { mounts } = storeToRefs(mountsStore);
-
-watchEffect(() => {
-  console.log(mounts.value);
-});
 </script>
 
 <template>

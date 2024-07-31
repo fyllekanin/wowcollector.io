@@ -2,14 +2,9 @@
 import { SORT_TYPES } from '~/constants';
 
 const mountsStore = useMountsStore();
-const { filters } = storeToRefs(mountsStore);
+const { filters, rootCategoryNames, subCategoryNames } =
+  storeToRefs(mountsStore);
 
-const rootCategories = computed(
-  () => filters.value.rootCategories ?? []
-) as ComputedRef<string[]>;
-const subCategories = computed(
-  () => filters.value.subCategories ?? []
-) as ComputedRef<string[]>;
 const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
   string[]
 >;
@@ -42,27 +37,37 @@ const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
     </UInput>
     <div class="flex flex-col gap-1">
       <span class="text-sm">Base Categories</span>
-      <UInputMenu
+      <USelectMenu
         v-model="filters.rootCategories"
         class="w-[150px]"
-        :options="rootCategories"
-      ></UInputMenu>
+        searchable
+        clear-search-on-close
+        multiple
+        :options="rootCategoryNames"
+      >
+      </USelectMenu>
     </div>
     <div class="flex flex-col gap-1">
       <span class="text-sm">Sub Categories</span>
-      <UInputMenu
+      <USelectMenu
         v-model="filters.subCategories"
         class="w-[150px]"
-        :options="subCategories"
-      ></UInputMenu>
+        searchable
+        clear-search-on-close
+        multiple
+        :options="subCategoryNames"
+      ></USelectMenu>
     </div>
     <div class="flex flex-col gap-1">
       <span class="text-sm">Misc</span>
-      <UInputMenu
+      <USelectMenu
         v-model="filters.miscFilters"
         class="w-[150px]"
+        searchable
+        clear-search-on-close
+        multiple
         :options="misc"
-      ></UInputMenu>
+      ></USelectMenu>
     </div>
     <div class="flex flex-col gap-1">
       <span class="text-sm">Sort</span>
