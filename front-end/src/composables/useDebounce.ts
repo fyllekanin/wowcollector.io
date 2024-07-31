@@ -1,14 +1,14 @@
 export function useDebounce() {
-  const debounce = (func: Function, wait: number) => {
-    let timeout: NodeJS.Timeout;
-    return function executedFunction(...args: any) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
+  let timer: NodeJS.Timeout;
+
+  const debounce = <T extends (...args: any[]) => void>(
+    fn: T,
+    delay: number
+  ) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn();
+    }, delay);
   };
 
   return {
