@@ -6,12 +6,15 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 	"wowcollector.io/api/v1/rest-character/aggregator"
 	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	errorcodes "wowcollector.io/internal/common/error-codes"
+	"wowcollector.io/internal/entities/documents"
 	"wowcollector.io/internal/entities/response"
 	errorresponse "wowcollector.io/internal/entities/response/error"
+	mountleaderboardrepository "wowcollector.io/internal/repository/repositories/mount-leaderboard-repository"
 	mountviewrepository "wowcollector.io/internal/repository/repositories/mount-view-repository"
 	battlenethttp "wowcollector.io/internal/services/http/battle-net-http"
 )
@@ -98,6 +101,8 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, "Character mount collection not found for character"))
 		return
 	}
+	go updateMountLeaderBoard(character, realm, region, len(collection.Mounts))
+
 	view, _ := mountviewrepository.GetRepository().GetDefaultMountView()
 	if view == nil {
 		zap.L().Error("Error finding default mount view")
@@ -172,4 +177,27 @@ func getCharacterAchievementCollection(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
 	zap.L().Info("Responded with achievement collection")
+}
+
+func updateMountLeaderBoard(character string, realm string, region string, count int) {
+	existing, _ := mountleaderboardrepository.GetRepository().GetLeaderBoardEntry(character, realm, blizzarddata.FromString(region))
+
+	document := &documents.LeaderboardDocument{
+		Character: character,
+		Realm:     realm,
+		Region:    region,
+		Count:     count,
+	}
+
+	if existing == nil {
+		document.ObjectID = primitive.NewObjectID()
+		mountleaderboardrepository.GetRepository().CreateLeaderboardEntry(document)
+		zap.L().Info("Added new mount leader board entry")
+	} else {
+		document.ObjectID = existing.ObjectID
+		if existing.Count != count {
+			mountleaderboardrepository.GetRepository().UpdateLeaderboardEntry(document)
+			zap.L().Info("Updated mount leader board entry")
+		}
+	}
 }

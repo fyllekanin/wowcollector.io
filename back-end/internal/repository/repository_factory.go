@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 	achievementcategoryrepository "wowcollector.io/internal/repository/repositories/achievement-category-repository"
 	achievementrepository "wowcollector.io/internal/repository/repositories/achievement-repository"
+	mountleaderboardrepository "wowcollector.io/internal/repository/repositories/mount-leaderboard-repository"
 	mountrepository "wowcollector.io/internal/repository/repositories/mount-repository"
 	mountviewrepository "wowcollector.io/internal/repository/repositories/mount-view-repository"
 	realmrepository "wowcollector.io/internal/repository/repositories/realm-repository"
@@ -29,6 +30,7 @@ func (r *RepositoryFactory) init() {
 	achievementrepository.Init(r.database)
 	achievementcategoryrepository.Init(r.database)
 	toyrepository.Init(r.database)
+	mountleaderboardrepository.Init(r.database)
 }
 
 var instance *RepositoryFactory
