@@ -3,12 +3,27 @@ definePageMeta({
   middleware: 'mounts',
 });
 useHead({
+  title: 'WoW Collector - Mounts',
+  meta: [
+    {
+      name: 'description',
+      content: 'Mounts collection page',
+    },
+  ],
   script: [
     {
       src: 'https://wow.zamimg.com/js/tooltips.js',
       async: true,
     },
+    {
+      innerHTML:
+        'const whTooltips = {colorLinks: false, iconizeLinks: true, renameLinks: false};',
+    },
   ],
+});
+useSeoMeta({
+  title: 'WoW Collector - Mounts',
+  description: 'Mounts collection page',
 });
 
 const mountsStore = useMountsStore();
@@ -32,7 +47,7 @@ const percentageMountsCollected = computed(() => {
 
 <template>
   <UContainer class="flex flex-col gap-4">
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 items-center">
       <div class="flex grow gap-2 items-center w-full">
         <div class="flex flex-col w-full">
           <UProgress :value="percentageMountsCollected" />
