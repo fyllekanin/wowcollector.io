@@ -3,13 +3,13 @@ package documents
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type ToyDocument struct {
-	ObjectID       primitive.ObjectID `bson:"_id"`
-	Id             int                `bson:"id"`
-	ItemId         int                `bson:"itemId"`
-	Name           string             `bson:"name"`
-	Source         string             `bson:"source"`
-	IsUnobtainable bool               `bson:"isUnobtainable"`
-	Icon           string             `bson:"icon"`
+	ObjectID       primitive.ObjectID `json:"_id" bson:"_id"`
+	Id             int                `json:"id" bson:"id"`
+	ItemId         int                `json:"itemId" bson:"itemId"`
+	Name           string             `json:"name" bson:"name"`
+	Source         string             `json:"source" bson:"source"`
+	IsUnobtainable bool               `json:"isUnobtainable" bson:"isUnobtainable"`
+	Icon           string             `json:"icon" bson:"icon"`
 }
 
 func (d *ToyDocument) IsEqual(other *ToyDocument) bool {

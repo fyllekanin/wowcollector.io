@@ -7,5 +7,5 @@ type LeaderboardDocument struct {
 	Character string             `bson:"character" json:"character"`
 	Realm     string             `bson:"realm" json:"realm"`
 	Region    string             `bson:"region" json:"region"`
-	Count     int                `json:"count"`
+	Count     int                `bson:"count" json:"count"`
 }
