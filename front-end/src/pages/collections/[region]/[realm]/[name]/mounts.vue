@@ -1,4 +1,16 @@
 <script lang="ts" setup>
+const { data: page } = await useAsyncData('mounts', () =>
+  queryContent('/collections/mounts').findOne()
+);
+if (!page.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page not found',
+    fatal: true,
+    cause: 'No mounts page found in the content.',
+  });
+}
+
 definePageMeta({
   middleware: 'mounts',
 });
@@ -12,8 +24,8 @@ useHead({
   ],
 });
 useSeoMeta({
-  title: 'WoW Collector - Mounts',
-  description: 'Mounts collection page',
+  title: page.value.title,
+  description: page.value.description,
 });
 
 const mountsStore = useMountsStore();

@@ -41,17 +41,32 @@ const links = [
       {
         label: 'Achievements',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/achievements`,
-        disabled: true,
+        disabled: !character.value,
+        click: () => {
+          if (!character.value) {
+            onSearch('achievements');
+          }
+        },
       },
       {
         label: 'Pets',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/pets`,
-        disabled: true,
+        disabled: !character.value,
+        click: () => {
+          if (!character.value) {
+            onSearch('toys');
+          }
+        },
       },
       {
         label: 'Toys',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/toys`,
-        disabled: true,
+        disabled: !character.value,
+        click: () => {
+          if (!character.value) {
+            onSearch('toys');
+          }
+        },
       },
     ],
   },

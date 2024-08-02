@@ -1,4 +1,16 @@
 <script lang="ts" setup>
+const { data: page } = await useAsyncData('achievements', () =>
+  queryContent('/collections/achievements').findOne()
+);
+if (!page.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page not found',
+    fatal: true,
+    cause: 'No achievements page found in the content.',
+  });
+}
+
 definePageMeta({
   middleware: 'achievements',
 });
@@ -12,8 +24,8 @@ useHead({
   ],
 });
 useSeoMeta({
-  title: 'WoW Collector - Achievements',
-  description: 'Achievements collection page',
+  title: page.value.title,
+  description: page.value.description,
 });
 
 const achievementsStore = useAchievementsStore();
@@ -50,7 +62,7 @@ const percentageAchievementsCompleted = computed(() => {
       :progress="percentageAchievementsCompleted"
       :collected="completedAchievements"
       :available="availableAchievements"
-      collection="mounts"
+      collection="achievements"
     >
       <AchievementFilters />
     </CollectionHeader>

@@ -17,7 +17,7 @@ const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
     <UInput
       v-model="filters.search"
       class="w-full sm:w-[250px] sm:self-end"
-      placeholder="Search for a mount"
+      placeholder="Search for an achievement"
       icon="i-heroicons-magnifying-glass-20-solid"
       variant="none"
       :ui="{
