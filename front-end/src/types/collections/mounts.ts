@@ -19,6 +19,24 @@ export interface MountCategory {
   order: number;
 }
 
+export interface MountFilters {
+  search: string;
+  rootCategories: string[];
+  subCategories: string[];
+  miscFilters: string[];
+  sort: MountSort;
+  viewStyle: ViewStyle;
+}
+
+export type ViewStyle = 'grid' | 'list' | 'grid-compact';
+
+export type MountSort =
+  | 'Default'
+  | 'Not Collected'
+  | 'Collected'
+  | 'Name Ascending'
+  | 'Name Descending';
+
 export interface WoWHeadMountInformation {
   completion_category: string;
   icon: string;

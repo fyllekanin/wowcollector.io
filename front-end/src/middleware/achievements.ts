@@ -6,19 +6,19 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   const characterStore = useCharacterStore();
-  const mountsStore = useMountsStore();
+  const achievementsStore = useAchievementsStore();
   const { character } = storeToRefs(characterStore);
-  const { mounts } = storeToRefs(mountsStore);
+  const { achievements } = storeToRefs(achievementsStore);
 
   characterStore.setCharacter({ region, realm, name });
 
-  if (!mounts.value?.length || character.value?.name !== name) {
-    const { data: mountData } = await useFetch(
-      `/api/character/${region}/${realm}/${name}/mounts`
+  if (!achievements.value?.length || character.value?.name !== name) {
+    const { data: achievementData } = await useFetch(
+      `/api/character/${region}/${realm}/${name}/achievements`
     );
-    if (!mountData.value) {
+    if (!achievementData.value) {
       return abortNavigation();
     }
-    mountsStore.setMounts(mountData.value);
+    achievementsStore.setAchievements(achievementData.value);
   }
 });

@@ -1,5 +1,10 @@
 import type { HeaderLink, NavigationTree } from '@nuxt/ui-pro/types';
-import type { MountCategory, MountInformation } from '~/types';
+import type {
+  AchievementCategory,
+  AchievementInformation,
+  MountCategory,
+  MountInformation,
+} from '~/types';
 
 export function mapNavigationLinks(links: HeaderLink[]): NavigationTree[] {
   return links.map((link) => ({
@@ -18,18 +23,29 @@ export function flatMapMounts(
   }, [] as MountInformation[]);
 }
 
+export function flatMapAchievements(
+  achievementCategories: AchievementCategory[]
+): AchievementInformation[] {
+  return achievementCategories.reduce((acc, category) => {
+    if (category.achievements) acc.push(...category.achievements);
+    if (category.categories)
+      acc.push(...flatMapAchievements(category.categories));
+    return acc;
+  }, [] as AchievementInformation[]);
+}
+
 export function getRootCategoryNames(
-  mountCategories: MountCategory[]
+  categories: MountCategory[] | AchievementCategory[]
 ): string[] {
-  return mountCategories.map((category) => category.name);
+  return categories.map((category) => category.name);
 }
 
 export function getSubCategoryNames(
-  mountCategories: MountCategory[]
+  categories: MountCategory[] | AchievementCategory[]
 ): string[] {
   return [
     ...new Set(
-      mountCategories.reduce((acc, category) => {
+      categories.reduce((acc, category) => {
         if (category.categories)
           acc.push(...getRootCategoryNames(category.categories));
         return acc;
