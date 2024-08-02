@@ -46,22 +46,14 @@ const percentageAchievementsCompleted = computed(() => {
 
 <template>
   <UContainer class="flex flex-col gap-4">
-    <div class="flex flex-col gap-4 items-center">
-      <div class="flex grow gap-2 items-center w-full md:flex-col">
-        <div class="flex flex-col w-full">
-          <UProgress :value="percentageAchievementsCompleted" />
-          <p
-            class="text-center text-xs sm:text-sm text-nowrap text-gray-500 self-end pt-1"
-          >
-            {{ completedAchievements.length }} out of
-            {{ availableAchievements.length }} achievements completed ({{
-              percentageAchievementsCompleted
-            }}%)
-          </p>
-        </div>
-        <AchievementFilters />
-      </div>
-    </div>
+    <CollectionHeader
+      :progress="percentageAchievementsCompleted"
+      :collected="completedAchievements"
+      :available="availableAchievements"
+      collection="mounts"
+    >
+      <AchievementFilters />
+    </CollectionHeader>
 
     <AchievementGridCompact />
   </UContainer>

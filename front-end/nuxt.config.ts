@@ -29,6 +29,10 @@ export default defineNuxtConfig({
       path: '~/components',
       pathPrefix: false,
     },
+    {
+      path: '~/containers',
+      pathPrefix: false,
+    },
   ],
   colorMode: {
     preference: 'dark',

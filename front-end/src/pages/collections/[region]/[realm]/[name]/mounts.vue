@@ -37,22 +37,14 @@ const percentageMountsCollected = computed(() => {
 
 <template>
   <UContainer class="flex flex-col gap-4">
-    <div class="flex flex-col gap-4 items-center">
-      <div class="flex grow gap-2 items-center w-full md:flex-col">
-        <div class="flex flex-col w-full">
-          <UProgress :value="percentageMountsCollected" />
-          <p
-            class="text-center text-xs sm:text-sm text-nowrap text-gray-500 self-end pt-1"
-          >
-            {{ collectedMounts.length }} out of
-            {{ availableMounts.length }} mounts collected ({{
-              percentageMountsCollected
-            }}%)
-          </p>
-        </div>
-        <MountFilters />
-      </div>
-    </div>
+    <CollectionHeader
+      :progress="percentageMountsCollected"
+      :collected="collectedMounts"
+      :available="availableMounts"
+      collection="mounts"
+    >
+      <MountFilters />
+    </CollectionHeader>
 
     <MountsGridCompact />
   </UContainer>
