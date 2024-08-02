@@ -18,7 +18,20 @@ import (
 func ScanAchievements(region blizzarddata.BattleNetRegion) {
 	zap.L().Info(fmt.Sprintf("Starting scan of achievements for region %s", region))
 	index := battlenethttp.GetInstance().GetAchievementCategoryIndex(region)
-	allCategories := slices.Concat(index.Categories, index.RootCategories)
+	var allCategories []*httpresponses.BattleNetAchievementCategory
+
+	for _, element := range slices.Concat(index.Categories, index.RootCategories) {
+		var isFound bool
+		for _, existing := range allCategories {
+			if existing.Id == element.Id {
+				isFound = true
+				break
+			}
+		}
+		if !isFound {
+			allCategories = append(allCategories, element)
+		}
+	}
 
 	existingAchievementCategories, err := achievementcategoryrepository.GetRepository().GetAchievementCategories()
 	if err != nil {
@@ -77,9 +90,6 @@ func runCategory(region blizzarddata.BattleNetRegion, category *httpresponses.Ba
 
 	var wg sync.WaitGroup
 	if achievementCategory.Achievements != nil {
-		for _, element := range achievementCategory.Achievements {
-			go runAchievement(region, category, element, existingAchievements)
-		}
 		for _, element := range achievementCategory.Achievements {
 			wg.Add(1)
 			go func() {
