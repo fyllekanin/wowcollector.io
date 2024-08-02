@@ -11,10 +11,12 @@ const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
 </script>
 
 <template>
-  <div class="flex grow flex-wrap gap-4 items-end">
+  <UContainer
+    class="w-full h-fit flex flex-col sm:flex-row sm:flex-wrap gap-5 items-center"
+  >
     <UInput
       v-model="filters.search"
-      class="self-end"
+      class="w-full sm:w-[250px] sm:self-end"
       placeholder="Search for a mount"
       icon="i-heroicons-magnifying-glass-20-solid"
       variant="none"
@@ -35,19 +37,18 @@ const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
         />
       </template>
     </UInput>
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-1 w-full sm:w-[150px]">
       <span class="text-sm">Base Categories</span>
       <UButtonGroup>
         <USelectMenu
           v-model="filters.rootCategories"
-          class="w-[150px]"
+          class="w-full"
           searchable
           clear-search-on-close
           multiple
           :options="rootCategoryNames"
         >
         </USelectMenu>
-        <!--  clear all button -->
         <UTooltip
           text="Clear all"
           :prevent="filters.rootCategories.length === 0"
@@ -62,12 +63,12 @@ const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
         </UTooltip>
       </UButtonGroup>
     </div>
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-1 w-full sm:w-[150px]">
       <span class="text-sm">Sub Categories</span>
       <UButtonGroup>
         <USelectMenu
           v-model="filters.subCategories"
-          class="w-[150px]"
+          class="w-full"
           searchable
           clear-search-on-close
           multiple
@@ -87,12 +88,12 @@ const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
         </UTooltip>
       </UButtonGroup>
     </div>
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-1 w-full sm:w-[150px]">
       <span class="text-sm">Misc</span>
       <UButtonGroup>
         <USelectMenu
+          class="w-full"
           v-model="filters.miscFilters"
-          class="w-[150px]"
           searchable
           clear-search-on-close
           multiple
@@ -109,42 +110,28 @@ const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
         </UTooltip>
       </UButtonGroup>
     </div>
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-1 w-full sm:w-[150px]">
       <span class="text-sm">Sort</span>
       <USelect
-        class="self-end"
         v-model="filters.sort"
         :options="SORT_TYPES"
         icon="material-symbols:sort"
         placeholder="Sort by"
       />
     </div>
-
-    <!-- Upcoming Feature -->
-
-    <!-- <UButton
-      class="h-min self-end"
-      variant="ghost"
-      color="gray"
-      icon="codicon:collapse-all"
-      :disabled="filters.viewStyle !== 'list'"
-      >Collapse all</UButton
-    >
-    <UButtonGroup class="h-min lg:self-end" size="sm">
-      <UTooltip
-        v-for="({ label, value, icon }, index) in RENDER_TYPES"
-        :text="label"
-        :key="index"
+    <div class="flex flex-col w-full sm:w-fit sm:self-end">
+      <UButton
+        class="self-end"
+        color="gray"
+        icon="material-symbols:filter-alt-off"
+        :disabled="
+          Object.values(filters).every(
+            (filter) => filter?.length === 0 || filter === ''
+          )
+        "
+        @click="mountsStore.clearMountFilters"
+        >Clear all filters</UButton
       >
-        <UButton
-          v-model="filters.viewStyle"
-          :value="value"
-          :icon="icon"
-          :color="filters.viewStyle === value ? 'primary' : 'light'"
-          variant="outline"
-          @click="mountsStore.setMountFilters({ viewStyle: value })"
-        />
-      </UTooltip>
-    </UButtonGroup> -->
-  </div>
+    </div>
+  </UContainer>
 </template>

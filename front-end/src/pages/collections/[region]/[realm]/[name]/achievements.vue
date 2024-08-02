@@ -47,7 +47,7 @@ const percentageAchievementsCompleted = computed(() => {
 <template>
   <UContainer class="flex flex-col gap-4">
     <div class="flex flex-col gap-4 items-center">
-      <div class="flex grow gap-2 items-center w-full">
+      <div class="flex grow gap-2 items-center w-full md:flex-col">
         <div class="flex flex-col w-full">
           <UProgress :value="percentageAchievementsCompleted" />
           <p
@@ -59,9 +59,8 @@ const percentageAchievementsCompleted = computed(() => {
             }}%)
           </p>
         </div>
-        <!-- <MountFilterSlideover /> -->
+        <AchievementFilters />
       </div>
-      <!-- <MountFilterRow class="hidden sm:flex" /> -->
     </div>
 
     <AchievementGridCompact />
