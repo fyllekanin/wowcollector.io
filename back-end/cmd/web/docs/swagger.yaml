@@ -26,6 +26,15 @@ definitions:
       message:
         type: string
     type: object
+  response.AchievementCategoryResponse:
+    properties:
+      displayOrder:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   response.AchievementCollectionAchievement:
     properties:
       description:
@@ -69,6 +78,17 @@ definitions:
       realm:
         type: string
     type: object
+  response.LeaderboardEntry:
+    properties:
+      character:
+        type: string
+      count:
+        type: integer
+      realm:
+        type: string
+      region:
+        type: string
+    type: object
   response.MountCollectionCategorySwagger:
     properties:
       categories:
@@ -86,11 +106,9 @@ definitions:
     type: object
   response.MountCollectionMount:
     properties:
-      creatureDisplay:
-        type: string
+      assets:
+        $ref: '#/definitions/response.MountCollectionMountAssets'
       description:
-        type: string
-      icon:
         type: string
       id:
         type: integer
@@ -98,6 +116,24 @@ definitions:
         type: boolean
       name:
         type: string
+    type: object
+  response.MountCollectionMountAssets:
+    properties:
+      display:
+        type: string
+      largeIcon:
+        type: string
+      smallIcon:
+        type: string
+    type: object
+  response.PaginationResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/response.LeaderboardEntry'
+        type: array
+      total:
+        type: integer
     type: object
   response.RealmResponse:
     properties:
@@ -158,6 +194,29 @@ paths:
       summary: Fetch all realms ang regions
       tags:
       - BattleNet
+  /api/v1/battle-net/root-achievement-categories:
+    get:
+      description: Get all the achievement categories which are root (top level)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.AchievementCategoryResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Fetch all root achievement categories
+      tags:
+      - BattleNet
   /api/v1/character/{region}/{realm}/{character}:
     get:
       description: Get summary information about a character
@@ -216,7 +275,7 @@ paths:
         type: string
       - description: Root category to include
         in: query
-        name: rootCategory
+        name: rootCategoryId
         type: string
       produces:
       - application/json
@@ -277,4 +336,25 @@ paths:
       summary: Fetch character mount collection
       tags:
       - Character
+  /api/v1/leaderboard/mounts:
+    get:
+      description: Get the leaderboard mounts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PaginationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Fetch leaderboard for mounts
+      tags:
+      - BattleNet
 swagger: "2.0"

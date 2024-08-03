@@ -21,7 +21,30 @@ func GetRepository() *AchievementCategoryRepository {
 
 func Init(database *mongo.Database) {
 	instance = &AchievementCategoryRepository{collection: database.Collection("achievement-categories")}
-	instance.createIndexes()
+	instance.createIndexes("id")
+	instance.createIndexes("isRootCategory")
+}
+
+func (r *AchievementCategoryRepository) GetAchievementRootCategories() ([]*documents.AchievementCategoryDocument, error) {
+	result, err := r.collection.Find(context.TODO(), bson.D{{"isRootCategory", true}})
+	if err != nil {
+		zap.L().Info("Error fetching achievement root categories" + err.Error())
+		return nil, err
+	}
+	defer result.Close(context.TODO())
+	var achievementCategories []*documents.AchievementCategoryDocument
+	for result.Next(context.TODO()) {
+		var achievementCategory *documents.AchievementCategoryDocument
+		err := result.Decode(&achievementCategory)
+		if err != nil {
+			zap.L().Info("Error decoding achievement root category" + err.Error())
+		}
+		achievementCategories = append(achievementCategories, achievementCategory)
+	}
+	if err := result.Err(); err != nil {
+		zap.L().Info("Error fetching achievement root categories" + err.Error())
+	}
+	return achievementCategories, nil
 }
 
 func (r *AchievementCategoryRepository) GetAchievementCategories() ([]*documents.AchievementCategoryDocument, error) {
@@ -68,10 +91,10 @@ func (r *AchievementCategoryRepository) UpdateAchievementCategory(document *docu
 	return nil
 }
 
-func (r *AchievementCategoryRepository) createIndexes() {
+func (r *AchievementCategoryRepository) createIndexes(key string) {
 	indexModel := mongo.IndexModel{
 		Keys: bson.D{
-			{Key: "id", Value: 1},
+			{Key: key, Value: 1},
 		},
 	}
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -135,7 +136,7 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 // @param region path string true "Region"
 // @param realm path string true "Realm"
 // @param character path string true "Character"
-// @param rootCategory query string false "Root category to include"
+// @param rootCategoryId query int false "Root category to include"
 // @success 200 {object} []response.AchievementCollectionCategorySwagger
 // @failure 400 {object} errorresponse.ErrorResponse
 // @failure 404 {object} errorresponse.ErrorResponse
@@ -144,7 +145,7 @@ func getCharacterAchievementCollection(w http.ResponseWriter, r *http.Request) {
 	region := chi.URLParam(r, "region")
 	realm := chi.URLParam(r, "realm")
 	character := chi.URLParam(r, "character")
-	rootCategory := r.URL.Query().Get("rootCategory")
+	rootCategoryId, _ := strconv.Atoi(r.URL.Query().Get("rootCategoryId"))
 	zap.L().Info(fmt.Sprintf("Fetching achievement collection for %s on realm %s in region %s", character, realm, region))
 
 	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
@@ -165,7 +166,7 @@ func getCharacterAchievementCollection(w http.ResponseWriter, r *http.Request) {
 	body, err := json.Marshal(aggregator.GetAchievementAggregation(
 		*item,
 		*collection,
-		rootCategory,
+		rootCategoryId,
 	))
 	if err != nil {
 		zap.L().Error("Error stringifying response body")

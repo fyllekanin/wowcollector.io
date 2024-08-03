@@ -52,6 +52,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/battle-net/root-achievement-categories": {
+            "get": {
+                "description": "Get all the achievement categories which are root (top level)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BattleNet"
+                ],
+                "summary": "Fetch all root achievement categories",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.AchievementCategoryResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/character/{region}/{realm}/{character}": {
             "get": {
                 "description": "Get summary information about a character",
@@ -142,7 +177,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Root category to include",
-                        "name": "rootCategory",
+                        "name": "rootCategoryId",
                         "in": "query"
                     }
                 ],
@@ -228,6 +263,38 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/leaderboard/mounts": {
+            "get": {
+                "description": "Get the leaderboard mounts",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BattleNet"
+                ],
+                "summary": "Fetch leaderboard for mounts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.PaginationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -264,6 +331,20 @@ const docTemplate = `{
                     "$ref": "#/definitions/errorcodes.ErrorCode"
                 },
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.AchievementCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "displayOrder": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }
@@ -334,6 +415,23 @@ const docTemplate = `{
                 }
             }
         },
+        "response.LeaderboardEntry": {
+            "type": "object",
+            "properties": {
+                "character": {
+                    "type": "string"
+                },
+                "count": {
+                    "type": "integer"
+                },
+                "realm": {
+                    "type": "string"
+                },
+                "region": {
+                    "type": "string"
+                }
+            }
+        },
         "response.MountCollectionCategorySwagger": {
             "type": "object",
             "properties": {
@@ -360,13 +458,10 @@ const docTemplate = `{
         "response.MountCollectionMount": {
             "type": "object",
             "properties": {
-                "creatureDisplay": {
-                    "type": "string"
+                "assets": {
+                    "$ref": "#/definitions/response.MountCollectionMountAssets"
                 },
                 "description": {
-                    "type": "string"
-                },
-                "icon": {
                     "type": "string"
                 },
                 "id": {
@@ -377,6 +472,34 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "response.MountCollectionMountAssets": {
+            "type": "object",
+            "properties": {
+                "display": {
+                    "type": "string"
+                },
+                "largeIcon": {
+                    "type": "string"
+                },
+                "smallIcon": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.PaginationResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.LeaderboardEntry"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
