@@ -16,3 +16,16 @@ type BattleNetToy struct {
 	ShouldExcludeIfUncollected bool                    `json:"should_exclude_if_uncollected"`
 	Media                      *BattleNetMediaProperty `json:"media"`
 }
+
+type BattleNetCharacterToyDetails struct {
+	Name string `json:"name"`
+	Id   int    `json:"id"`
+}
+
+type BattleNetCharacterToy struct {
+	Toys *BattleNetCharacterToyDetails `json:"toy"`
+}
+
+type BattleNetCharacterToyCollection struct {
+	Toys []*BattleNetCharacterToy `json:"toys"`
+}

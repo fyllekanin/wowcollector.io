@@ -9,7 +9,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
-	"wowcollector.io/api/v1/rest-character/aggregator"
+	achievementaggregator "wowcollector.io/api/v1/rest-character/aggregators/achievement-aggregator"
+	mountaggregator "wowcollector.io/api/v1/rest-character/aggregators/mount-aggregator"
+	toyaggregator "wowcollector.io/api/v1/rest-character/aggregators/toy-aggregator"
 	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	errorcodes "wowcollector.io/internal/common/error-codes"
 	"wowcollector.io/internal/entities/documents"
@@ -17,6 +19,7 @@ import (
 	errorresponse "wowcollector.io/internal/entities/response/error"
 	mountleaderboardrepository "wowcollector.io/internal/repository/repositories/mount-leaderboard-repository"
 	mountviewrepository "wowcollector.io/internal/repository/repositories/mount-view-repository"
+	toyviewrepository "wowcollector.io/internal/repository/repositories/toy-view-repository"
 	battlenethttp "wowcollector.io/internal/services/http/battle-net-http"
 )
 
@@ -25,6 +28,7 @@ func GetRoutes(r chi.Router) {
 		r.Get("/", getCharacterProfile)
 		r.Get("/mounts", getCharacterMountCollection)
 		r.Get("/achievements", getCharacterAchievementCollection)
+		r.Get("/toys", getCharacterToyCollection)
 	})
 }
 
@@ -112,7 +116,7 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, err := json.Marshal(aggregator.GetMountsAggregation(
+	body, err := json.Marshal(mountaggregator.GetMountsAggregation(
 		*item,
 		*collection,
 		*view,
@@ -127,6 +131,62 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
 	zap.L().Info("Responded with mount collection")
+}
+
+// @summary Fetch character toy collection
+// @description Get toy collection for character
+// @tags Character
+// @produce json
+// @param region path string true "Region"
+// @param realm path string true "Realm"
+// @param character path string true "Character"
+// @success 200 {object} []response.ToyCollectionCategorySwagger
+// @failure 400 {object} errorresponse.ErrorResponse
+// @failure 404 {object} errorresponse.ErrorResponse
+// @router /api/v1/character/{region}/{realm}/{character}/toys [get]
+func getCharacterToyCollection(w http.ResponseWriter, r *http.Request) {
+	region := chi.URLParam(r, "region")
+	realm := chi.URLParam(r, "realm")
+	character := chi.URLParam(r, "character")
+	zap.L().Info(fmt.Sprintf("Fetching toy collection for %s on realm %s in region %s", character, realm, region))
+
+	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
+	if item == nil {
+		zap.L().Error("Error finding character")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, fmt.Sprintf("Character %s on realm %s in region %s not found", character, realm, region)))
+		return
+	}
+	collection := battlenethttp.GetInstance().GetCharacterToyCollection(blizzarddata.FromString(region), realm, character)
+	if collection == nil {
+		zap.L().Error("Error getting characters toy collection")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, "Character toy collection not found for character"))
+		return
+	}
+
+	view, _ := toyviewrepository.GetRepository().GetDefaultToyView()
+	if view == nil {
+		zap.L().Error("Error finding default toy view")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_DEFAULT_TOY_VIEW, "No default toy view available"))
+		return
+	}
+
+	body, err := json.Marshal(toyaggregator.GetToysAggregation(
+		*collection,
+		*view,
+	))
+	if err != nil {
+		zap.L().Error("Error stringifying response body")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.INTERNAL_ERROR, "Invalid JSON body"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(body)
+	zap.L().Info("Responded with toy collection")
 }
 
 // @summary Fetch character achievement collection
@@ -163,7 +223,7 @@ func getCharacterAchievementCollection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, err := json.Marshal(aggregator.GetAchievementAggregation(
+	body, err := json.Marshal(achievementaggregator.GetAchievementAggregation(
 		*item,
 		*collection,
 		rootCategoryId,

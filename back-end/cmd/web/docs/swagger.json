@@ -168,7 +168,7 @@
                         "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "Root category to include",
                         "name": "rootCategoryId",
                         "in": "query"
@@ -257,6 +257,64 @@
                 }
             }
         },
+        "/api/v1/character/{region}/{realm}/{character}/toys": {
+            "get": {
+                "description": "Get toy collection for character",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character"
+                ],
+                "summary": "Fetch character toy collection",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Region",
+                        "name": "region",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Realm",
+                        "name": "realm",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Character",
+                        "name": "character",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.ToyCollectionCategorySwagger"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/leaderboard/mounts": {
             "get": {
                 "description": "Get the leaderboard mounts",
@@ -308,13 +366,15 @@
                 "CHARACTER_NOT_FOUND",
                 "LOADING_BATTLE_NET_DATA",
                 "INTERNAL_ERROR",
-                "NO_DEFAULT_MOUNT_VIEW"
+                "NO_DEFAULT_MOUNT_VIEW",
+                "NO_DEFAULT_TOY_VIEW"
             ],
             "x-enum-varnames": [
                 "CHARACTER_NOT_FOUND",
                 "LOADING_BATTLE_NET_DATA",
                 "INTERNAL_ERROR",
-                "NO_DEFAULT_MOUNT_VIEW"
+                "NO_DEFAULT_MOUNT_VIEW",
+                "NO_DEFAULT_TOY_VIEW"
             ]
         },
         "errorresponse.ErrorResponse": {
@@ -535,6 +595,54 @@
                 },
                 "value": {
                     "$ref": "#/definitions/blizzarddata.BattleNetRegion"
+                }
+            }
+        },
+        "response.ToyCollectionCategorySwagger": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "toys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.ToyCollectionToy"
+                    }
+                }
+            }
+        },
+        "response.ToyCollectionToy": {
+            "type": "object",
+            "properties": {
+                "assets": {
+                    "$ref": "#/definitions/response.ToyCollectionToyAssets"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isCollected": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ToyCollectionToyAssets": {
+            "type": "object",
+            "properties": {
+                "largeIcon": {
+                    "type": "string"
                 }
             }
         }

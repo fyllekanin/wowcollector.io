@@ -13,12 +13,14 @@ definitions:
     - LOADING_BATTLE_NET_DATA
     - INTERNAL_ERROR
     - NO_DEFAULT_MOUNT_VIEW
+    - NO_DEFAULT_TOY_VIEW
     type: string
     x-enum-varnames:
     - CHARACTER_NOT_FOUND
     - LOADING_BATTLE_NET_DATA
     - INTERNAL_ERROR
     - NO_DEFAULT_MOUNT_VIEW
+    - NO_DEFAULT_TOY_VIEW
   errorresponse.ErrorResponse:
     properties:
       code:
@@ -162,6 +164,37 @@ definitions:
       value:
         $ref: '#/definitions/blizzarddata.BattleNetRegion'
     type: object
+  response.ToyCollectionCategorySwagger:
+    properties:
+      categories:
+        items:
+          type: object
+        type: array
+      name:
+        type: string
+      order:
+        type: integer
+      toys:
+        items:
+          $ref: '#/definitions/response.ToyCollectionToy'
+        type: array
+    type: object
+  response.ToyCollectionToy:
+    properties:
+      assets:
+        $ref: '#/definitions/response.ToyCollectionToyAssets'
+      id:
+        type: integer
+      isCollected:
+        type: boolean
+      name:
+        type: string
+    type: object
+  response.ToyCollectionToyAssets:
+    properties:
+      largeIcon:
+        type: string
+    type: object
 host: localhost:8888
 info:
   contact: {}
@@ -276,7 +309,7 @@ paths:
       - description: Root category to include
         in: query
         name: rootCategoryId
-        type: string
+        type: integer
       produces:
       - application/json
       responses:
@@ -334,6 +367,45 @@ paths:
           schema:
             $ref: '#/definitions/errorresponse.ErrorResponse'
       summary: Fetch character mount collection
+      tags:
+      - Character
+  /api/v1/character/{region}/{realm}/{character}/toys:
+    get:
+      description: Get toy collection for character
+      parameters:
+      - description: Region
+        in: path
+        name: region
+        required: true
+        type: string
+      - description: Realm
+        in: path
+        name: realm
+        required: true
+        type: string
+      - description: Character
+        in: path
+        name: character
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.ToyCollectionCategorySwagger'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Fetch character toy collection
       tags:
       - Character
   /api/v1/leaderboard/mounts:
