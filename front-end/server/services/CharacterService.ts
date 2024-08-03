@@ -19,11 +19,17 @@ export default class CharacterService {
   static async getCharacterAchievements(
     name: string,
     realm: string,
-    region: string
+    region: string,
+    rootCategoryId?: number | string
   ) {
     try {
       const response = await get<AchievementCategory[]>({
         url: `/api/v1/character/${region}/${realm}/${name}/achievements`,
+        config: {
+          params: {
+            rootCategoryId,
+          },
+        },
       });
 
       return response.data;

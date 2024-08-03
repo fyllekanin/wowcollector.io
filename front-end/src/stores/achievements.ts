@@ -32,15 +32,17 @@ export const useAchievementsStore = defineStore('achievements', {
         );
       };
       const mapSubCategories = (category: AchievementCategory) => {
+        if (!category.hasOwnProperty('achievements')) return category;
         return {
           ...category,
-          achievements: filterBySearch(category.achievements),
+          achievements: filterBySearch(category?.achievements || []),
         };
       };
       const mapRootCategories = (category: AchievementCategory) => {
+        if (!category.hasOwnProperty('achievements')) return category;
         return {
           ...category,
-          achievements: filterBySearch(category.achievements),
+          achievements: filterBySearch(category?.achievements || []),
           categories: category.categories
             ?.map(mapSubCategories)
             .filter((subCategory) => subCategory.achievements?.length),
@@ -48,12 +50,10 @@ export const useAchievementsStore = defineStore('achievements', {
       };
 
       // Search
-      result = result
-        ?.map(mapRootCategories)
-        .filter(
-          (category) =>
-            category.achievements?.length || category.categories?.length
-        );
+      result = result?.map(mapRootCategories).filter((category) => {
+        if (!('achievements' in category)) return true;
+        return category.achievements?.length || category.categories?.length;
+      });
 
       // Sort
       const sortAchievements = (
@@ -141,6 +141,20 @@ export const useAchievementsStore = defineStore('achievements', {
     },
   },
   actions: {
+    setAchievement(newAchievementCategory: AchievementCategory) {
+      const rootCategoryIndex = this._achievements?.findIndex(
+        (category) => category.id === newAchievementCategory.id
+      );
+      console.log(this._achievements);
+      if (
+        rootCategoryIndex !== undefined &&
+        rootCategoryIndex !== -1 &&
+        this._achievements
+      ) {
+        this._achievements[rootCategoryIndex] = newAchievementCategory;
+      }
+      console.log(this._achievements);
+    },
     setAchievements(newAchievements: AchievementCategory[]) {
       this._achievements = newAchievements;
     },

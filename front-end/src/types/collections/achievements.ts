@@ -13,6 +13,7 @@ export interface AchievementCategory {
   achievements: AchievementInformation[] | null;
   categories: AchievementCategory[];
   displayOrder: number;
+  id: number;
 }
 
 export type AchievementSort =
