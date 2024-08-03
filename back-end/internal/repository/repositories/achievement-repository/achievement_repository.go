@@ -26,13 +26,22 @@ func Init(database *mongo.Database) {
 	instance.createIndexes("categoryId")
 }
 
+func (r *AchievementRepository) GetTotal() (int64, error) {
+	result, err := r.collection.EstimatedDocumentCount(context.TODO())
+	if err != nil {
+		zap.L().Error("Error counting achievement documents")
+		return 0, err
+	}
+	return result, nil
+}
+
 func (r *AchievementRepository) GetAchievements() ([]*documents.AchievementDocument, error) {
 	result, err := r.collection.Find(context.TODO(), bson.D{})
-	defer result.Close(context.TODO())
 	if err != nil {
 		zap.L().Error("Error fetching achievements" + err.Error())
 		return nil, err
 	}
+	defer result.Close(context.TODO())
 	var achievements []*documents.AchievementDocument
 	for result.Next(context.TODO()) {
 		var achievement *documents.AchievementDocument

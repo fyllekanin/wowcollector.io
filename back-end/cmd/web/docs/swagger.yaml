@@ -69,6 +69,17 @@ definitions:
       name:
         type: string
     type: object
+  response.AchievementCollectionResponseSwagger:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/response.AchievementCollectionCategorySwagger'
+        type: array
+      completed:
+        type: integer
+      total:
+        type: integer
+    type: object
   response.CharacterProfileResponse:
     properties:
       faction:
@@ -316,9 +327,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/response.AchievementCollectionCategorySwagger'
-            type: array
+            $ref: '#/definitions/response.AchievementCollectionResponseSwagger'
         "400":
           description: Bad Request
           schema:

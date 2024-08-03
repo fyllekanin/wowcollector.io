@@ -185,10 +185,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/response.AchievementCollectionCategorySwagger"
-                            }
+                            "$ref": "#/definitions/response.AchievementCollectionResponseSwagger"
                         }
                     },
                     "400": {
@@ -455,6 +452,23 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "response.AchievementCollectionResponseSwagger": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.AchievementCollectionCategorySwagger"
+                    }
+                },
+                "completed": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
