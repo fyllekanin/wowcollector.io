@@ -1,4 +1,4 @@
-import type { AchievementCategory } from '~/types';
+import type { AchievementCategory, AchievementCategoryResponse } from '~/types';
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const { region, realm, name } = to.params as Record<string, string>;
@@ -29,7 +29,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     );
 
     const responses = await Promise.all([
-      useFetch<AchievementCategory[]>(
+      useFetch<AchievementCategoryResponse>(
         `/api/character/${region}/${realm}/${name}/achievements`,
         {
           query: {
@@ -37,7 +37,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
           },
         }
       ),
-      useFetch<AchievementCategory[]>(
+      useFetch<AchievementCategoryResponse>(
         `/api/character/${region}/${realm}/${name}/achievements`,
         {
           query: {
@@ -51,15 +51,15 @@ export default defineNuxtRouteMiddleware(async (to) => {
       return abortNavigation();
     }
 
-    const mergedAchievements = responses.reduce((acc, { data }, index) => {
+    const mergedAchievements = responses.reduce((prev, curr, index) => {
       // const [category] = data.value;
       const merged = {
         ...achievements.value[index],
-        categories: data.value,
+        categories: curr.data.value?.categories,
         achievements: null,
       } as AchievementCategory;
-      acc.push(merged);
-      return acc;
+      prev.push(merged);
+      return prev;
     }, [] as AchievementCategory[]);
 
     mergedAchievements.forEach((achievementCategory) => {
