@@ -18,7 +18,7 @@ import (
 func GetRoutes(r chi.Router) {
 	r.Route("/battle-net", func(r chi.Router) {
 		r.Get("/realms-regions", getRealmsAndRegions)
-		r.Get("/root-achievement-categories", getRootAchievementCategories)
+		r.Get("/achievement-root-categories", getAchievementRootCategories)
 	})
 }
 
@@ -64,7 +64,7 @@ func getRealmsAndRegions(w http.ResponseWriter, r *http.Request) {
 // @failure 400 {object} errorresponse.ErrorResponse
 // @failure 404 {object} errorresponse.ErrorResponse
 // @router /api/v1/battle-net/root-achievement-categories [get]
-func getRootAchievementCategories(w http.ResponseWriter, r *http.Request) {
+func getAchievementRootCategories(w http.ResponseWriter, r *http.Request) {
 	zap.L().Info("Fetching achievement root categories")
 	categories, err := achievementcategoryrepository.GetRepository().GetAchievementRootCategories()
 	if err != nil {
