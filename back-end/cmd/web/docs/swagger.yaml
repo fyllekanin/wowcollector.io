@@ -206,28 +206,7 @@ info:
   title: wowcollector.io
   version: "1.0"
 paths:
-  /api/v1/battle-net/realms-regions:
-    get:
-      description: Get all the realms and regions
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.RegionRealmResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errorresponse.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/errorresponse.ErrorResponse'
-      summary: Fetch all realms ang regions
-      tags:
-      - BattleNet
-  /api/v1/battle-net/root-achievement-categories:
+  /api/v1/battle-net/achievement-root-categories:
     get:
       description: Get all the achievement categories which are root (top level)
       produces:
@@ -248,6 +227,27 @@ paths:
           schema:
             $ref: '#/definitions/errorresponse.ErrorResponse'
       summary: Fetch all root achievement categories
+      tags:
+      - BattleNet
+  /api/v1/battle-net/realms-regions:
+    get:
+      description: Get all the realms and regions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.RegionRealmResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Fetch all realms ang regions
       tags:
       - BattleNet
   /api/v1/character/{region}/{realm}/{character}:

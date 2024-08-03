@@ -63,7 +63,7 @@ func getRealmsAndRegions(w http.ResponseWriter, r *http.Request) {
 // @success 200 {object} []response.AchievementCategoryResponse
 // @failure 400 {object} errorresponse.ErrorResponse
 // @failure 404 {object} errorresponse.ErrorResponse
-// @router /api/v1/battle-net/root-achievement-categories [get]
+// @router /api/v1/battle-net/achievement-root-categories [get]
 func getAchievementRootCategories(w http.ResponseWriter, r *http.Request) {
 	zap.L().Info("Fetching achievement root categories")
 	categories, err := achievementcategoryrepository.GetRepository().GetAchievementRootCategories()

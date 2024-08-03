@@ -20,39 +20,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/battle-net/realms-regions": {
-            "get": {
-                "description": "Get all the realms and regions",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "BattleNet"
-                ],
-                "summary": "Fetch all realms ang regions",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.RegionRealmResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errorresponse.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/errorresponse.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/battle-net/root-achievement-categories": {
+        "/api/v1/battle-net/achievement-root-categories": {
             "get": {
                 "description": "Get all the achievement categories which are root (top level)",
                 "produces": [
@@ -70,6 +38,38 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/response.AchievementCategoryResponse"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/battle-net/realms-regions": {
+            "get": {
+                "description": "Get all the realms and regions",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BattleNet"
+                ],
+                "summary": "Fetch all realms ang regions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.RegionRealmResponse"
                         }
                     },
                     "400": {
