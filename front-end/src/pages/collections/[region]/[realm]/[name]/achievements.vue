@@ -44,9 +44,6 @@ const completedAchievements = computed(() => {
 const percentageAchievementsCompleted = computed(() => {
   if (!achievements.value) return 0;
   const flattenedAchievements = flatMapAchievements(achievements.value);
-  console.log(
-    flattenedAchievements.filter((achievement) => achievement.id === 8891)
-  );
   const completedAchievements = flattenedAchievements.filter(
     (mount) => mount.isCompleted
   );

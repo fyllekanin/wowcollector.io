@@ -74,6 +74,27 @@ const links = [
     label: 'Character Search',
     to: '/search',
   },
+  // {
+  //   label: 'Leaderboards',
+  //   children: [
+  //     {
+  //       label: 'Mounts',
+  //       to: '/leaderboards/mounts',
+  //     },
+  //     {
+  //       label: 'Achievements',
+  //       to: '/leaderboards/achievements',
+  //     },
+  //     {
+  //       label: 'Pets',
+  //       to: '/leaderboards/pets',
+  //     },
+  //     {
+  //       label: 'Toys',
+  //       to: '/leaderboards/toys',
+  //     },
+  //   ],
+  // },
 ] as HeaderLink[];
 </script>
 

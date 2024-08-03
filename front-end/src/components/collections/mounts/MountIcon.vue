@@ -24,9 +24,8 @@ defineProps({
           : '',
       ]"
       width="38"
-      :on-error="(e: any) => (e.target.src = mount.creatureDisplay)"
       @error="
-        mount.assets.smallIcon =
+        mount.assets.largeIcon =
           'https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg'
       "
     />

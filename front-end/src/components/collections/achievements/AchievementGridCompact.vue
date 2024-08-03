@@ -35,9 +35,7 @@ const { achievements } = storeToRefs(achievementsStore);
             class="flex grow flex-wrap gap-2 px-0 lg:px-0 sm:px-0 mx-0"
           >
             <div v-for="(achievement, k) in subCategory.achievements" :key="k">
-              <Lazy>
-                <AchievementIcon :achievement="achievement" />
-              </Lazy>
+              <AchievementIcon :achievement="achievement" />
             </div>
           </UContainer>
         </div>

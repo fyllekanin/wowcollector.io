@@ -1,14 +1,17 @@
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-
 const isIntersecting = ref(false);
 const elementRef = ref<HTMLElement | null>(null);
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    isIntersecting.value = entry.isIntersecting;
-  });
-});
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      isIntersecting.value = entry.isIntersecting;
+    });
+  },
+  {
+    threshold: 0.5,
+  }
+);
 
 onMounted(() => {
   if (elementRef.value) {
@@ -22,7 +25,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="elementRef">
-    <slot v-if="isIntersecting" />
-  </div>
+  <!-- <div ref="elementRef"> -->
+  <slot ref="elementRef" v-if="isIntersecting" />
+  <!-- </div> -->
 </template>

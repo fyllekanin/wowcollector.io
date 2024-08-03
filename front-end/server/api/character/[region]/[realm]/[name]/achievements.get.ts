@@ -10,14 +10,6 @@ export default defineEventHandler({
       realm,
       region
     );
-
-    if (achievements) {
-      const flattenedAchievements = flatMapAchievements(achievements);
-      console.log(
-        flattenedAchievements.filter((achievement) => achievement.id === 8891)
-      );
-    }
-
     if (achievements) return achievements;
   },
 });
