@@ -15,11 +15,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
   characterStore.setCharacter({ region, realm, name });
 
   if (!achievements.value?.length || character.value?.name !== name) {
-    console.time('achievements 1');
     const { data: rootCategories } = await useFetch(
       '/api/battle-net/achievement-root-categories'
     );
-    console.timeEnd('achievements 1');
     if (!rootCategories.value) {
       return abortNavigation();
     }
@@ -28,7 +26,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
       rootCategories.value as AchievementCategory[]
     );
 
-    console.time('achievements 2');
     const responses = await Promise.all([
       useFetch<AchievementCategoryResponse>(
         `/api/character/${region}/${realm}/${name}/achievements`,
@@ -47,17 +44,15 @@ export default defineNuxtRouteMiddleware(async (to) => {
         }
       ),
     ]);
-    console.timeEnd('achievements 2');
 
     if (responses.some((response) => !response.data.value)) {
       return abortNavigation();
     }
 
-    console.time('achievements 3');
     const mergedAchievements = responses.reduce((prev, curr, index) => {
       const merged = {
         ...achievements.value[index],
-        categories: curr.data.value?.categories,
+        ...curr.data.value?.category,
         achievements: null,
       } as AchievementCategory;
       prev.push(merged);
@@ -67,12 +62,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
         achievementsStore.setCompleted(curr.data.value.completed);
       return prev;
     }, [] as AchievementCategory[]);
-    console.timeEnd('achievements 3');
 
-    console.time('achievements 4');
     mergedAchievements.forEach((achievementCategory) => {
       achievementsStore.setAchievement(achievementCategory);
     });
-    console.timeEnd('achievements 4');
   }
 });
