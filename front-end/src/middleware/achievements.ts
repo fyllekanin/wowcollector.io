@@ -53,7 +53,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
       const merged = {
         ...achievements.value[index],
         ...curr.data.value?.category,
-        achievements: null,
       } as AchievementCategory;
       prev.push(merged);
       if (curr.data.value?.total)

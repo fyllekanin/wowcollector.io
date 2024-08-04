@@ -90,7 +90,7 @@ export const useAchievementsStore = defineStore('achievements', {
             traverseSort(cat, sortType)
           );
           if (sortType === 'Default' && category.displayOrder) {
-            category.categories.sort((a, b) => b.displayOrder - a.displayOrder);
+            category.categories.sort((a, b) => a.displayOrder - b.displayOrder);
           }
         }
 
@@ -105,7 +105,7 @@ export const useAchievementsStore = defineStore('achievements', {
 
       result = result
         .sort((a, b) =>
-          state.filters.sort === 'Default' ? b.displayOrder - a.displayOrder : 0
+          state.filters.sort === 'Default' ? a.displayOrder - b.displayOrder : 0
         )
         .map((category) => traverseSort(category, state.filters.sort));
 
@@ -147,7 +147,6 @@ export const useAchievementsStore = defineStore('achievements', {
       const rootCategoryIndex = this._achievements?.findIndex(
         (category) => category.id === newAchievementCategory.id
       );
-      console.log(this._achievements);
       if (
         rootCategoryIndex !== undefined &&
         rootCategoryIndex !== -1 &&
@@ -155,7 +154,21 @@ export const useAchievementsStore = defineStore('achievements', {
       ) {
         this._achievements[rootCategoryIndex] = newAchievementCategory;
       }
-      console.log(this._achievements);
+    },
+    mergeAchievementCategory(newAchievementCategory: AchievementCategory) {
+      const rootCategoryIndex = this._achievements?.findIndex(
+        (category) => category.id === newAchievementCategory.id
+      );
+      if (
+        rootCategoryIndex !== undefined &&
+        rootCategoryIndex !== -1 &&
+        this._achievements
+      ) {
+        this._achievements[rootCategoryIndex] = {
+          ...this._achievements[rootCategoryIndex],
+          ...newAchievementCategory,
+        };
+      }
     },
     setAchievements(newAchievements: AchievementCategory[]) {
       this._achievements = newAchievements;

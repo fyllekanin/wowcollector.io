@@ -1,14 +1,56 @@
 <script lang="ts" setup>
 import type { AchievementCategory } from '~/types';
 
+const loading = ref(false);
+
+const toast = useToast();
 const achievementsStore = useAchievementsStore();
+const characterStore = useCharacterStore();
 
 const { achievements } = storeToRefs(achievementsStore);
+const { character } = storeToRefs(characterStore);
+
+const fetchAchievementCategory = async (
+  category: AchievementCategory,
+  open: boolean
+) => {
+  if ((category.achievements && category.categories) || open) return;
+
+  try {
+    loading.value = true;
+    const data = await $fetch(
+      `/api/character/${character.value?.region}/${character.value?.realm}/${character.value?.name}/achievements`,
+      {
+        query: { rootCategoryId: category.id },
+      }
+    );
+
+    if (data?.category)
+      achievementsStore.mergeAchievementCategory({
+        ...data.category,
+        id: category.id,
+      });
+  } catch (error) {
+    console.error(error);
+    toast.add({
+      title: 'Error',
+      description: (error as Error).message || 'Failed to fetch achievements',
+      color: 'red',
+    });
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
 
 <template>
   <UAccordion
-    :items="achievements"
+    :items="
+      achievements.map((category, i) => ({
+        ...category,
+        ...((i === 0 || i === 1) && { defaultOpen: true }),
+      }))
+    "
     :ui="{ wrapper: 'flex flex-col w-full' }"
     multiple
   >
@@ -17,6 +59,7 @@ const { achievements } = storeToRefs(achievementsStore);
         variant="ghost"
         class="border-b border-gray-200 dark:border-gray-700"
         :ui="{ rounded: 'rounded-none', padding: { sm: 'p-3' } }"
+        @click="() => fetchAchievementCategory(item, open)"
       >
         <span>{{ item.name }}</span>
 
@@ -31,15 +74,28 @@ const { achievements } = storeToRefs(achievementsStore);
     </template>
     <template #item="{ item }">
       <UContainer
+        v-if="loading"
+        class="flex flex-wrap w-full justify-center md:justify-start px-3 lg:px-3 sm:px-0 py-2 lg:py-2 sm:py-2 mx-0 gap-4"
+      >
+        <USkeleton
+          v-for="i in 300"
+          :key="i"
+          class="h-8 w-8"
+          :ui="{
+            rounded: 'none',
+          }"
+        />
+      </UContainer>
+      <UContainer
         v-if="item.achievements?.length"
-        class="flex flex-wrap w-full justify-center md:justify-start px-3 lg:px-3 sm:px-0 mx-0 gap-4"
+        class="flex flex-wrap w-full justify-center md:justify-start px-3 lg:px-3 sm:px-0 py-2 lg:py-2 sm:py-2 mx-0 gap-4"
       >
         <div v-for="(achievement, j) in item.achievements" :key="j">
           <AchievementIcon :achievement="achievement" />
         </div>
       </UContainer>
       <UContainer
-        class="flex flex-wrap w-full self-start px-3 lg:px-3 sm:px-0 mx-0 gap-4"
+        class="flex flex-wrap w-full self-start px-3 lg:px-3 sm:px-0 py-2 lg:py-2 sm:py-2 mx-0 gap-4"
       >
         <UContainer
           v-for="(subCategory, j) in item.categories?.filter(
