@@ -11,13 +11,13 @@ collections:
   - title: Achievements
     description: Track your progress and see what you have left to complete.
     icon: mdi:trophy
-    class: col-span-6 row-span-4
+    class: col-span-6 row-span-2
     to: achievements
     color: yellow
   - title: Pets
     description: Find all the pets you can and have collected in World of Warcraft.
     icon: mdi:paw
-    class: col-span-6 row-span-4
+    class: col-span-6 row-span-2
     to: pets
     color: green
   - title: Toys
