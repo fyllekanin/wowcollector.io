@@ -23,7 +23,7 @@ func GetAchievementAggregation(character httpresponses.BattleNetCharacter, colle
 func getCategoryResponse(category *documents.AchievementCategoryDocument, collectedIds []int) response.AchievementCollectionCategory {
 	var subCategories []response.AchievementCollectionCategory
 	categories, err := achievementcategoryrepository.GetRepository().GetAchievementCategoriesForRootCategory(category.Id)
-	if err == nil {
+	if err == nil && len(categories) > 0 {
 		var wg sync.WaitGroup
 		ch := make(chan response.AchievementCollectionCategory, len(categories))
 
@@ -58,6 +58,9 @@ func getAchievementsForCategory(category *documents.AchievementCategoryDocument,
 	if err != nil {
 		zap.L().Error(fmt.Sprintf("Error getting achievements for category %d", category.Id))
 		return nil
+	}
+	if len(achievements) == 0 {
+		return make([]response.AchievementCollectionAchievement, 0)
 	}
 
 	var items []response.AchievementCollectionAchievement
