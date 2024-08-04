@@ -197,7 +197,7 @@ func getCharacterToyCollection(w http.ResponseWriter, r *http.Request) {
 // @param region path string true "Region"
 // @param realm path string true "Realm"
 // @param character path string true "Character"
-// @param rootCategoryId query int false "Root category to include"
+// @param rootCategoryId query int true "Root category to include"
 // @success 200 {object} response.AchievementCollectionResponseSwagger
 // @failure 400 {object} errorresponse.ErrorResponse
 // @failure 404 {object} errorresponse.ErrorResponse
@@ -224,16 +224,16 @@ func getCharacterAchievementCollection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	categories := achievementaggregator.GetAchievementAggregation(
+	category := achievementaggregator.GetAchievementAggregation(
 		*item,
 		*collection,
 		rootCategoryId,
 	)
 	total, _ := achievementrepository.GetRepository().GetTotal()
 	body, err := json.Marshal(&response.AchievementCollectionResponse{
-		Completed:  len(collection.Achievements),
-		Total:      total,
-		Categories: categories,
+		Completed: len(collection.Achievements),
+		Total:     total,
+		Category:  category,
 	})
 	if err != nil {
 		zap.L().Error("Error stringifying response body")

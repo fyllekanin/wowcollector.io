@@ -178,7 +178,8 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Root category to include",
                         "name": "rootCategoryId",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -458,11 +459,8 @@ const docTemplate = `{
         "response.AchievementCollectionResponseSwagger": {
             "type": "object",
             "properties": {
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/response.AchievementCollectionCategorySwagger"
-                    }
+                "category": {
+                    "$ref": "#/definitions/response.AchievementCollectionCategorySwagger"
                 },
                 "completed": {
                     "type": "integer"

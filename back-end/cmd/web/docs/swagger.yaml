@@ -71,10 +71,8 @@ definitions:
     type: object
   response.AchievementCollectionResponseSwagger:
     properties:
-      categories:
-        items:
-          $ref: '#/definitions/response.AchievementCollectionCategorySwagger'
-        type: array
+      category:
+        $ref: '#/definitions/response.AchievementCollectionCategorySwagger'
       completed:
         type: integer
       total:
@@ -320,6 +318,7 @@ paths:
       - description: Root category to include
         in: query
         name: rootCategoryId
+        required: true
         type: integer
       produces:
       - application/json

@@ -66,7 +66,7 @@ func (r *MountViewRepository) GetDefaultMountView() (*documents.MountViewDocumen
 			zap.L().Info("No default mount view found")
 			return nil, nil
 		}
-		zap.L().Info("Error fetching default mount view" + err.Error())
+		zap.L().Error("Error fetching default mount view" + err.Error())
 		return nil, err
 	}
 

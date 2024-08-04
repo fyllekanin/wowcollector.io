@@ -13,62 +13,36 @@ import (
 	achievementrepository "wowcollector.io/internal/repository/repositories/achievement-repository"
 )
 
-func GetAchievementAggregation(character httpresponses.BattleNetCharacter, collection httpresponses.BattleNetCharacterAchievements, rootCategoryId int) []response.AchievementCollectionCategory {
+func GetAchievementAggregation(character httpresponses.BattleNetCharacter, collection httpresponses.BattleNetCharacterAchievements, rootCategoryId int) response.AchievementCollectionCategory {
 	collectedIds := getCollectedAchievementIds(collection)
-	achievementCategories, _ := achievementcategoryrepository.GetRepository().GetAchievementCategories()
-	var items []response.AchievementCollectionCategory
+	category, _ := achievementcategoryrepository.GetRepository().GetAchievementCategoryWithId(rootCategoryId)
 
-	var wg sync.WaitGroup
-	ch := make(chan response.AchievementCollectionCategory, len(achievementCategories))
-
-	for _, element := range achievementCategories {
-		if !element.IsRootCategory {
-			continue
-		}
-		if rootCategoryId != 0 && element.Id != rootCategoryId {
-			continue
-		}
-		wg.Add(1)
-		go func(element *documents.AchievementCategoryDocument) {
-			defer wg.Done()
-			ch <- getCategoryResponse(element, achievementCategories, collectedIds)
-		}(element)
-	}
-
-	go func() {
-		wg.Wait()
-		close(ch)
-	}()
-
-	for result := range ch {
-		items = append(items, result)
-	}
-
-	return items
+	return getCategoryResponse(category, collectedIds)
 }
 
-func getCategoryResponse(category *documents.AchievementCategoryDocument, categories []*documents.AchievementCategoryDocument, collectedIds []int) response.AchievementCollectionCategory {
+func getCategoryResponse(category *documents.AchievementCategoryDocument, collectedIds []int) response.AchievementCollectionCategory {
 	var subCategories []response.AchievementCollectionCategory
-	var wg sync.WaitGroup
-	ch := make(chan response.AchievementCollectionCategory, len(categories))
+	categories, err := achievementcategoryrepository.GetRepository().GetAchievementCategoriesForRootCategory(category.Id)
+	if err == nil {
+		var wg sync.WaitGroup
+		ch := make(chan response.AchievementCollectionCategory, len(categories))
 
-	for _, element := range categories {
-		if element.RootCategoryId == category.Id {
+		for _, element := range categories {
 			wg.Add(1)
 			go func(element *documents.AchievementCategoryDocument) {
 				defer wg.Done()
-				ch <- getCategoryResponse(element, categories, collectedIds)
+				ch <- getCategoryResponse(element, collectedIds)
 			}(element)
 		}
-	}
 
-	go func() {
-		wg.Wait()
-		close(ch)
-	}()
+		go func() {
+			wg.Wait()
+			close(ch)
+		}()
 
-	for result := range ch {
-		subCategories = append(subCategories, result)
+		for result := range ch {
+			subCategories = append(subCategories, result)
+		}
 	}
 
 	return response.AchievementCollectionCategory{
