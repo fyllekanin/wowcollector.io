@@ -14,6 +14,8 @@ export const useAchievementsStore = defineStore('achievements', {
       subCategories: [],
       miscFilters: [],
     } as AchievementFilters,
+    total: 0,
+    completed: 0,
   }),
   getters: {
     achievements(state) {
@@ -178,6 +180,12 @@ export const useAchievementsStore = defineStore('achievements', {
     },
     clearAchievementFilter(filter: keyof AchievementFilters) {
       delete this.filters[filter];
+    },
+    setTotal(newTotal: number) {
+      this.total = newTotal;
+    },
+    setCompleted(newCompleted: number) {
+      this.completed = newCompleted;
     },
   },
   persist: {

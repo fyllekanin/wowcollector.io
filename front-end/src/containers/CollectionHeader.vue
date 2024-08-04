@@ -5,11 +5,11 @@ const props = defineProps({
     required: true,
   },
   collected: {
-    type: Array,
+    type: Number,
     required: true,
   },
-  available: {
-    type: Array,
+  total: {
+    type: Number,
     required: true,
   },
   collection: {
@@ -38,8 +38,9 @@ const phrase = computed(
         <p
           class="text-center text-xs sm:text-sm text-nowrap text-gray-500 self-end pt-1"
         >
-          {{ collected.length }} out of {{ available.length }} {{ collection }}
-          {{ phrase }} ({{ progress }}%)
+          {{ collected }} out of {{ total }} {{ collection }} {{ phrase }} ({{
+            progress
+          }}%)
         </p>
       </div>
       <!-- <MountFilters v-if="collection === 'mounts'" />

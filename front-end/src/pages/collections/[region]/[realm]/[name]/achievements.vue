@@ -29,27 +29,11 @@ useSeoMeta({
 });
 
 const achievementsStore = useAchievementsStore();
-const { achievements } = storeToRefs(achievementsStore);
+const { achievements, total, completed } = storeToRefs(achievementsStore);
 
-const availableAchievements = computed(() => {
-  if (!achievements.value) return [];
-  return flatMapAchievements(achievements.value);
-});
-const completedAchievements = computed(() => {
-  if (!achievements.value) return [];
-  return flatMapAchievements(achievements.value).filter(
-    (mount) => mount.isCompleted
-  );
-});
 const percentageAchievementsCompleted = computed(() => {
   if (!achievements.value) return 0;
-  const flattenedAchievements = flatMapAchievements(achievements.value);
-  const completedAchievements = flattenedAchievements.filter(
-    (mount) => mount.isCompleted
-  );
-  return Math.round(
-    (completedAchievements.length / flattenedAchievements.length) * 100
-  );
+  return Math.round((completed.value / total.value) * 100);
 });
 </script>
 
@@ -57,8 +41,8 @@ const percentageAchievementsCompleted = computed(() => {
   <UContainer class="flex flex-col gap-4">
     <CollectionHeader
       :progress="percentageAchievementsCompleted"
-      :collected="completedAchievements"
-      :available="availableAchievements"
+      :collected="completed"
+      :total="total"
       collection="achievements"
     >
       <AchievementFilters />

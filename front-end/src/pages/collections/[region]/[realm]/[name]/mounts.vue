@@ -31,19 +31,18 @@ useSeoMeta({
 const mountsStore = useMountsStore();
 const { mounts } = storeToRefs(mountsStore);
 
-const availableMounts = computed(() => {
-  if (!mounts.value) return [];
-  return flatMapMounts(mounts.value);
+const total = computed(() => {
+  if (!mounts.value) return 0;
+  return flatMapMounts(mounts.value).length;
 });
-const collectedMounts = computed(() => {
-  if (!mounts.value) return [];
-  return flatMapMounts(mounts.value).filter((mount) => mount.isCollected);
+const collected = computed(() => {
+  if (!mounts.value) return 0;
+  return flatMapMounts(mounts.value).filter((mount) => mount.isCollected)
+    .length;
 });
 const percentageMountsCollected = computed(() => {
   if (!mounts.value) return 0;
-  const flattenedMounts = flatMapMounts(mounts.value);
-  const collectedMounts = flattenedMounts.filter((mount) => mount.isCollected);
-  return Math.round((collectedMounts.length / flattenedMounts.length) * 100);
+  return Math.round((collected.value / total.value) * 100);
 });
 </script>
 
@@ -51,8 +50,8 @@ const percentageMountsCollected = computed(() => {
   <UContainer class="flex flex-col gap-4">
     <CollectionHeader
       :progress="percentageMountsCollected"
-      :collected="collectedMounts"
-      :available="availableMounts"
+      :collected="collected"
+      :total="total"
       collection="mounts"
     >
       <MountFilters />
