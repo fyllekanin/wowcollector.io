@@ -28,15 +28,6 @@ definitions:
       message:
         type: string
     type: object
-  response.AchievementCategoryResponse:
-    properties:
-      displayOrder:
-        type: integer
-      id:
-        type: integer
-      name:
-        type: string
-    type: object
   response.AchievementCollectionAchievement:
     properties:
       description:
@@ -68,15 +59,6 @@ definitions:
         type: integer
       name:
         type: string
-    type: object
-  response.AchievementCollectionResponseSwagger:
-    properties:
-      category:
-        $ref: '#/definitions/response.AchievementCollectionCategorySwagger'
-      completed:
-        type: integer
-      total:
-        type: integer
     type: object
   response.CharacterProfileResponse:
     properties:
@@ -215,29 +197,6 @@ info:
   title: wowcollector.io
   version: "1.0"
 paths:
-  /api/v1/battle-net/achievement-root-categories:
-    get:
-      description: Get all the achievement categories which are root (top level)
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/response.AchievementCategoryResponse'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errorresponse.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/errorresponse.ErrorResponse'
-      summary: Fetch all root achievement categories
-      tags:
-      - BattleNet
   /api/v1/battle-net/realms-regions:
     get:
       description: Get all the realms and regions
@@ -321,7 +280,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.AchievementCollectionResponseSwagger'
+            items:
+              $ref: '#/definitions/response.AchievementCollectionCategorySwagger'
+            type: array
         "400":
           description: Bad Request
           schema:

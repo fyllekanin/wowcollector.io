@@ -20,41 +20,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/battle-net/achievement-root-categories": {
-            "get": {
-                "description": "Get all the achievement categories which are root (top level)",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "BattleNet"
-                ],
-                "summary": "Fetch all root achievement categories",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/response.AchievementCategoryResponse"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errorresponse.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/errorresponse.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/battle-net/realms-regions": {
             "get": {
                 "description": "Get all the realms and regions",
@@ -179,7 +144,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.AchievementCollectionResponseSwagger"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.AchievementCollectionCategorySwagger"
+                            }
                         }
                     },
                     "400": {
@@ -386,20 +354,6 @@ const docTemplate = `{
                 }
             }
         },
-        "response.AchievementCategoryResponse": {
-            "type": "object",
-            "properties": {
-                "displayOrder": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "response.AchievementCollectionAchievement": {
             "type": "object",
             "properties": {
@@ -446,20 +400,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                }
-            }
-        },
-        "response.AchievementCollectionResponseSwagger": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "$ref": "#/definitions/response.AchievementCollectionCategorySwagger"
-                },
-                "completed": {
-                    "type": "integer"
-                },
-                "total": {
-                    "type": "integer"
                 }
             }
         },

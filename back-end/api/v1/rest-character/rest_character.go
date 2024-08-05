@@ -16,7 +16,6 @@ import (
 	"wowcollector.io/internal/entities/documents"
 	"wowcollector.io/internal/entities/response"
 	errorresponse "wowcollector.io/internal/entities/response/error"
-	achievementrepository "wowcollector.io/internal/repository/repositories/achievement-repository"
 	mountleaderboardrepository "wowcollector.io/internal/repository/repositories/mount-leaderboard-repository"
 	mountviewrepository "wowcollector.io/internal/repository/repositories/mount-view-repository"
 	toyviewrepository "wowcollector.io/internal/repository/repositories/toy-view-repository"
@@ -196,7 +195,7 @@ func getCharacterToyCollection(w http.ResponseWriter, r *http.Request) {
 // @param region path string true "Region"
 // @param realm path string true "Realm"
 // @param character path string true "Character"
-// @success 200 {object} response.AchievementCollectionResponseSwagger
+// @success 200 {object} []response.AchievementCollectionCategorySwagger
 // @failure 400 {object} errorresponse.ErrorResponse
 // @failure 404 {object} errorresponse.ErrorResponse
 // @router /api/v1/character/{region}/{realm}/{character}/achievements [get]
@@ -225,12 +224,7 @@ func getCharacterAchievementCollection(w http.ResponseWriter, r *http.Request) {
 		*item,
 		*collection,
 	)
-	total, _ := achievementrepository.GetRepository().GetTotal()
-	body, err := json.Marshal(&response.AchievementCollectionResponse{
-		Completed:  len(collection.Achievements),
-		Total:      total,
-		Categories: categories,
-	})
+	body, err := json.Marshal(categories)
 	if err != nil {
 		zap.L().Error("Error stringifying response body")
 		w.WriteHeader(http.StatusBadRequest)
