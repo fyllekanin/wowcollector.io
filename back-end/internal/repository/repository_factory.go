@@ -13,6 +13,7 @@ import (
 	mountleaderboardrepository "wowcollector.io/internal/repository/repositories/mount-leaderboard-repository"
 	mountrepository "wowcollector.io/internal/repository/repositories/mount-repository"
 	mountviewrepository "wowcollector.io/internal/repository/repositories/mount-view-repository"
+	petrepository "wowcollector.io/internal/repository/repositories/pet-repository"
 	realmrepository "wowcollector.io/internal/repository/repositories/realm-repository"
 	seedrepository "wowcollector.io/internal/repository/repositories/seed-repository"
 	toyrepository "wowcollector.io/internal/repository/repositories/toy-repository"
@@ -33,6 +34,7 @@ func (r *RepositoryFactory) init() {
 	toyrepository.Init(r.database)
 	mountleaderboardrepository.Init(r.database)
 	toyviewrepository.Init(r.database)
+	petrepository.Init(r.database)
 }
 
 var instance *RepositoryFactory

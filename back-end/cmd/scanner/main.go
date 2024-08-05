@@ -39,7 +39,7 @@ func main() {
 		})
 	})
 
-	time.AfterFunc(4*time.Second, func() {
+	time.AfterFunc(4*time.Hour, func() {
 		tasks.ScanAchievements(blizzarddata.REGION_EU)
 		c.AddFunc("@every 24h", func() {
 			tasks.ScanAchievements(blizzarddata.REGION_EU)
@@ -50,6 +50,13 @@ func main() {
 		tasks.ScanToys(blizzarddata.REGION_EU)
 		c.AddFunc("@every 24h", func() {
 			tasks.ScanToys(blizzarddata.REGION_EU)
+		})
+	})
+
+	time.AfterFunc(8*time.Second, func() {
+		tasks.ScanPets(blizzarddata.REGION_EU)
+		c.AddFunc("@every 24h", func() {
+			tasks.ScanPets(blizzarddata.REGION_EU)
 		})
 	})
 

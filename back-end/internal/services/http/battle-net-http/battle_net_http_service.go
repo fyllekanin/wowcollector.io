@@ -202,6 +202,38 @@ func (s *BattleNetHttpService) GetMountsIndex(region blizzarddata.BattleNetRegio
 	return &result
 }
 
+func (s *BattleNetHttpService) GetPetsIndex(region blizzarddata.BattleNetRegion) *httpresponses.BattleNetPetsIndex {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/pet/index?namespace=static-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting pets index;" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetPetsIndex
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding pets index:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
+func (s *BattleNetHttpService) GetPet(region blizzarddata.BattleNetRegion, id int) *httpresponses.BattleNetPet {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/pet/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting pet" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetPet
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding pet:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
 func (s *BattleNetHttpService) GetMount(region blizzarddata.BattleNetRegion, id int) *httpresponses.BattleNetMount {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/mount/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
