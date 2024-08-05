@@ -1,2 +1,14 @@
 title: WoW Collector - Toys
 description: See all the toys you can and have collected in World of Warcraft.
+
+breadcrumbs:
+  - title: Home
+    icon: mdi:home
+    to: /
+  - title: Collections
+    icon: mdi:bookshelf
+    to: /collections
+  - title: Toys
+    icon: game-icons:locked-chest
+    disabled: true
+    to: toys

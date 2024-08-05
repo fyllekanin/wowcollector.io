@@ -1,2 +1,14 @@
 title: WoW Collector - Mounts
 description: See all the mounts you can and have collected in World of Warcraft.
+
+breadcrumbs:
+  - title: Home
+    icon: mdi:home
+    to: /
+  - title: Collections
+    icon: mdi:bookshelf
+    to: /collections
+  - title: Mounts
+    icon: mdi:horse-variant
+    disabled: true
+    to: mounts

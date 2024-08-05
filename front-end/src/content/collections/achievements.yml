@@ -1,2 +1,14 @@
 title: WoW Collector - Achievements
 description: Track your progress and see what you have left to complete.
+
+breadcrumbs:
+  - title: Home
+    icon: mdi:home
+    to: /
+  - title: Collections
+    icon: mdi:bookshelf
+    to: /collections
+  - title: Achievements
+    icon: mdi:trophy
+    disabled: true
+    to: achievements
