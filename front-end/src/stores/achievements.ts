@@ -1,12 +1,12 @@
 import type {
-  AchievementCategory,
+  AchievementCategoryAccordion,
   AchievementFilters,
   AchievementInformation,
 } from '~/types';
 
 export const useAchievementsStore = defineStore('achievements', {
   state: () => ({
-    _achievements: null as AchievementCategory[] | null,
+    _achievements: null as AchievementCategoryAccordion[] | null,
     filters: {
       search: '',
       sort: 'Default',
@@ -33,14 +33,14 @@ export const useAchievementsStore = defineStore('achievements', {
         );
       };
 
-      const mapSubCategories = (category: AchievementCategory) => {
+      const mapSubCategories = (category: AchievementCategoryAccordion) => {
         return {
           ...category,
           achievements: filterBySearch(category.achievements || []),
         };
       };
 
-      const mapRootCategories = (category: AchievementCategory) => {
+      const mapRootCategories = (category: AchievementCategoryAccordion) => {
         return {
           ...category,
           achievements: filterBySearch(category.achievements || []),
@@ -80,7 +80,7 @@ export const useAchievementsStore = defineStore('achievements', {
       };
 
       const traverseSort = (
-        category: AchievementCategory,
+        category: AchievementCategoryAccordion,
         sortType: string
       ) => {
         if (category.categories) {
@@ -114,7 +114,7 @@ export const useAchievementsStore = defineStore('achievements', {
         );
 
       // Sub Categories
-      const subCategoryFilter = (category: AchievementCategory) => {
+      const subCategoryFilter = (category: AchievementCategoryAccordion) => {
         if (category.categories) {
           category.categories = category.categories.filter((subCategory) =>
             state.filters.subCategories.includes(subCategory.name)
@@ -142,7 +142,7 @@ export const useAchievementsStore = defineStore('achievements', {
     },
   },
   actions: {
-    setAchievement(newAchievementCategory: AchievementCategory) {
+    setAchievement(newAchievementCategory: AchievementCategoryAccordion) {
       const rootCategoryIndex = this._achievements?.findIndex(
         (category) => category.id === newAchievementCategory.id
       );
@@ -154,7 +154,9 @@ export const useAchievementsStore = defineStore('achievements', {
         this._achievements[rootCategoryIndex] = newAchievementCategory;
       }
     },
-    mergeAchievementCategory(newAchievementCategory: AchievementCategory) {
+    mergeAchievementCategory(
+      newAchievementCategory: AchievementCategoryAccordion
+    ) {
       const rootCategoryIndex = this._achievements?.findIndex(
         (category) => category.id === newAchievementCategory.id
       );
@@ -169,7 +171,7 @@ export const useAchievementsStore = defineStore('achievements', {
         };
       }
     },
-    setAchievements(newAchievements: AchievementCategory[]) {
+    setAchievements(newAchievements: AchievementCategoryAccordion[]) {
       this._achievements = newAchievements;
     },
     clearAchievements() {
@@ -192,6 +194,14 @@ export const useAchievementsStore = defineStore('achievements', {
     },
     clearAchievementFilter(filter: keyof AchievementFilters) {
       delete this.filters[filter];
+    },
+    toggleCategoryOpen(categoryId: number) {
+      const category = this._achievements?.find(
+        (category) => category.id === categoryId
+      );
+      if (category) {
+        category.deafultOpen = !category.deafultOpen;
+      }
     },
   },
   persist: {

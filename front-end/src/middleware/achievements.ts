@@ -23,6 +23,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
       return abortNavigation();
     }
 
-    achievementsStore.setAchievements(data.value);
+    const minDisplayOrder =
+      Math.min(...data.value?.map((c) => c.displayOrder || 0)) || 0;
+    const accordionCategories = data.value.map((category) => ({
+      ...category,
+      defaultOpen: category.displayOrder === minDisplayOrder,
+    }));
+
+    achievementsStore.setAchievements(accordionCategories);
   }
 });

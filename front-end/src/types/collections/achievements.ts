@@ -16,6 +16,10 @@ export interface AchievementCategory {
   id: number;
 }
 
+export interface AchievementCategoryAccordion extends AchievementCategory {
+  deafultOpen?: boolean;
+}
+
 export type AchievementSort =
   | 'Default'
   | 'Not Completed'

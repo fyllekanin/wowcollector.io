@@ -18,6 +18,7 @@ const { achievements } = storeToRefs(achievementsStore);
         variant="ghost"
         class="border-b border-gray-200 dark:border-gray-700"
         :ui="{ rounded: 'rounded-none', padding: { sm: 'p-3' } }"
+        @click="() => achievementsStore.toggleCategoryOpen(item.id)"
       >
         <span>{{ item.name }}</span>
 
