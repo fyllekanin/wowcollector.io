@@ -4,6 +4,8 @@ import type {
   AchievementInformation,
   MountCategory,
   MountInformation,
+  ToyCategory,
+  ToyInformation,
 } from '~/types';
 
 export function mapNavigationLinks(links: HeaderLink[]): NavigationTree[] {
@@ -34,14 +36,22 @@ export function flatMapAchievements(
   }, [] as AchievementInformation[]);
 }
 
+export function flatMapToys(toyCategories: ToyCategory[]): ToyInformation[] {
+  return toyCategories.reduce((acc, category) => {
+    if (category.toys) acc.push(...category.toys);
+    if (category.categories) acc.push(...flatMapToys(category.categories));
+    return acc;
+  }, [] as ToyInformation[]);
+}
+
 export function getRootCategoryNames(
-  categories: MountCategory[] | AchievementCategory[]
+  categories: MountCategory[] | AchievementCategory[] | ToyCategory[]
 ): string[] {
   return categories.map((category) => category.name);
 }
 
 export function getSubCategoryNames(
-  categories: MountCategory[] | AchievementCategory[]
+  categories: MountCategory[] | AchievementCategory[] | ToyCategory[]
 ): string[] {
   return [
     ...new Set(

@@ -36,8 +36,8 @@ const slideoverOpen = ref<boolean>(false);
         </div>
       </template>
 
-      <MountFilterForm class="md:hidden" />
+      <ToyFilterForm class="md:hidden" />
     </UCard>
   </USlideover>
-  <MountFilterForm class="hidden md:flex" />
+  <ToyFilterForm class="hidden md:flex" />
 </template>

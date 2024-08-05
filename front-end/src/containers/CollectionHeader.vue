@@ -34,14 +34,16 @@ const phrase = computed(
   <div class="flex flex-col gap-4 items-center">
     <div class="flex grow gap-2 items-center w-full md:flex-col">
       <div class="flex flex-col w-full">
-        <UProgress :value="progress" />
-        <p
-          class="text-center text-xs sm:text-sm text-nowrap text-gray-500 self-end pt-1"
-        >
-          {{ collected }} out of {{ total }} {{ collection }} {{ phrase }} ({{
-            progress
-          }}%)
-        </p>
+        <UMeter :value="progress">
+          <template #label>
+            <p
+              class="text-center text-xs sm:text-sm text-nowrap text-gray-500 self-end"
+            >
+              {{ collected }} out of {{ total }} {{ collection }}
+              {{ phrase }} ({{ progress }}%)
+            </p>
+          </template>
+        </UMeter>
       </div>
       <slot />
     </div>

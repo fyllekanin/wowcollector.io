@@ -54,7 +54,7 @@ const links = [
         disabled: !character.value,
         click: () => {
           if (!character.value) {
-            onSearch('toys');
+            onSearch('pets');
           }
         },
       },
@@ -74,27 +74,6 @@ const links = [
     label: 'Character Search',
     to: '/search',
   },
-  // {
-  //   label: 'Leaderboards',
-  //   children: [
-  //     {
-  //       label: 'Mounts',
-  //       to: '/leaderboards/mounts',
-  //     },
-  //     {
-  //       label: 'Achievements',
-  //       to: '/leaderboards/achievements',
-  //     },
-  //     {
-  //       label: 'Pets',
-  //       to: '/leaderboards/pets',
-  //     },
-  //     {
-  //       label: 'Toys',
-  //       to: '/leaderboards/toys',
-  //     },
-  //   ],
-  // },
 ] as HeaderLink[];
 </script>
 

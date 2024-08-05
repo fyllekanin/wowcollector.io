@@ -2,9 +2,8 @@
 import { SORT_TYPES } from '~/constants';
 
 const { debounce } = useDebounce();
-const mountsStore = useMountsStore();
-const { filters, rootCategoryNames, subCategoryNames } =
-  storeToRefs(mountsStore);
+const toysStore = useToysStore();
+const { filters, rootCategoryNames, subCategoryNames } = storeToRefs(toysStore);
 
 const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
   string[]
@@ -15,7 +14,7 @@ const debouncableSearch = ref('');
 watch(
   () => debouncableSearch.value,
   debounce((value) => {
-    mountsStore.setMountFilters({ search: value });
+    toysStore.setToyFilters({ search: value });
   }, 300),
   { immediate: true }
 );
@@ -29,7 +28,7 @@ watch(
       <UInput
         v-model="debouncableSearch"
         class="w-full sm:w-[250px]"
-        placeholder="Search for a mount"
+        placeholder="Search for a toy"
         icon="i-heroicons-magnifying-glass-20-solid"
         variant="none"
         :ui="{
@@ -69,7 +68,7 @@ watch(
             icon="i-heroicons-x-mark-20-solid"
             :disabled="filters.rootCategories.length === 0"
             :padded="false"
-            @click="mountsStore.setMountFilters({ rootCategories: [] })"
+            @click="toysStore.setToyFilters({ rootCategories: [] })"
           />
         </UTooltip>
       </UButtonGroup>
@@ -94,7 +93,7 @@ watch(
             icon="i-heroicons-x-mark-20-solid"
             :disabled="filters.subCategories.length === 0"
             :padded="false"
-            @click="mountsStore.setMountFilters({ subCategories: [] })"
+            @click="toysStore.setToyFilters({ subCategories: [] })"
           />
         </UTooltip>
       </UButtonGroup>
@@ -116,7 +115,7 @@ watch(
             icon="i-heroicons-x-mark-20-solid"
             :disabled="filters.miscFilters.length === 0"
             :padded="false"
-            @click="mountsStore.setMountFilters({ miscFilters: [] })"
+            @click="toysStore.setToyFilters({ miscFilters: [] })"
           />
         </UTooltip>
       </UButtonGroup>
@@ -140,7 +139,7 @@ watch(
             (filter) => filter?.length === 0 || filter === ''
           )
         "
-        @click="mountsStore.clearMountFilters"
+        @click="toysStore.clearToyFilters"
         >Clear all filters</UButton
       >
     </div>
