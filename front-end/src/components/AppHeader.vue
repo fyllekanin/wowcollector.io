@@ -71,6 +71,10 @@ const links = [
     ],
   },
   {
+    label: 'Leaderboards',
+    to: '/leaderboards',
+  },
+  {
     label: 'Character Search',
     to: '/search',
   },
