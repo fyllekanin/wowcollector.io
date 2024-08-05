@@ -223,6 +223,64 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/character/{region}/{realm}/{character}/pets": {
+            "get": {
+                "description": "Get pet collection for character",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character"
+                ],
+                "summary": "Fetch character pet collection",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Region",
+                        "name": "region",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Realm",
+                        "name": "realm",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Character",
+                        "name": "character",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.PetCollectionCategorySwagger"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/character/{region}/{realm}/{character}/toys": {
             "get": {
                 "description": "Get toy collection for character",
@@ -508,6 +566,54 @@ const docTemplate = `{
                 }
             }
         },
+        "response.PetCollectionCategorySwagger": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "pets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.PetCollectionPet"
+                    }
+                }
+            }
+        },
+        "response.PetCollectionPet": {
+            "type": "object",
+            "properties": {
+                "assets": {
+                    "$ref": "#/definitions/response.PetCollectionPetAssets"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isCollected": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.PetCollectionPetAssets": {
+            "type": "object",
+            "properties": {
+                "largeIcon": {
+                    "type": "string"
+                }
+            }
+        },
         "response.RealmResponse": {
             "type": "object",
             "properties": {
@@ -584,6 +690,9 @@ const docTemplate = `{
                 },
                 "isCollected": {
                     "type": "boolean"
+                },
+                "itemId": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"

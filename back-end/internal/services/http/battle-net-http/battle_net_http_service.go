@@ -186,6 +186,22 @@ func (s *BattleNetHttpService) GetCharacterToyCollection(region blizzarddata.Bat
 	return &result
 }
 
+func (s *BattleNetHttpService) GetCharacterPetCollection(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetCharacterPetCollection {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/collections/pets?namespace=profile-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting character pet collection:" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetCharacterPetCollection
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding character pet collection:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
 func (s *BattleNetHttpService) GetMountsIndex(region blizzarddata.BattleNetRegion) *httpresponses.BattleNetMountsIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/mount/index?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {

@@ -128,6 +128,37 @@ definitions:
       total:
         type: integer
     type: object
+  response.PetCollectionCategorySwagger:
+    properties:
+      categories:
+        items:
+          type: object
+        type: array
+      name:
+        type: string
+      order:
+        type: integer
+      pets:
+        items:
+          $ref: '#/definitions/response.PetCollectionPet'
+        type: array
+    type: object
+  response.PetCollectionPet:
+    properties:
+      assets:
+        $ref: '#/definitions/response.PetCollectionPetAssets'
+      id:
+        type: integer
+      isCollected:
+        type: boolean
+      name:
+        type: string
+    type: object
+  response.PetCollectionPetAssets:
+    properties:
+      largeIcon:
+        type: string
+    type: object
   response.RealmResponse:
     properties:
       name:
@@ -178,6 +209,8 @@ definitions:
         type: integer
       isCollected:
         type: boolean
+      itemId:
+        type: integer
       name:
         type: string
     type: object
@@ -331,6 +364,45 @@ paths:
           schema:
             $ref: '#/definitions/errorresponse.ErrorResponse'
       summary: Fetch character mount collection
+      tags:
+      - Character
+  /api/v1/character/{region}/{realm}/{character}/pets:
+    get:
+      description: Get pet collection for character
+      parameters:
+      - description: Region
+        in: path
+        name: region
+        required: true
+        type: string
+      - description: Realm
+        in: path
+        name: realm
+        required: true
+        type: string
+      - description: Character
+        in: path
+        name: character
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.PetCollectionCategorySwagger'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Fetch character pet collection
       tags:
       - Character
   /api/v1/character/{region}/{realm}/{character}/toys:

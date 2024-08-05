@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 	achievementaggregator "wowcollector.io/api/v1/rest-character/aggregators/achievement-aggregator"
 	mountaggregator "wowcollector.io/api/v1/rest-character/aggregators/mount-aggregator"
+	petaggregator "wowcollector.io/api/v1/rest-character/aggregators/pet-aggregator"
 	toyaggregator "wowcollector.io/api/v1/rest-character/aggregators/toy-aggregator"
 	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	errorcodes "wowcollector.io/internal/common/error-codes"
@@ -18,6 +19,7 @@ import (
 	errorresponse "wowcollector.io/internal/entities/response/error"
 	mountleaderboardrepository "wowcollector.io/internal/repository/repositories/mount-leaderboard-repository"
 	mountviewrepository "wowcollector.io/internal/repository/repositories/mount-view-repository"
+	petviewrepository "wowcollector.io/internal/repository/repositories/pet-view-repository"
 	toyviewrepository "wowcollector.io/internal/repository/repositories/toy-view-repository"
 	battlenethttp "wowcollector.io/internal/services/http/battle-net-http"
 )
@@ -28,6 +30,7 @@ func GetRoutes(r chi.Router) {
 		r.Get("/mounts", getCharacterMountCollection)
 		r.Get("/achievements", getCharacterAchievementCollection)
 		r.Get("/toys", getCharacterToyCollection)
+		r.Get("/pets", getCharacterPetCollection)
 	})
 }
 
@@ -186,6 +189,62 @@ func getCharacterToyCollection(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
 	zap.L().Info("Responded with toy collection")
+}
+
+// @summary Fetch character pet collection
+// @description Get pet collection for character
+// @tags Character
+// @produce json
+// @param region path string true "Region"
+// @param realm path string true "Realm"
+// @param character path string true "Character"
+// @success 200 {object} []response.PetCollectionCategorySwagger
+// @failure 400 {object} errorresponse.ErrorResponse
+// @failure 404 {object} errorresponse.ErrorResponse
+// @router /api/v1/character/{region}/{realm}/{character}/pets [get]
+func getCharacterPetCollection(w http.ResponseWriter, r *http.Request) {
+	region := chi.URLParam(r, "region")
+	realm := chi.URLParam(r, "realm")
+	character := chi.URLParam(r, "character")
+	zap.L().Info(fmt.Sprintf("Fetching pet collection for %s on realm %s in region %s", character, realm, region))
+
+	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
+	if item == nil {
+		zap.L().Error("Error finding character")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, fmt.Sprintf("Character %s on realm %s in region %s not found", character, realm, region)))
+		return
+	}
+	collection := battlenethttp.GetInstance().GetCharacterPetCollection(blizzarddata.FromString(region), realm, character)
+	if collection == nil {
+		zap.L().Error("Error getting characters pet collection")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, "Character pet collection not found for character"))
+		return
+	}
+
+	view, _ := petviewrepository.GetRepository().GetDefaultPetView()
+	if view == nil {
+		zap.L().Error("Error finding default pet view")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_DEFAULT_TOY_VIEW, "No default pet view available"))
+		return
+	}
+
+	body, err := json.Marshal(petaggregator.GetPetsAggregation(
+		*collection,
+		*view,
+	))
+	if err != nil {
+		zap.L().Error("Error stringifying response body")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorresponse.GenerateErrorBody(errorcodes.INTERNAL_ERROR, "Invalid JSON body"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(body)
+	zap.L().Info("Responded with pet collection")
 }
 
 // @summary Fetch character achievement collection

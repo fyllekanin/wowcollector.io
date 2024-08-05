@@ -37,4 +37,5 @@ func runSeeds() {
 	seeds.ToysSeeder()
 	seeds.ToyViewsSeeder()
 	seeds.PetsSeeder()
+	seeds.PetViewsSeeder()
 }

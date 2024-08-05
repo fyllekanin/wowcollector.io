@@ -3,7 +3,6 @@ package seeds
 import (
 	"encoding/json"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 	"wowcollector.io/internal/entities/documents"
 	seedrepository "wowcollector.io/internal/repository/repositories/seed-repository"
@@ -27,7 +26,6 @@ func ToyViewsSeeder() {
 	}
 
 	for _, element := range toyViews {
-		element.ObjectID = primitive.NewObjectID()
 		toyviewrepository.GetRepository().CreateToyView(&element)
 	}
 	seedrepository.GetRepository().CreateSeed(seedName)
