@@ -7,6 +7,7 @@ type ToyCollectionToyAssets struct {
 type ToyCollectionToy struct {
 	Name        string                  `json:"name"`
 	Id          int                     `json:"id"`
+	ItemId      int                     `json:"itemId"`
 	IsCollected bool                    `json:"isCollected"`
 	Assets      *ToyCollectionToyAssets `json:"assets"`
 }
