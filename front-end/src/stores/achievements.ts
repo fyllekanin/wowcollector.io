@@ -24,6 +24,7 @@ export const useAchievementsStore = defineStore('achievements', {
       const filterBySearch = (
         achievements: AchievementInformation[] | null
       ) => {
+        if (!state.filters.search) return achievements;
         if (!achievements) return null;
         return achievements.filter(
           (achievement) =>

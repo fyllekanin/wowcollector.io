@@ -26,7 +26,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
       rootCategories.value as AchievementCategory[]
     );
 
-    const { data } = useFetch<AchievementCategoryResponse>(
+    const { data } = await useFetch<AchievementCategoryResponse>(
       `/api/character/${region}/${realm}/${name}/achievements`
     );
 
