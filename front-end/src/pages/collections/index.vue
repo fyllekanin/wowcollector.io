@@ -36,7 +36,7 @@ function onSearch(to: string) {
 </script>
 
 <template>
-  <UContainer class="flex flex-col gap-6 max-w-[1200px] max-4 lg:mx-auto pt-12">
+  <UContainer class="flex flex-col gap-6 max-w-[1200px] max-4 lg:mx-auto pb-12">
     <UBreadcrumb :links="mapContentNavigation(page?.breadcrumbs)" />
     <ULandingGrid>
       <ULandingCard

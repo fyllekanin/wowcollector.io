@@ -18,7 +18,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <UContainer class="flex flex-col gap-2 max-w-[1200px] max-4 lg:mx-auto pt-12">
+  <UContainer class="flex flex-col gap-2 max-w-[1200px] max-4 lg:mx-auto py-12">
     <ULandingGrid>
       <ULandingCard
         v-for="(card, index) in page?.services"

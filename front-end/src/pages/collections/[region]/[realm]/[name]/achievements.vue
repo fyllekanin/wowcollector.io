@@ -49,6 +49,7 @@ const percentageAchievementsCompleted = computed(() => {
 
 <template>
   <UContainer class="flex flex-col gap-4 pb-6">
+    <UBreadcrumb :links="mapContentNavigation(page?.breadcrumbs)" />
     <CollectionHeader
       :progress="percentageAchievementsCompleted"
       :collected="completed"
