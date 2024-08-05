@@ -12,9 +12,9 @@ defineProps({
 
 <template>
   <a
-    :href="`https://www.wowhead.com/item=${toy.id}`"
+    :href="`https://www.wowhead.com/item=${toy.itemId}`"
     target="_blank"
-    :data-wowhead="`item=${toy.id}`"
+    :data-wowhead="`item=${toy.itemId}`"
   >
     <img
       :src="toy.assets.largeIcon"

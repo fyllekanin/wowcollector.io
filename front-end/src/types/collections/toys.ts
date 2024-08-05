@@ -2,6 +2,7 @@ export interface ToyInformation {
   name: string;
   id: number;
   isCollected: boolean;
+  itemId: number;
   assets: {
     largeIcon: string;
   };
