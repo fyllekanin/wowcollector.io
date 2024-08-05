@@ -1,4 +1,4 @@
-import type { AchievementCategory, AchievementCategoryResponse } from '~/types';
+import type { AchievementCategoryResponse } from '~/types';
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const { region, realm, name } = to.params as Record<string, string>;
@@ -15,18 +15,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   characterStore.setCharacter({ region, realm, name });
 
   if (!achievements.value?.length || character.value?.name !== name) {
-    const { data: rootCategories } = await useFetch(
-      '/api/battle-net/achievement-root-categories'
-    );
-    if (!rootCategories.value) {
-      return abortNavigation();
-    }
-
-    achievementsStore.setAchievements(
-      rootCategories.value as AchievementCategory[]
-    );
-
-    const { data } = await useFetch<AchievementCategoryResponse>(
+    const { data } = await useLazyFetch<AchievementCategoryResponse>(
       `/api/character/${region}/${realm}/${name}/achievements`
     );
 
