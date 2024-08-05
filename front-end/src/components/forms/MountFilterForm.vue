@@ -38,22 +38,12 @@ watch(
           },
         }"
       >
-        <!-- <template #trailing>
-        <UButton
-          v-show="filters.search !== ''"
-          color="gray"
-          variant="link"
-          icon="i-heroicons-x-mark-20-solid"
-          :padded="false"
-          @click="mountsStore.setMountFilters({ search: '' })"
-        />
-      </template> -->
       </UInput>
       <UButton
-        v-show="debouncableSearch !== ''"
         color="gray"
         variant="link"
         icon="i-heroicons-x-mark-20-solid"
+        :disabled="debouncableSearch === ''"
         :padded="false"
         @click="debouncableSearch = ''"
       />

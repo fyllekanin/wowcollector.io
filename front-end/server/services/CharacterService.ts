@@ -1,10 +1,6 @@
 import { get } from './HttpService';
 
-import type {
-  AchievementCategory,
-  AchievementCategoryResponse,
-  MountCategory,
-} from '~/types';
+import type { AchievementCategory, MountCategory } from '~/types';
 
 export default class CharacterService {
   static async getCharacterMounts(name: string, realm: string, region: string) {
@@ -27,13 +23,8 @@ export default class CharacterService {
     rootCategoryId: number
   ) {
     try {
-      const response = await get<AchievementCategoryResponse>({
+      const response = await get<AchievementCategory[]>({
         url: `/api/v1/character/${region}/${realm}/${name}/achievements`,
-        config: {
-          params: {
-            rootCategoryId,
-          },
-        },
       });
 
       return response.data;

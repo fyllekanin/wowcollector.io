@@ -29,8 +29,18 @@ useSeoMeta({
 });
 
 const achievementsStore = useAchievementsStore();
-const { achievements, total, completed } = storeToRefs(achievementsStore);
+const { achievements } = storeToRefs(achievementsStore);
 
+const total = computed(() => {
+  if (!achievements.value) return 0;
+  return flatMapAchievements(achievements.value).length;
+});
+const completed = computed(() => {
+  if (!achievements.value) return 0;
+  return flatMapAchievements(achievements.value).filter(
+    (achievement) => achievement.isCompleted
+  ).length;
+});
 const percentageAchievementsCompleted = computed(() => {
   if (!achievements.value) return 0;
   return Math.round((completed.value / total.value) * 100);

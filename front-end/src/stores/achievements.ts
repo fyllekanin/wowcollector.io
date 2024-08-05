@@ -14,8 +14,6 @@ export const useAchievementsStore = defineStore('achievements', {
       subCategories: [],
       miscFilters: [],
     } as AchievementFilters,
-    total: 0,
-    completed: 0,
   }),
   getters: {
     achievements(state) {
@@ -36,7 +34,6 @@ export const useAchievementsStore = defineStore('achievements', {
       };
 
       const mapSubCategories = (category: AchievementCategory) => {
-        // if (!('achievements' in category)) return category;
         return {
           ...category,
           achievements: filterBySearch(category.achievements || []),
@@ -44,7 +41,6 @@ export const useAchievementsStore = defineStore('achievements', {
       };
 
       const mapRootCategories = (category: AchievementCategory) => {
-        // if (!('achievements' in category)) return category;
         return {
           ...category,
           achievements: filterBySearch(category.achievements || []),
@@ -56,7 +52,6 @@ export const useAchievementsStore = defineStore('achievements', {
 
       // Search
       result = result?.map(mapRootCategories).filter((category) => {
-        // if (!('achievements' in category)) return true;
         return category.achievements?.length || category.categories?.length;
       });
 
@@ -197,12 +192,6 @@ export const useAchievementsStore = defineStore('achievements', {
     },
     clearAchievementFilter(filter: keyof AchievementFilters) {
       delete this.filters[filter];
-    },
-    setTotal(newTotal: number) {
-      this.total = newTotal;
-    },
-    setCompleted(newCompleted: number) {
-      this.completed = newCompleted;
     },
   },
   persist: {

@@ -16,12 +16,6 @@ export interface AchievementCategory {
   id: number;
 }
 
-export interface AchievementCategoryResponse {
-  total: number;
-  completed: number;
-  categories: AchievementCategory[];
-}
-
 export type AchievementSort =
   | 'Default'
   | 'Not Completed'
