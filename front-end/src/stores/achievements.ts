@@ -25,7 +25,7 @@ export const useAchievementsStore = defineStore('achievements', {
         achievements: AchievementInformation[] | null
       ) => {
         if (!achievements) return null;
-        return achievements?.filter(
+        return achievements.filter(
           (achievement) =>
             achievement.name
               .toLowerCase()
@@ -33,18 +33,20 @@ export const useAchievementsStore = defineStore('achievements', {
             achievement.id.toString().includes(state.filters.search)
         );
       };
+
       const mapSubCategories = (category: AchievementCategory) => {
-        if (!category.hasOwnProperty('achievements')) return category;
+        if (!('achievements' in category)) return category;
         return {
           ...category,
-          achievements: filterBySearch(category?.achievements || []),
+          achievements: filterBySearch(category.achievements || []),
         };
       };
+
       const mapRootCategories = (category: AchievementCategory) => {
-        if (!category.hasOwnProperty('achievements')) return category;
+        if (!('achievements' in category)) return category;
         return {
           ...category,
-          achievements: filterBySearch(category?.achievements || []),
+          achievements: filterBySearch(category.achievements || []),
           categories: category.categories
             ?.map(mapSubCategories)
             .filter((subCategory) => subCategory.achievements?.length),
@@ -68,11 +70,11 @@ export const useAchievementsStore = defineStore('achievements', {
             return a.name.localeCompare(b.name);
           case 'Name Descending':
             return b.name.localeCompare(a.name);
-          case 'Collected':
+          case 'Completed':
             if (a.isCompleted && !b.isCompleted) return -1;
             if (!a.isCompleted && b.isCompleted) return 1;
             return 0;
-          case 'Not Collected':
+          case 'Not Completed':
             if (!a.isCompleted && b.isCompleted) return -1;
             if (a.isCompleted && !b.isCompleted) return 1;
             return 0;
@@ -123,6 +125,7 @@ export const useAchievementsStore = defineStore('achievements', {
           );
           category.categories = category.categories.map(subCategoryFilter);
         }
+
         return category;
       };
       if (state.filters.subCategories.length)

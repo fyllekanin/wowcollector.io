@@ -43,8 +43,6 @@ const phrase = computed(
           }}%)
         </p>
       </div>
-      <!-- <MountFilters v-if="collection === 'mounts'" />
-      <AchievementFilters v-else-if="collection === 'achievements'" /> -->
       <slot />
     </div>
   </div>

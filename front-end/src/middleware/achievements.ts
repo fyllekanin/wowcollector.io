@@ -55,8 +55,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
         ...curr.data.value?.category,
       } as AchievementCategory;
       prev.push(merged);
+      console.log(curr.data.value?.total);
       if (curr.data.value?.total)
         achievementsStore.setTotal(curr.data.value.total);
+      console.log(curr.data.value?.completed);
       if (curr.data.value?.completed)
         achievementsStore.setCompleted(curr.data.value.completed);
       return prev;

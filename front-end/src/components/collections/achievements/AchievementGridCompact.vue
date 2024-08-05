@@ -11,6 +11,13 @@ const characterStore = useCharacterStore();
 const { achievements } = storeToRefs(achievementsStore);
 const { character } = storeToRefs(characterStore);
 
+const accordionItems = computed(() =>
+  achievements.value.map((category, i) => ({
+    ...category,
+    ...((i === 0 || i === 1) && { defaultOpen: true }),
+  }))
+);
+
 const fetchAchievementCategory = async (
   category: AchievementCategory,
   open: boolean
@@ -48,12 +55,7 @@ const fetchAchievementCategory = async (
 
 <template>
   <UAccordion
-    :items="
-      achievements.map((category, i) => ({
-        ...category,
-        ...((i === 0 || i === 1) && { defaultOpen: true }),
-      }))
-    "
+    :items="accordionItems"
     :ui="{ wrapper: 'flex flex-col w-full' }"
     multiple
   >

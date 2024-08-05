@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { SORT_TYPES } from '~/constants';
 
+const { debounce } = useDebounce();
 const mountsStore = useMountsStore();
 const { filters, rootCategoryNames, subCategoryNames } =
   storeToRefs(mountsStore);
@@ -8,25 +9,36 @@ const { filters, rootCategoryNames, subCategoryNames } =
 const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
   string[]
 >;
+
+const debouncableSearch = ref('');
+
+watch(
+  () => debouncableSearch.value,
+  debounce((value) => {
+    mountsStore.setMountFilters({ search: value });
+  }, 300),
+  { immediate: true }
+);
 </script>
 
 <template>
   <UContainer
     class="w-full h-fit flex flex-col sm:flex-row sm:flex-wrap gap-5 items-center"
   >
-    <UInput
-      v-model="filters.search"
-      class="w-full sm:w-[250px] sm:self-end"
-      placeholder="Search for a mount"
-      icon="i-heroicons-magnifying-glass-20-solid"
-      variant="none"
-      :ui="{
-        variant: {
-          none: 'bg-transparent focus:ring-0 focus:shadow-none border-b border-gray-200 dark:border-gray-800 rounded-none focus:border-primary dark:focus:border-primary',
-        },
-      }"
-    >
-      <template #trailing>
+    <UButtonGroup>
+      <UInput
+        v-model="filters.search"
+        class="w-full sm:w-[250px] sm:self-end"
+        placeholder="Search for a mount"
+        icon="i-heroicons-magnifying-glass-20-solid"
+        variant="none"
+        :ui="{
+          variant: {
+            none: 'bg-transparent focus:ring-0 focus:shadow-none border-b border-gray-200 dark:border-gray-800 rounded-none focus:border-primary dark:focus:border-primary',
+          },
+        }"
+      >
+        <!-- <template #trailing>
         <UButton
           v-show="filters.search !== ''"
           color="gray"
@@ -35,8 +47,17 @@ const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
           :padded="false"
           @click="mountsStore.setMountFilters({ search: '' })"
         />
-      </template>
-    </UInput>
+      </template> -->
+      </UInput>
+      <UButton
+        v-show="debouncableSearch !== ''"
+        color="gray"
+        variant="link"
+        icon="i-heroicons-x-mark-20-solid"
+        :padded="false"
+        @click="debouncableSearch = ''"
+      />
+    </UButtonGroup>
     <div class="flex flex-col gap-1 w-full sm:w-[150px]">
       <span class="text-sm">Base Categories</span>
       <UButtonGroup>

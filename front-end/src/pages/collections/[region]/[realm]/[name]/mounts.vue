@@ -47,7 +47,7 @@ const percentageMountsCollected = computed(() => {
 </script>
 
 <template>
-  <UContainer class="flex flex-col gap-4">
+  <UContainer class="flex flex-col gap-4 pb-6">
     <CollectionHeader
       :progress="percentageMountsCollected"
       :collected="collected"
