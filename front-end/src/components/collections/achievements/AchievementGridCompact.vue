@@ -30,9 +30,9 @@ const { achievements } = storeToRefs(achievementsStore);
         </template>
       </UButton>
     </template>
-    <template #item="{ item }">
+    <template #item="{ item, open }">
       <UContainer
-        v-if="item.achievements?.length"
+        v-if="item.achievements?.length && open"
         class="flex flex-wrap w-full justify-center md:justify-start px-3 lg:px-3 sm:px-0 py-2 lg:py-2 sm:py-2 mx-0 gap-4"
       >
         <div v-for="(achievement, j) in item.achievements" :key="j">
@@ -40,6 +40,7 @@ const { achievements } = storeToRefs(achievementsStore);
         </div>
       </UContainer>
       <UContainer
+        v-if="open"
         class="flex flex-wrap w-full self-start px-3 lg:px-3 sm:px-0 py-2 lg:py-2 sm:py-2 mx-0 gap-4"
       >
         <UContainer

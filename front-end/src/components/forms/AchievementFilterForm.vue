@@ -40,9 +40,9 @@ watch(
       </UInput>
       <UTooltip text="Clear search" :prevent="debouncableSearch === ''">
         <UButton
-          v-show="debouncableSearch !== ''"
           color="gray"
           icon="i-heroicons-x-mark-20-solid"
+          :disabled="debouncableSearch === ''"
           :padded="false"
           @click="debouncableSearch = ''"
         />
