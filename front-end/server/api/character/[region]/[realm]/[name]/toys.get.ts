@@ -4,7 +4,7 @@ export default defineEventHandler({
   onRequest: (_) => {},
   handler: async (event) => {
     const { region, realm, name } = getRouterParams(event);
-    const mounts = await CharacterService.getCharacterToys(name, realm, region);
-    if (mounts) return mounts;
+    const toys = await CharacterService.getCharacterToys(name, realm, region);
+    if (toys) return toys;
   },
 });

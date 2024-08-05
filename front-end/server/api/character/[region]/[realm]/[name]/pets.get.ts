@@ -4,11 +4,7 @@ export default defineEventHandler({
   onRequest: (_) => {},
   handler: async (event) => {
     const { region, realm, name } = getRouterParams(event);
-    const achievements = await CharacterService.getCharacterAchievements(
-      name,
-      realm,
-      region
-    );
-    if (achievements) return achievements;
+    const pets = await CharacterService.getCharacterPets(name, realm, region);
+    if (pets) return pets;
   },
 });

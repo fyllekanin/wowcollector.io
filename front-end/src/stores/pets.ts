@@ -1,21 +1,21 @@
-import type { ToyCategory, ToyFilters, ToyInformation } from '~/types';
+import type { PetCategory, PetFilters, PetInformation } from '~/types';
 
-export const useToysStore = defineStore('toys', {
+export const usePetsStore = defineStore('pets', {
   state: () => ({
-    _toys: null as ToyCategory[] | null,
+    _pets: null as PetCategory[] | null,
     filters: {
       search: '',
       sort: 'Default',
       rootCategories: [],
       subCategories: [],
       miscFilters: [],
-    } as ToyFilters,
+    } as PetFilters,
   }),
   getters: {
-    toys(state) {
-      let result = state._toys || [];
+    pets(state) {
+      let result = state._pets || [];
 
-      const filterBySearch = (toys: ToyInformation[] | null) => {
+      const filterBySearch = (toys: PetInformation[] | null) => {
         if (!toys) return null;
         return toys?.filter(
           (mount) =>
@@ -25,19 +25,19 @@ export const useToysStore = defineStore('toys', {
             mount.id.toString().includes(state.filters.search)
         );
       };
-      const mapSubCategories = (category: ToyCategory) => {
+      const mapSubCategories = (category: PetCategory) => {
         return {
           ...category,
-          toys: filterBySearch(category.toys),
+          toys: filterBySearch(category.pets),
         };
       };
-      const mapRootCategories = (category: ToyCategory) => {
+      const mapRootCategories = (category: PetCategory) => {
         return {
           ...category,
-          toys: filterBySearch(category.toys),
+          pets: filterBySearch(category.pets),
           categories: category.categories
             ?.map(mapSubCategories)
-            .filter((subCategory) => subCategory.toys?.length),
+            .filter((subCategory) => subCategory.pets?.length),
         };
       };
 
@@ -45,13 +45,13 @@ export const useToysStore = defineStore('toys', {
       result = result
         ?.map(mapRootCategories)
         .filter(
-          (category) => category.toys?.length || category.categories?.length
+          (category) => category.pets?.length || category.categories?.length
         );
 
       // Sort
-      const sortToys = (
-        a: ToyInformation,
-        b: ToyInformation,
+      const sortPets = (
+        a: PetInformation,
+        b: PetInformation,
         sortType: string
       ) => {
         switch (sortType) {
@@ -72,7 +72,7 @@ export const useToysStore = defineStore('toys', {
         }
       };
 
-      const traverseSort = (category: ToyCategory, sortType: string) => {
+      const traverseSort = (category: PetCategory, sortType: string) => {
         if (category.categories) {
           category.categories = category.categories.map((cat) =>
             traverseSort(cat, sortType)
@@ -82,8 +82,8 @@ export const useToysStore = defineStore('toys', {
           }
         }
 
-        if (category.toys) {
-          category.toys.sort((a, b) => sortToys(a, b, sortType));
+        if (category.pets) {
+          category.pets.sort((a, b) => sortPets(a, b, sortType));
         }
 
         return category;
@@ -102,7 +102,7 @@ export const useToysStore = defineStore('toys', {
         );
 
       // Sub Categories
-      const subCategoryFilter = (category: ToyCategory) => {
+      const subCategoryFilter = (category: PetCategory) => {
         if (category.categories) {
           category.categories = category.categories.filter((subCategory) =>
             state.filters.subCategories.includes(subCategory.name)
@@ -118,30 +118,30 @@ export const useToysStore = defineStore('toys', {
       return result;
     },
     rootCategoryNames(state) {
-      return getRootCategoryNames(state._toys || []).sort((a, b) =>
+      return getRootCategoryNames(state._pets || []).sort((a, b) =>
         a.localeCompare(b)
       );
     },
     subCategoryNames(state) {
-      return getSubCategoryNames(state._toys || []).sort((a, b) =>
+      return getSubCategoryNames(state._pets || []).sort((a, b) =>
         a.localeCompare(b)
       );
     },
   },
   actions: {
-    setToys(newToys: ToyCategory[]) {
-      this._toys = newToys;
+    setPets(newPets: PetCategory[]) {
+      this._pets = newPets;
     },
-    clearToys() {
-      this._toys = null;
+    clearPets() {
+      this._pets = null;
     },
-    setToyFilters(newFilters: Partial<ToyFilters>) {
+    setPetFilters(newFilters: Partial<PetFilters>) {
       for (const key in newFilters) {
         // @ts-expect-error
         this.filters[key] = newFilters[key as keyof PetFilters];
       }
     },
-    clearToyFilters() {
+    clearPetFilters() {
       this.filters = {
         search: '',
         sort: 'Default',
@@ -150,12 +150,12 @@ export const useToysStore = defineStore('toys', {
         miscFilters: [],
       };
     },
-    clearToyFilter(filter: keyof ToyFilters) {
+    clearPetFilter(filter: keyof PetFilters) {
       delete this.filters[filter];
     },
   },
   persist: {
-    paths: ['_toys'],
+    paths: ['_pets'],
     storage: persistedState.sessionStorage,
   },
 });

@@ -1,0 +1,14 @@
+title: WoW Collector - Pets
+description: See all the pets you can and have collected in World of Warcraft.
+
+breadcrumbs:
+  - title: Home
+    icon: mdi:home
+    to: /
+  - title: Collections
+    icon: mdi:bookshelf
+    to: /collections
+  - title: Pets
+    icon: mdi:paw
+    disabled: true
+    to: pets

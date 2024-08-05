@@ -1,6 +1,11 @@
 import { get } from './HttpService';
 
-import type { AchievementCategory, MountCategory, ToyCategory } from '~/types';
+import type {
+  AchievementCategory,
+  MountCategory,
+  PetCategory,
+  ToyCategory,
+} from '~/types';
 
 export default class CharacterService {
   static async getCharacterMounts(name: string, realm: string, region: string) {
@@ -37,6 +42,19 @@ export default class CharacterService {
     try {
       const response = await get<ToyCategory[]>({
         url: `/api/v1/character/${region}/${realm}/${name}/toys`,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  static async getCharacterPets(name: string, realm: string, region: string) {
+    try {
+      const response = await get<PetCategory[]>({
+        url: `/api/v1/character/${region}/${realm}/${name}/pets`,
       });
 
       return response.data;

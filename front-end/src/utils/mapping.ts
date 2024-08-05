@@ -4,6 +4,8 @@ import type {
   AchievementInformation,
   MountCategory,
   MountInformation,
+  PetCategory,
+  PetInformation,
   ToyCategory,
   ToyInformation,
 } from '~/types';
@@ -44,14 +46,30 @@ export function flatMapToys(toyCategories: ToyCategory[]): ToyInformation[] {
   }, [] as ToyInformation[]);
 }
 
+export function flatMapPets(petCategories: PetCategory[]): PetInformation[] {
+  return petCategories.reduce((acc, category) => {
+    if (category.pets) acc.push(...category.pets);
+    if (category.categories) acc.push(...flatMapPets(category.categories));
+    return acc;
+  }, [] as PetInformation[]);
+}
+
 export function getRootCategoryNames(
-  categories: MountCategory[] | AchievementCategory[] | ToyCategory[]
+  categories:
+    | MountCategory[]
+    | AchievementCategory[]
+    | ToyCategory[]
+    | PetCategory[]
 ): string[] {
   return categories.map((category) => category.name);
 }
 
 export function getSubCategoryNames(
-  categories: MountCategory[] | AchievementCategory[] | ToyCategory[]
+  categories:
+    | MountCategory[]
+    | AchievementCategory[]
+    | ToyCategory[]
+    | PetCategory[]
 ): string[] {
   return [
     ...new Set(
