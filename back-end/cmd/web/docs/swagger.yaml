@@ -315,11 +315,6 @@ paths:
         name: character
         required: true
         type: string
-      - description: Root category to include
-        in: query
-        name: rootCategoryId
-        required: true
-        type: integer
       produces:
       - application/json
       responses:

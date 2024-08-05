@@ -25,9 +25,9 @@ type AchievementCollectionCategorySwagger struct {
 }
 
 type AchievementCollectionResponse struct {
-	Completed int                           `json:"completed"`
-	Total     int64                         `json:"total"`
-	Category  AchievementCollectionCategory `json:"category"`
+	Completed  int                             `json:"completed"`
+	Total      int64                           `json:"total"`
+	Categories []AchievementCollectionCategory `json:"categories"`
 }
 
 type AchievementCollectionResponseSwagger struct {

@@ -173,13 +173,6 @@ const docTemplate = `{
                         "name": "character",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Root category to include",
-                        "name": "rootCategoryId",
-                        "in": "query",
-                        "required": true
                     }
                 ],
                 "responses": {
