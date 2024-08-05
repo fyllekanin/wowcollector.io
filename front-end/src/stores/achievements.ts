@@ -35,7 +35,7 @@ export const useAchievementsStore = defineStore('achievements', {
       };
 
       const mapSubCategories = (category: AchievementCategory) => {
-        if (!('achievements' in category)) return category;
+        // if (!('achievements' in category)) return category;
         return {
           ...category,
           achievements: filterBySearch(category.achievements || []),
@@ -43,7 +43,7 @@ export const useAchievementsStore = defineStore('achievements', {
       };
 
       const mapRootCategories = (category: AchievementCategory) => {
-        if (!('achievements' in category)) return category;
+        // if (!('achievements' in category)) return category;
         return {
           ...category,
           achievements: filterBySearch(category.achievements || []),
@@ -55,7 +55,7 @@ export const useAchievementsStore = defineStore('achievements', {
 
       // Search
       result = result?.map(mapRootCategories).filter((category) => {
-        if (!('achievements' in category)) return true;
+        // if (!('achievements' in category)) return true;
         return category.achievements?.length || category.categories?.length;
       });
 

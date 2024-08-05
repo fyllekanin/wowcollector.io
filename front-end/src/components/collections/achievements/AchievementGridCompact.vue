@@ -1,61 +1,14 @@
 <script lang="ts" setup>
 import type { AchievementCategory } from '~/types';
 
-const loading = ref(false);
-const loadingCategoryId = ref<number | null>(null);
-
-const toast = useToast();
 const achievementsStore = useAchievementsStore();
-const characterStore = useCharacterStore();
 
 const { achievements } = storeToRefs(achievementsStore);
-const { character } = storeToRefs(characterStore);
-
-const accordionItems = computed(() =>
-  achievements.value.map((category, i) => ({
-    ...category,
-    ...((i === 0 || i === 1) && { defaultOpen: true }),
-  }))
-);
-
-const fetchAchievementCategory = async (
-  category: AchievementCategory,
-  open: boolean
-) => {
-  if ((category.achievements && category.categories) || open) return;
-
-  try {
-    loading.value = true;
-    loadingCategoryId.value = category.id;
-    const data = await $fetch(
-      `/api/character/${character.value?.region}/${character.value?.realm}/${character.value?.name}/achievements`,
-      {
-        query: { rootCategoryId: category.id },
-      }
-    );
-
-    if (data?.category)
-      achievementsStore.mergeAchievementCategory({
-        ...data.category,
-        id: category.id,
-      });
-  } catch (error) {
-    console.error(error);
-    toast.add({
-      title: 'Error',
-      description: (error as Error).message || 'Failed to fetch achievements',
-      color: 'red',
-    });
-  } finally {
-    loading.value = false;
-    loadingCategoryId.value = null;
-  }
-};
 </script>
 
 <template>
   <UAccordion
-    :items="accordionItems"
+    :items="achievements"
     :ui="{ wrapper: 'flex flex-col w-full' }"
     multiple
   >
@@ -65,7 +18,6 @@ const fetchAchievementCategory = async (
         variant="ghost"
         class="border-b border-gray-200 dark:border-gray-700"
         :ui="{ rounded: 'rounded-none', padding: { sm: 'p-3' } }"
-        @click="() => fetchAchievementCategory(item, open)"
       >
         <span>{{ item.name }}</span>
 
@@ -79,25 +31,6 @@ const fetchAchievementCategory = async (
       </UButton>
     </template>
     <template #item="{ item }">
-      <!-- <UContainer
-        class="flex flex-wrap w-full justify-center md:justify-start px-3 lg:px-3 sm:px-0 py-2 lg:py-2 sm:py-2 mx-0 gap-4"
-      > -->
-
-      <!-- <UProgress
-        v-if="loading && loadingCategoryId === item.id"
-        class="w-full"
-        animation="carousel"
-      /> -->
-
-      <!-- <USkeleton
-          v-for="i in 300"
-          :key="i"
-          class="h-8 w-8"
-          :ui="{
-            rounded: 'none',
-          }"
-        /> -->
-      <!-- </UContainer> -->
       <UContainer
         v-if="item.achievements?.length"
         class="flex flex-wrap w-full justify-center md:justify-start px-3 lg:px-3 sm:px-0 py-2 lg:py-2 sm:py-2 mx-0 gap-4"

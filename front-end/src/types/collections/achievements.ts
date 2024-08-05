@@ -19,7 +19,7 @@ export interface AchievementCategory {
 export interface AchievementCategoryResponse {
   total: number;
   completed: number;
-  category: AchievementCategory;
+  categories: AchievementCategory[];
 }
 
 export type AchievementSort =

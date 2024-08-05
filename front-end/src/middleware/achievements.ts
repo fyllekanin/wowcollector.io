@@ -26,46 +26,16 @@ export default defineNuxtRouteMiddleware(async (to) => {
       rootCategories.value as AchievementCategory[]
     );
 
-    const responses = await Promise.all([
-      useFetch<AchievementCategoryResponse>(
-        `/api/character/${region}/${realm}/${name}/achievements`,
-        {
-          query: {
-            rootCategoryId: achievements.value[0]?.id,
-          },
-        }
-      ),
-      useFetch<AchievementCategoryResponse>(
-        `/api/character/${region}/${realm}/${name}/achievements`,
-        {
-          query: {
-            rootCategoryId: achievements.value[1]?.id,
-          },
-        }
-      ),
-    ]);
+    const { data } = useFetch<AchievementCategoryResponse>(
+      `/api/character/${region}/${realm}/${name}/achievements`
+    );
 
-    if (responses.some((response) => !response.data.value)) {
+    if (!data.value) {
       return abortNavigation();
     }
 
-    const mergedAchievements = responses.reduce((prev, curr, index) => {
-      const merged = {
-        ...achievements.value[index],
-        ...curr.data.value?.category,
-      } as AchievementCategory;
-      prev.push(merged);
-      console.log(curr.data.value?.total);
-      if (curr.data.value?.total)
-        achievementsStore.setTotal(curr.data.value.total);
-      console.log(curr.data.value?.completed);
-      if (curr.data.value?.completed)
-        achievementsStore.setCompleted(curr.data.value.completed);
-      return prev;
-    }, [] as AchievementCategory[]);
-
-    mergedAchievements.forEach((achievementCategory) => {
-      achievementsStore.setAchievement(achievementCategory);
-    });
+    achievementsStore.setAchievements(data.value.categories);
+    achievementsStore.setTotal(data.value.total);
+    achievementsStore.setCompleted(data.value.completed);
   }
 });
