@@ -12,7 +12,7 @@ defineProps({
 
 <template>
   <a
-    :href="`https://www.wowhead.com/mount/${mount.id}`"
+    :href="`https://www.wowhead.com/mount=${mount.id}`"
     target="_blank"
     :data-wowhead="`mount=${mount.id}`"
   >

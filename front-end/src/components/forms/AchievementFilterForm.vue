@@ -31,11 +31,6 @@ watch(
         class="w-full sm:w-[250px]"
         placeholder="Search for an achievement"
         icon="i-heroicons-magnifying-glass-20-solid"
-        :ui="{
-          variant: {
-            none: 'bg-transparent focus:ring-0 focus:shadow-none border-b border-gray-200 dark:border-gray-800 rounded-none focus:border-primary dark:focus:border-primary',
-          },
-        }"
       >
       </UInput>
       <UTooltip text="Clear search" :prevent="debouncableSearch === ''">

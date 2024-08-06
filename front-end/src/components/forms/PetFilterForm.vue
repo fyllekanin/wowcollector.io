@@ -2,8 +2,8 @@
 import { SORT_TYPES } from '~/constants';
 
 const { debounce } = useDebounce();
-const toysStore = useToysStore();
-const { filters, rootCategoryNames, subCategoryNames } = storeToRefs(toysStore);
+const petsStore = usePetsStore();
+const { filters, rootCategoryNames, subCategoryNames } = storeToRefs(petsStore);
 
 const misc = computed(() => filters.value.miscFilters ?? []) as ComputedRef<
   string[]
@@ -14,7 +14,7 @@ const debouncableSearch = ref('');
 watch(
   () => debouncableSearch.value,
   debounce((value) => {
-    toysStore.setToyFilters({ search: value });
+    petsStore.setPetFilters({ search: value });
   }, 300),
   { immediate: true }
 );
@@ -28,7 +28,7 @@ watch(
       <UInput
         v-model="debouncableSearch"
         class="w-full sm:w-[250px]"
-        placeholder="Search for a toy"
+        placeholder="Search for a pet"
         icon="i-heroicons-magnifying-glass-20-solid"
       >
       </UInput>
@@ -61,7 +61,7 @@ watch(
             icon="i-heroicons-x-mark-20-solid"
             :disabled="filters.rootCategories.length === 0"
             :padded="false"
-            @click="toysStore.setToyFilters({ rootCategories: [] })"
+            @click="petsStore.setPetFilters({ rootCategories: [] })"
           />
         </UTooltip>
       </UButtonGroup>
@@ -86,7 +86,7 @@ watch(
             icon="i-heroicons-x-mark-20-solid"
             :disabled="filters.subCategories.length === 0"
             :padded="false"
-            @click="toysStore.setToyFilters({ subCategories: [] })"
+            @click="petsStore.setPetFilters({ subCategories: [] })"
           />
         </UTooltip>
       </UButtonGroup>
@@ -108,7 +108,7 @@ watch(
             icon="i-heroicons-x-mark-20-solid"
             :disabled="filters.miscFilters.length === 0"
             :padded="false"
-            @click="toysStore.setToyFilters({ miscFilters: [] })"
+            @click="petsStore.setPetFilters({ miscFilters: [] })"
           />
         </UTooltip>
       </UButtonGroup>
@@ -132,7 +132,7 @@ watch(
             (filter) => filter?.length === 0 || filter === ''
           )
         "
-        @click="toysStore.clearToyFilters"
+        @click="petsStore.clearPetFilters"
         >Clear all filters</UButton
       >
     </div>
