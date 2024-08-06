@@ -2,6 +2,12 @@
 const mountsStore = useMountsStore();
 
 const { mounts } = storeToRefs(mountsStore);
+
+onUnmounted(() => {
+  [...document.getElementsByClassName('wowhead-tooltip')].forEach(item => {
+    item.remove();
+  });
+});
 </script>
 
 <template>
