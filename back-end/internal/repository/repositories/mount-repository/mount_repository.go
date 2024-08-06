@@ -7,9 +7,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"wowcollector.io/internal/entities/documents"
+	commonrepository "wowcollector.io/internal/repository/repositories/common-repository"
 )
 
 type MountRepository struct {
+	commonrepository.CommonRepository
 	collection *mongo.Collection
 }
 
@@ -20,28 +22,29 @@ func GetRepository() *MountRepository {
 }
 
 func Init(database *mongo.Database) {
-	instance = &MountRepository{collection: database.Collection("mounts")}
+	collection := database.Collection("mounts")
+	instance = &MountRepository{
+		CommonRepository: commonrepository.CommonRepository{
+			Collection: collection,
+		},
+		collection: collection,
+	}
 	instance.createIndexes()
 }
 
 func (r *MountRepository) GetMounts() ([]*documents.MountDocument, error) {
-	result, err := r.collection.Find(context.TODO(), bson.D{})
+	result, err := r.GetAll()
 	if err != nil {
 		zap.L().Info("Error fetching mounts" + err.Error())
 		return nil, err
 	}
-	defer result.Close(context.TODO())
-	var mounts []*documents.MountDocument
-	for result.Next(context.TODO()) {
-		var mount *documents.MountDocument
-		err := result.Decode(&mount)
-		if err != nil {
-			zap.L().Info("Error decoding mount" + err.Error())
-		}
-		mounts = append(mounts, mount)
-	}
-	if err := result.Err(); err != nil {
-		zap.L().Info("Error fetching mounts" + err.Error())
+
+	mounts := make([]*documents.MountDocument, len(result))
+	for i, record := range result {
+		var doc *documents.MountDocument
+		bsonBytes, _ := bson.Marshal(record)
+		bson.Unmarshal(bsonBytes, &doc)
+		mounts[i] = doc
 	}
 	return mounts, nil
 }

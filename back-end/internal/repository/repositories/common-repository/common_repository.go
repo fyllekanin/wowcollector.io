@@ -1,0 +1,31 @@
+package commonrepository
+
+import (
+	"context"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
+type Repository interface {
+	GetAll() ([]bson.D, error)
+}
+
+type CommonRepository struct {
+	Collection *mongo.Collection
+}
+
+func (r *CommonRepository) GetAll() ([]bson.D, error) {
+	result, err := r.Collection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		return nil, err
+	}
+	defer result.Close(context.TODO())
+
+	var records []bson.D
+	if err = result.All(context.TODO(), &records); err != nil {
+		return nil, err
+	}
+
+	return records, nil
+}
