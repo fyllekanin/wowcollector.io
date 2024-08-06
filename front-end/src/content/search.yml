@@ -1,2 +1,11 @@
 title: WoW Collector - Character Search
 description: Search for a character in World of Warcraft and see their collections.
+
+breadcrumbs:
+  - title: Home
+    icon: mdi:home
+    to: /
+  - title: Character Search
+    icon: mdi:account-search
+    disabled: true
+    to: search

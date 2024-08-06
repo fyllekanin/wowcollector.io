@@ -29,7 +29,8 @@ function onSuccess() {
 </script>
 
 <template>
-  <UContainer class="w-full flex items-center justify-center">
+  <UContainer class="flex flex-col gap-4 max-w-[1200px] max-4 lg:mx-auto">
+    <UBreadcrumb :links="mapContentNavigation(page?.breadcrumbs)" />
     <CharacterSearchCard @success="onSuccess" />
   </UContainer>
 </template>

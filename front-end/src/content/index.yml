@@ -15,3 +15,9 @@ services:
     to: /leaderboard
     disabled: true
     color: primary
+  - title: Character Search
+    description: Search for a character to see their collection progress.
+    icon: mdi:account-search
+    class: col-span-6 row-span-2
+    to: /search
+    color: primary
