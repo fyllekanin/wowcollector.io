@@ -15,6 +15,7 @@ import (
 	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	errorcodes "wowcollector.io/internal/common/error-codes"
 	"wowcollector.io/internal/entities/documents"
+	httpresponses "wowcollector.io/internal/entities/http-responses"
 	"wowcollector.io/internal/entities/response"
 	errorresponse "wowcollector.io/internal/entities/response/error"
 	mountleaderboardrepository "wowcollector.io/internal/repository/repositories/mount-leaderboard-repository"
@@ -59,11 +60,13 @@ func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	media := battlenethttp.GetInstance().GetCharacterMedia(blizzarddata.FromString(region), realm, character)
 	body, err := json.Marshal(&response.CharacterProfileResponse{
 		Name:    item.Name,
 		Level:   item.Level,
 		Realm:   item.GetRealm(),
 		Faction: item.GetFaction(),
+		Assets:  getCharacterAssets(media),
 	})
 	if err != nil {
 		zap.L().Error("Could not stringify response body")
@@ -75,6 +78,17 @@ func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
 	zap.L().Info("Responded with character profile")
+}
+
+func getCharacterAssets(media *httpresponses.BattleNetMedia) *response.CharacterProfileAssets {
+	if media == nil {
+		return nil
+	}
+	return &response.CharacterProfileAssets{
+		Avatar:  media.GetAssetByKey("avatar"),
+		Inset:   media.GetAssetByKey("inset"),
+		MainRaw: media.GetAssetByKey("main-raw"),
+	}
 }
 
 // @summary Fetch character mount collection

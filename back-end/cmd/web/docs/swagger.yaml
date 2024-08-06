@@ -60,8 +60,19 @@ definitions:
       name:
         type: string
     type: object
+  response.CharacterProfileAssets:
+    properties:
+      avatar:
+        type: string
+      inset:
+        type: string
+      mainRaw:
+        type: string
+    type: object
   response.CharacterProfileResponse:
     properties:
+      assets:
+        $ref: '#/definitions/response.CharacterProfileAssets'
       faction:
         type: string
       level:

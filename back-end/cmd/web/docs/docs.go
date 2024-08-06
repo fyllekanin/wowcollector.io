@@ -461,9 +461,26 @@ const docTemplate = `{
                 }
             }
         },
+        "response.CharacterProfileAssets": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "inset": {
+                    "type": "string"
+                },
+                "mainRaw": {
+                    "type": "string"
+                }
+            }
+        },
         "response.CharacterProfileResponse": {
             "type": "object",
             "properties": {
+                "assets": {
+                    "$ref": "#/definitions/response.CharacterProfileAssets"
+                },
                 "faction": {
                     "type": "string"
                 },

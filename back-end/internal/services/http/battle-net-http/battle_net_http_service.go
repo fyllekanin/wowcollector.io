@@ -74,6 +74,22 @@ func (s *BattleNetHttpService) GetCharacter(region blizzarddata.BattleNetRegion,
 	return &result
 }
 
+func (s *BattleNetHttpService) GetCharacterMedia(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetMedia {
+	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/character-media?namespace=profile-"+string(region)+"&locale=en_US", true)
+	if err != nil {
+		zap.L().Info("Error getting character media:" + err.Error())
+		return nil
+	}
+
+	var result httpresponses.BattleNetMedia
+	err = json.Unmarshal(response, &result)
+	if err != nil {
+		zap.L().Info("Error decoding character media:" + err.Error())
+		return nil
+	}
+	return &result
+}
+
 func (s *BattleNetHttpService) GetAchievementCategoryIndex(region blizzarddata.BattleNetRegion) *httpresponses.BattleNetAchievementCategoryIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/achievement-category/index?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {

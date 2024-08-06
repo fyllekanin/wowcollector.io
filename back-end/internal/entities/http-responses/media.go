@@ -11,8 +11,12 @@ type BattleNetMedia struct {
 }
 
 func (m *BattleNetMedia) GetIconAsset() string {
+	return m.GetAssetByKey("icon")
+}
+
+func (m *BattleNetMedia) GetAssetByKey(key string) string {
 	for _, element := range m.Assets {
-		if element.Key == "icon" {
+		if element.Key == key {
 			return element.Value
 		}
 	}
