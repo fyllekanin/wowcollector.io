@@ -4,6 +4,12 @@ import type { AchievementCategory } from '~/types';
 const achievementsStore = useAchievementsStore();
 
 const { achievements } = storeToRefs(achievementsStore);
+
+onUnmounted(() => {
+  [...document.getElementsByClassName('wowhead-tooltip')].forEach((item) => {
+    item.remove();
+  });
+});
 </script>
 
 <template>

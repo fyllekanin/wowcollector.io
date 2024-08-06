@@ -2,6 +2,12 @@
 const toysStore = useToysStore();
 
 const { toys } = storeToRefs(toysStore);
+
+onUnmounted(() => {
+  [...document.getElementsByClassName('wowhead-tooltip')].forEach((item) => {
+    item.remove();
+  });
+});
 </script>
 
 <template>
