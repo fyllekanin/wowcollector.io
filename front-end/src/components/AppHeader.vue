@@ -6,6 +6,8 @@ import type { HeaderLink } from '@nuxt/ui-pro/types';
 const characterStore = useCharacterStore();
 const { character } = storeToRefs(characterStore);
 
+const disabled = computed(() => !character.value);
+
 const modal = useModal();
 const router = useRouter();
 
@@ -31,9 +33,9 @@ const links = [
       {
         label: 'Mounts',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/mounts`,
-        disabled: !character.value,
+        disabled: disabled.value,
         click: () => {
-          if (!character.value) {
+          if (disabled.value) {
             onSearch('mounts');
           }
         },
@@ -41,9 +43,9 @@ const links = [
       {
         label: 'Achievements',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/achievements`,
-        disabled: !character.value,
+        disabled: disabled.value,
         click: () => {
-          if (!character.value) {
+          if (disabled.value) {
             onSearch('achievements');
           }
         },
@@ -51,9 +53,9 @@ const links = [
       {
         label: 'Pets',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/pets`,
-        disabled: !character.value,
+        disabled: disabled.value,
         click: () => {
-          if (!character.value) {
+          if (disabled.value) {
             onSearch('pets');
           }
         },
@@ -61,9 +63,9 @@ const links = [
       {
         label: 'Toys',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/toys`,
-        disabled: !character.value,
+        disabled: disabled.value,
         click: () => {
-          if (!character.value) {
+          if (disabled.value) {
             onSearch('toys');
           }
         },
