@@ -27,7 +27,6 @@ const links = [
   },
   {
     label: 'Collections',
-    to: '/collections',
     children: [
       {
         label: 'Mounts',
