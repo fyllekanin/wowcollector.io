@@ -22,7 +22,7 @@ function onSearch(to: string) {
   });
 }
 
-const links = [
+const links = computed(() => [
   {
     label: 'Home',
     to: '/',
@@ -80,7 +80,7 @@ const links = [
     label: 'Character Search',
     to: '/search',
   },
-] as HeaderLink[];
+]) as ComputedRef<HeaderLink[]>;
 </script>
 
 <template>
