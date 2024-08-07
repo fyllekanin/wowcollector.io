@@ -11,7 +11,6 @@ defineProps({
 </script>
 
 <template>
-  <!-- <LazyLazyLoad> -->
   <a
     :href="`https://www.wowhead.com/achievement=${achievement.id}`"
     target="_blank"
@@ -32,5 +31,4 @@ defineProps({
       "
     />
   </a>
-  <!-- </LazyLazyLoad> -->
 </template>

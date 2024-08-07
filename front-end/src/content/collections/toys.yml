@@ -5,9 +5,6 @@ breadcrumbs:
   - title: Home
     icon: mdi:home
     to: /
-  - title: Collections
-    icon: mdi:bookshelf
-    to: /collections
   - title: Toys
     icon: game-icons:locked-chest
     disabled: true
