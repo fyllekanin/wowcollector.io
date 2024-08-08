@@ -8,7 +8,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const characterStore = useCharacterStore();
   const toysStore = useToysStore();
   const { character } = storeToRefs(characterStore);
-  const { toys } = storeToRefs(toysStore);
 
   if (
     character.value?.name !== name &&
@@ -26,15 +25,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
     characterStore.setCharacter(characterData.value);
   }
 
-  if (!toys.value?.length || character.value?.name !== name) {
-    const { data: toyData } = await useFetch(
-      `/api/character/${region}/${realm}/${name}/toys`
-    );
+  const { data: toyData } = await useFetch(
+    `/api/character/${region}/${realm}/${name}/toys`
+  );
 
-    if (!toyData.value) {
-      return abortNavigation();
-    }
-
-    toysStore.setToys(toyData.value);
+  if (!toyData.value) {
+    return abortNavigation();
   }
+
+  toysStore.setToys(toyData.value);
 });
