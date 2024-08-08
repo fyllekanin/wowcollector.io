@@ -53,7 +53,7 @@ func main() {
 		})
 	})
 
-	time.AfterFunc(8*time.Hour, func() {
+	time.AfterFunc(8*time.Second, func() {
 		tasks.ScanPets(blizzarddata.REGION_EU)
 		c.AddFunc("@every 24h", func() {
 			tasks.ScanPets(blizzarddata.REGION_EU)

@@ -9,6 +9,7 @@ type PetDocument struct {
 	Source         string             `json:"source" bson:"source"`
 	IsUnobtainable bool               `json:"isUnobtainable" bson:"isUnobtainable"`
 	Icon           string             `json:"icon" bson:"icon"`
+	NpcId          int                `json:"npcId" bson:"npcId"`
 }
 
 func (d *PetDocument) IsEqual(other *PetDocument) bool {
@@ -16,5 +17,6 @@ func (d *PetDocument) IsEqual(other *PetDocument) bool {
 		d.Name == other.Name &&
 		d.Source == other.Source &&
 		d.IsUnobtainable == other.IsUnobtainable &&
-		d.Icon == other.Icon
+		d.Icon == other.Icon &&
+		d.NpcId == other.NpcId
 }

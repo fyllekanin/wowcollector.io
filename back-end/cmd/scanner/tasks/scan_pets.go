@@ -57,6 +57,7 @@ func runPet(region blizzarddata.BattleNetRegion, petId int, existingPets []*docu
 		Name:           battleNetPet.Name,
 		IsUnobtainable: battleNetPet.ShouldExcludeIfUncollected,
 		Icon:           battleNetPet.Icon,
+		NpcId:          battleNetPet.Creature.Id,
 	}
 
 	if battleNetPet.Source != nil {
