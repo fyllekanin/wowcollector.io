@@ -7,5 +7,7 @@
     <UMain class="pt-6">
       <slot />
     </UMain>
+
+    <AppFooter />
   </div>
 </template>

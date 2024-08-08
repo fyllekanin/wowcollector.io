@@ -4,9 +4,7 @@ const elementRef = ref();
 
 const observer = new IntersectionObserver(
   (entries) => {
-    console.log('entries', entries);
     entries.forEach((entry) => {
-      console.log('entry', entry.isIntersecting);
       isIntersecting.value = entry.isIntersecting;
     });
   },
@@ -18,7 +16,6 @@ const observer = new IntersectionObserver(
 );
 
 onMounted(() => {
-  console.log('äHELLO!');
   if (!elementRef.value) return;
   observer.observe(elementRef.value);
 });

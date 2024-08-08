@@ -6,7 +6,6 @@ export const useCharacterStore = defineStore('character', {
   }),
   actions: {
     setCharacter(newCharacter: Partial<Character>) {
-      console.log('newCharacter', newCharacter);
       this.character = newCharacter;
     },
     clearCharacter() {
