@@ -23,10 +23,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
       return abortNavigation();
     }
 
-    characterStore.setCharacter({
-      ...characterData.value,
-      region,
-    });
+    characterStore.setCharacter(characterData.value);
   }
 
   if (!mounts.value?.length || character.value?.name !== name) {
