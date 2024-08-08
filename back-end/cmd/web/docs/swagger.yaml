@@ -81,6 +81,8 @@ definitions:
         type: string
       realm:
         type: string
+      region:
+        type: string
     type: object
   response.LeaderboardEntry:
     properties:

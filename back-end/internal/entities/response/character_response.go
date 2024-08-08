@@ -12,4 +12,5 @@ type CharacterProfileResponse struct {
 	Realm   string                  `json:"realm"`
 	Faction string                  `json:"faction"`
 	Assets  *CharacterProfileAssets `json:"assets"`
+	Region  string                  `json:"region"`
 }

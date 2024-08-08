@@ -67,6 +67,7 @@ func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
 		Realm:   item.GetRealm(),
 		Faction: item.GetFaction(),
 		Assets:  getCharacterAssets(media),
+		Region:  region,
 	})
 	if err != nil {
 		zap.L().Error("Could not stringify response body")

@@ -485,6 +485,9 @@
                 },
                 "realm": {
                     "type": "string"
+                },
+                "region": {
+                    "type": "string"
                 }
             }
         },

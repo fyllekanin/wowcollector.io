@@ -492,6 +492,9 @@ const docTemplate = `{
                 },
                 "realm": {
                     "type": "string"
+                },
+                "region": {
+                    "type": "string"
                 }
             }
         },
