@@ -83,19 +83,23 @@ const regionsMapped = computed(() =>
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   loading.value = true;
 
-  const { data: character } = event;
+  const { data: characterData } = event;
 
   try {
-    const mounts = await $fetch<CollectionInformationResponse<MountCategory>>(
-      `/api/character/${character.region}/${character.realm}/${character.name}/mounts`
+    const { data: character } = await useAsyncData('character', () =>
+      $fetch(
+        `/api/character/${characterData.region}/${characterData.realm}/${characterData.name}`
+      )
     );
 
-    if (!mounts) {
+    if (!character.value) {
       throw new Error('Character not found');
     }
 
-    characterStore.setCharacter(character);
-    mountsStore.setMounts(mounts);
+    characterStore.setCharacter({
+      ...character.value,
+      region: characterData.region,
+    });
 
     emit('success');
   } catch (error) {

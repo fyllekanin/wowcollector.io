@@ -5,9 +5,27 @@ import type {
   MountCategory,
   PetCategory,
   ToyCategory,
+  Character,
 } from '~/types';
 
 export default class CharacterService {
+  static async getCharacterInformation(
+    name: string,
+    realm: string,
+    region: string
+  ) {
+    try {
+      const response = await get<Character>({
+        url: `/api/v1/character/${region}/${realm}/${name}`,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
   static async getCharacterMounts(name: string, realm: string, region: string) {
     try {
       const response = await get<MountCategory[]>({

@@ -1,5 +1,3 @@
-import type { AchievementCategory } from '~/types';
-
 export default defineNuxtRouteMiddleware(async (to) => {
   const { region, realm, name } = to.params as Record<string, string>;
 
@@ -12,20 +10,37 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const { character } = storeToRefs(characterStore);
   const { achievements } = storeToRefs(achievementsStore);
 
-  characterStore.setCharacter({ region, realm, name });
+  if (
+    character.value?.name !== name &&
+    character.value?.region !== region &&
+    character.value?.realm !== realm
+  ) {
+    const { data: characterData } = await useFetch(
+      `/api/character/${region}/${realm}/${name}`
+    );
+
+    if (!characterData.value) {
+      return abortNavigation();
+    }
+
+    characterStore.setCharacter({
+      ...characterData.value,
+      region,
+    });
+  }
 
   if (!achievements.value?.length || character.value?.name !== name) {
-    const { data } = await useLazyFetch<AchievementCategory[]>(
+    const { data: achievementData } = await useFetch(
       `/api/character/${region}/${realm}/${name}/achievements`
     );
 
-    if (!data.value) {
+    if (!achievementData.value) {
       return abortNavigation();
     }
 
     const minDisplayOrder =
-      Math.min(...data.value?.map((c) => c.displayOrder || 0)) || 0;
-    const accordionCategories = data.value.map((category) => ({
+      Math.min(...achievementData.value?.map((c) => c.displayOrder || 0)) || 0;
+    const accordionCategories = achievementData.value.map((category) => ({
       ...category,
       defaultOpen: category.displayOrder === minDisplayOrder,
     }));

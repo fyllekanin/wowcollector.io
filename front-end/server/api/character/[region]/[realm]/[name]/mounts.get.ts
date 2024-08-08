@@ -5,9 +5,9 @@ export default defineEventHandler({
   handler: async (event) => {
     const { region, realm, name } = getRouterParams(event);
     const mounts = await CharacterService.getCharacterMounts(
-      name,
-      realm,
-      region
+      name.toLowerCase(),
+      realm.toLowerCase(),
+      region.toLowerCase()
     );
     if (mounts) return mounts;
   },

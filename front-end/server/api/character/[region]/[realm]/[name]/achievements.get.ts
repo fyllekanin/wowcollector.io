@@ -5,9 +5,9 @@ export default defineEventHandler({
   handler: async (event) => {
     const { region, realm, name } = getRouterParams(event);
     const achievements = await CharacterService.getCharacterAchievements(
-      name,
-      realm,
-      region
+      name.toLowerCase(),
+      realm.toLowerCase(),
+      region.toLowerCase()
     );
     if (achievements) return achievements;
   },

@@ -10,15 +10,34 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const { character } = storeToRefs(characterStore);
   const { mounts } = storeToRefs(mountsStore);
 
-  characterStore.setCharacter({ region, realm, name });
+  if (
+    character.value?.name !== name &&
+    character.value?.region !== region &&
+    character.value?.realm !== realm
+  ) {
+    const { data: characterData } = await useFetch(
+      `/api/character/${region}/${realm}/${name}`
+    );
+
+    if (!characterData.value) {
+      return abortNavigation();
+    }
+
+    characterStore.setCharacter({
+      ...characterData.value,
+      region,
+    });
+  }
 
   if (!mounts.value?.length || character.value?.name !== name) {
     const { data: mountData } = await useFetch(
       `/api/character/${region}/${realm}/${name}/mounts`
     );
+
     if (!mountData.value) {
       return abortNavigation();
     }
+
     mountsStore.setMounts(mountData.value);
   }
 });

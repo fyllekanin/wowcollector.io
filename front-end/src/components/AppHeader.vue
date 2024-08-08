@@ -6,8 +6,6 @@ import type { HeaderLink } from '@nuxt/ui-pro/types';
 const characterStore = useCharacterStore();
 const { character } = storeToRefs(characterStore);
 
-const disabled = computed(() => !character.value);
-
 const modal = useModal();
 const router = useRouter();
 
@@ -33,9 +31,9 @@ const links = computed(() => [
       {
         label: 'Mounts',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/mounts`,
-        disabled: disabled.value,
+        disabled: character.value,
         click: () => {
-          if (disabled.value) {
+          if (character.value) {
             onSearch('mounts');
           }
         },
@@ -43,9 +41,9 @@ const links = computed(() => [
       {
         label: 'Achievements',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/achievements`,
-        disabled: disabled.value,
+        disabled: character.value,
         click: () => {
-          if (disabled.value) {
+          if (character.value) {
             onSearch('achievements');
           }
         },
@@ -53,9 +51,9 @@ const links = computed(() => [
       {
         label: 'Pets',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/pets`,
-        disabled: disabled.value,
+        disabled: character.value,
         click: () => {
-          if (disabled.value) {
+          if (character.value) {
             onSearch('pets');
           }
         },
@@ -63,9 +61,9 @@ const links = computed(() => [
       {
         label: 'Toys',
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/toys`,
-        disabled: disabled.value,
+        disabled: character.value,
         click: () => {
-          if (disabled.value) {
+          if (character.value) {
             onSearch('toys');
           }
         },
@@ -92,14 +90,36 @@ const links = computed(() => [
 
     <template #right>
       <UButton icon="simple-icons:battledotnet" to="/login" color="gray"
-        >Sign In</UButton
+        >Connect</UButton
       >
       <UColorModeButton class="hidden lg:flex" />
+      <ActiveCharacterDropdown v-if="character" class="hidden lg:flex" />
     </template>
 
     <template #panel>
-      <UNavigationTree :links="links" default-open />
-      <UColorModeSelect class="lg:hidden pt-5" />
+      <div class="flex flex-col gap-8">
+        <UNavigationTree :links="links" default-open />
+        <UDivider />
+        <div class="flex grow flex-wrap items-center justify-between">
+          <div class="flex items-center gap-3">
+            <UAvatar :src="character?.assets?.avatar" />
+            <div class="flex gap-1">
+              <span class="text-sm"
+                >{{ character?.name }} - {{ character?.realm }}</span
+              >
+            </div>
+          </div>
+          <UButton
+            icon="material-symbols:logout"
+            to="/search"
+            variant="ghost"
+            color="red"
+            @click="characterStore.clearCharacter"
+            >Change character</UButton
+          >
+        </div>
+        <UColorModeSelect class="lg:hidden" />
+      </div>
     </template>
   </UHeader>
 </template>

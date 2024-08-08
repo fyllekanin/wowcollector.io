@@ -3,34 +3,26 @@ description: Explore the various collections available in World of Warcraft.
 
 collections:
   - title: Mounts
-    description: See all the mounts you can and have collected in World of Warcraft.
+    description: Explore your mounts or those of other riders in Azeroth.
     icon: mdi:horse-variant
     class: col-span-6 row-span-2
     to: mounts
     color: purple
   - title: Achievements
-    description: Track your progress and see what you have left to complete.
+    description: Track your achievements or compare them with fellow adventurers.
     icon: mdi:trophy
     class: col-span-6 row-span-2
     to: achievements
     color: yellow
   - title: Pets
-    description: Find all the pets you can and have collected in World of Warcraft.
+    description: Discover battle pets in your collection or others' across Azeroth.
     icon: mdi:paw
     class: col-span-6 row-span-2
     to: pets
     color: green
   - title: Toys
-    description: Discover all the toys you can and have collected in World of Warcraft.
+    description: Browse toys you've gathered or see what others have found.
     icon: game-icons:locked-chest
     class: col-span-6 row-span-2
     to: toys
     color: blue
-# breadcrumbs:
-#   - title: Home
-#     icon: mdi:home
-#     to: /
-#   - title: Collections
-#     icon: mdi:bookshelf
-#     to: /collections
-#     disabled: true

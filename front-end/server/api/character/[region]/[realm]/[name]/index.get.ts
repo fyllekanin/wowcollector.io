@@ -4,11 +4,11 @@ export default defineEventHandler({
   onRequest: (_) => {},
   handler: async (event) => {
     const { region, realm, name } = getRouterParams(event);
-    const pets = await CharacterService.getCharacterPets(
+    const character = await CharacterService.getCharacterInformation(
       name.toLowerCase(),
       realm.toLowerCase(),
       region.toLowerCase()
     );
-    if (pets) return pets;
+    if (character) return character;
   },
 });
