@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "node changelog.js && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -28,6 +28,8 @@
     "@iconify-json/game-icons": "^1.1.9",
     "@iconify-json/material-symbols": "^1.1.85",
     "@iconify-json/mdi": "^1.1.67",
-    "@iconify-json/simple-icons": "^1.1.111"
+    "@iconify-json/simple-icons": "^1.1.111",
+    "path": "^0.12.7",
+    "semver": "^7.6.3"
   }
 }

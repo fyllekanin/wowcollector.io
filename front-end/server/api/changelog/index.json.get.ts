@@ -1,38 +1,23 @@
+export enum ChangelogType {
+  BREAKING = '1',
+  FEATURE = '2',
+  BUG = '3'
+}
+  
 interface Changelog {
   version: string;
-  timestamp: number;
+  timestamp: string;
   changes: Change[];
 }
 
 interface Change {
-  type: number;
+  type: ChangelogType;
   content: string;
 }
 
+const data: Changelog[] =
+[] as Changelog[];
+
 export default defineEventHandler({
-  handler: () =>
-    [
-      {
-        version: '0.0.5',
-        changes: [
-          {
-            type: 3,
-            content: 'Fixed sticking tooltip',
-          },
-        ],
-      },
-      {
-        version: '0.0.4',
-        changes: [
-          {
-            type: 3,
-            content: 'Fixed bug with tooltip',
-          },
-          {
-            type: 3,
-            content: 'Fixed mounts middleware not triggering redirect',
-          },
-        ],
-      },
-    ] as Changelog[],
+  handler: () => data,
 });
