@@ -32,9 +32,10 @@ jobs:
       id: read_version
       run: echo "current_version=$(cat version.txt)" >> $GITHUB_ENV
 
-    - name: Update version based on release type
-      id: update_version
-      run: bash scripts/update-version.sh
+    - name: Run update version script
+      run: |
+        bash scripts/update-version.sh "${{ env.current_version }}" "${{ github.event.inputs.release_type }}"
+
 
     - name: Create release folder
       id: create_release_folder
