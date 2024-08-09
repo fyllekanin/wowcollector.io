@@ -72,10 +72,10 @@ const links = computed(() => [
       },
     ],
   },
-  {
-    label: 'Leaderboards',
-    to: '/leaderboards',
-  },
+  // {
+  //   label: 'Leaderboards',
+  //   to: '/leaderboards',
+  // },
   {
     label: 'Character Search',
     to: '/search',
@@ -87,7 +87,7 @@ const links = computed(() => [
   <UHeader :links="links">
     <template #logo>
       <Logo width="48px" height="48px" />
-      <p class="hidden min-[375px]:block self-center mt-1">WOW Collector</p>
+      <p class="hidden min-[375px]:block self-center mt-1">WoW Collector</p>
     </template>
 
     <template #right>

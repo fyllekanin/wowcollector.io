@@ -18,5 +18,5 @@ const links = [
 </script>
 
 <template>
-  <UFooter :links="links"> </UFooter>
+  <UFooter :links="links" />
 </template>
