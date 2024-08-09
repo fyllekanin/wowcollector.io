@@ -33,6 +33,7 @@ jobs:
       run: echo "current_version=$(cat version.txt)" >> $GITHUB_ENV
 
     - name: Run update version script
+      shell: bash {0}
       run: |
         bash scripts/update-version.sh "${{ env.current_version }}" "${{ github.event.inputs.release_type }}"
 
