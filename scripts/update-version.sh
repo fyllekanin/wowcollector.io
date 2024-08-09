@@ -26,7 +26,7 @@ if [[ "$release_type" != "major" && "$release_type" != "minor" && "$release_type
 fi
 
 # Update version numbers based on release type
-case "$release_type" in
+case $release_type in
     major)
         ((major++))
         minor=0
