@@ -41,8 +41,7 @@ timestamp=$(date +%s)
 json_content=$(cat <<EOF
 {
     "type": "$type",
-    "content": "$description",
-    "timestamp": "$timestamp"
+    "content": "$description"
 }
 EOF
 )
