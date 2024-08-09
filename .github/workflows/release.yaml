@@ -35,18 +35,33 @@ jobs:
     - name: Update version based on release type
       id: update_version
       run: |
+        echo "Current version: ${{ env.current_version }}"
         release_type="${{ github.event.inputs.release_type }}"
         current_version="${{ env.current_version }}"
 
+        # Split the version number into major, minor, and patch
         IFS='.' read -r major minor patch <<< "$current_version"
 
+        echo "Parsed version: major=$major, minor=$minor, patch=$patch"
+
         case "$release_type" in
-          major) ((major++)); minor=0; patch=0 ;;
-          minor) ((minor++)); patch=0 ;;
-          patch) ((patch++)) ;;
+          major) 
+            ((major++)); minor=0; patch=0
+            ;;
+          minor) 
+            ((minor++)); patch=0
+            ;;
+          patch) 
+            ((patch++))
+            ;;
+          *)
+            echo "Invalid release type: $release_type"
+            exit 1
+            ;;
         esac
 
         new_version="$major.$minor.$patch"
+        echo "New version: $new_version"
         echo "new_version=$new_version" >> $GITHUB_ENV
 
         echo "$new_version" > version.txt
