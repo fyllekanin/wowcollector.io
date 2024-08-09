@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set +e
 
 # Check if the right number of arguments are provided
 if [ "$#" -ne 2 ]; then
