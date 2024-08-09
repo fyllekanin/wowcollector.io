@@ -43,7 +43,15 @@ jobs:
         IFS='.' read -r major minor patch <<< "$current_version"
 
         echo "Parsed version: major=$major, minor=$minor, patch=$patch"
+        echo "Release type: $release_type"
 
+        # Handle invalid release_type values
+        if [[ "$release_type" != "major" && "$release_type" != "minor" && "$release_type" != "patch" ]]; then
+          echo "Invalid release type: $release_type"
+          exit 1
+        fi
+
+        # Update version numbers based on release type
         case "$release_type" in
           major) 
             ((major++)); minor=0; patch=0
@@ -53,10 +61,6 @@ jobs:
             ;;
           patch) 
             ((patch++))
-            ;;
-          *)
-            echo "Invalid release type: $release_type"
-            exit 1
             ;;
         esac
 
