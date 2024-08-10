@@ -43,7 +43,7 @@ export function getChanges(folderPath) {
 
 function getVersionsPopulated(folders) {
     const result = [];
-    
+
     for (const folder of folders) {
         const [version, timestamp] = folder.split('-');
 
@@ -57,7 +57,7 @@ function getVersionsPopulated(folders) {
 }
 
 function writeTextToFile(text) {
-    const filePath = join(import.meta.url ? new URL('server/api/changelog/index.json.get.ts', import.meta.url).pathname : 'server/api/changelog/index.json.get.ts');
+    const filePath = join(import.meta.url ? new URL('server/api/changelog.json.get.ts', import.meta.url).pathname : 'server/api/changelog.json.get.ts');
 
     writeFileSync(filePath, text, 'utf-8');
     console.log(`File written successfully at ${filePath}`);
