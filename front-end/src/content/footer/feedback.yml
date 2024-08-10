@@ -1,0 +1,11 @@
+tabs:
+  - label: Feedback
+    icon: mdi:comment-text
+    feedbackType: feedback
+    description: Share your ideas and feedback to help enhance wowcollector.io. Your suggestions are vital in shaping the future of the site!
+    additionalNotes: Fields marked with * are required.
+  - label: Bug Report
+    icon: mdi:bug
+    feedbackType: bug
+    description: Please provide the details of the bug here
+    additionalNotes: Fields marked with * are required.

@@ -11,12 +11,13 @@ const links = [
     to: '/releases',
   },
   {
-    label: 'Suggestions',
-    to: '/suggestions',
+    label: 'Feedback',
+    to: '/feedback',
   },
 ] as FooterLink[];
 </script>
 
 <template>
+  <UDivider />
   <UFooter :links="links" />
 </template>

@@ -2,7 +2,7 @@
 import { eachDayOfInterval, isSameDay, isToday } from 'date-fns';
 
 const { data: page } = await useAsyncData('releases', () =>
-  queryContent('/releases').findOne()
+  queryContent('/footer/releases').findOne()
 );
 if (!page.value) {
   throw createError({
@@ -22,142 +22,27 @@ useSeoMeta({
   ogDescription: description,
 });
 
-const releases = [
-  {
-    published_at: '2022-01-01T00:00:00Z',
-    version: '1.0.0',
-    name: 'Initial release',
-  },
-  {
-    published_at: '2022-01-15T00:00:00Z',
-    version: '1.1.0',
-    name: 'Dark mode',
-  },
-  {
-    published_at: '2022-02-01T00:00:00Z',
-    version: '1.2.0',
-    name: 'New components',
-  },
-  {
-    published_at: '2022-02-15T00:00:00Z',
-    version: '1.3.0',
-    name: 'New features',
-  },
-  {
-    published_at: '2022-03-01T00:00:00Z',
-    version: '1.4.0',
-    name: 'New components',
-  },
-  {
-    published_at: '2022-03-15T00:00:00Z',
-    version: '1.5.0',
-    name: 'New features',
-  },
-  {
-    published_at: '2022-04-01T00:00:00Z',
-    version: '1.6.0',
-    name: 'New components',
-  },
-  {
-    published_at: '2022-04-15T00:00:00Z',
-    version: '1.7.0',
-    name: 'New features',
-  },
-  {
-    published_at: '2022-05-01T00:00:00Z',
-    version: '1.8.0',
-    name: 'New components',
-  },
-  {
-    published_at: '2022-05-15T00:00:00Z',
-    version: '1.9.0',
-    name: 'New features',
-  },
-  {
-    published_at: '2022-06-01T00:00:00Z',
-    version: '1.10.0',
-    name: 'New components',
-  },
-  {
-    published_at: '2022-06-15T00:00:00Z',
-    version: '1.11.0',
-    name: 'New features',
-  },
-];
+const { data: releases } = await useFetch('/api/changelog/index.json');
 
-const pulls = [
-  {
-    merged_at: '2022-01-01T00:00:00Z',
-    title: 'Initial release',
-  },
-  {
-    merged_at: '2022-01-15T00:00:00Z',
-    title: 'Dark mode',
-  },
-  {
-    merged_at: '2022-02-01T00:00:00Z',
-    title: 'New components',
-  },
-  {
-    merged_at: '2022-02-15T00:00:00Z',
-    title: 'New features',
-  },
-  {
-    merged_at: '2022-03-01T00:00:00Z',
-    title: 'New components',
-  },
-  {
-    merged_at: '2022-03-15T00:00:00Z',
-    title: 'New features',
-  },
-  {
-    merged_at: '2022-04-01T00:00:00Z',
-    title: 'New components',
-  },
-  {
-    merged_at: '2022-04-15T00:00:00Z',
-    title: 'New features',
-  },
-  {
-    merged_at: '2022-05-01T00:00:00Z',
-    title: 'New components',
-  },
-  {
-    merged_at: '2022-05-15T00:00:00Z',
-    title: 'New features',
-  },
-  {
-    merged_at: '2022-06-01T00:00:00Z',
-    title: 'New components',
-  },
-  {
-    merged_at: '2022-06-15T00:00:00Z',
-    title: 'New features',
-  },
-];
+watchEffect(() => console.log(releases.value));
 
 const dates = computed(() => {
-  const first = releases[releases.length - 1];
+  if (!releases.value) return [];
+
+  const first = releases.value[releases.value.length - 1];
   if (!first) return [];
 
   const days = eachDayOfInterval({
-    start: new Date(first.published_at),
+    start: new Date(first.timestamp),
     end: new Date(),
   });
 
   return days.reverse().map((day, i) => {
-    // console.log(day, releases[i]);
     return {
       day,
-      release: releases.find((release) => {
-        console.log(
-          release.published_at,
-          day,
-          isSameDay(new Date(release.published_at), day)
-        );
-        return isSameDay(new Date(release.published_at), day);
+      release: releases.value?.find((release) => {
+        return isSameDay(new Date(release.timestamp), day);
       }),
-      pulls: pulls.filter((pull) => isSameDay(new Date(pull.merged_at), day)),
     };
   });
 });
@@ -198,9 +83,7 @@ const dates = computed(() => {
           class="h-full w-0.5 bg-gray-200 dark:bg-gray-800 absolute top-0 inset-x-[50%] -ml-[1px] flex-shrink-0"
         />
 
-        <template
-          v-if="date.release || date.pulls?.length || isToday(date.day)"
-        >
+        <template v-if="date.release || isToday(date.day)">
           <div
             class="flex items-start gap-8 relative w-[50%]"
             :class="
