@@ -22,30 +22,28 @@ useSeoMeta({
   ogDescription: description,
 });
 
-const { data: releases } = await useFetch('/api/changelog/index.json');
+const { data: releases } = await useFetch('/api/changelog.json');
 
-watchEffect(() => console.log(releases.value));
+// const dates = computed(() => {
+//   if (!releases.value) return [];
 
-const dates = computed(() => {
-  if (!releases.value) return [];
+//   const first = releases.value[releases.value.length - 1];
+//   if (!first) return [];
 
-  const first = releases.value[releases.value.length - 1];
-  if (!first) return [];
+//   const days = eachDayOfInterval({
+//     start: new Date(first.timestamp),
+//     end: new Date(),
+//   });
 
-  const days = eachDayOfInterval({
-    start: new Date(first.timestamp),
-    end: new Date(),
-  });
-
-  return days.reverse().map((day, i) => {
-    return {
-      day,
-      release: releases.value?.find((release) => {
-        return isSameDay(new Date(release.timestamp), day);
-      }),
-    };
-  });
-});
+//   return days.reverse().map((day, i) => {
+//     return {
+//       day,
+//       release: releases.value?.find((release) => {
+//         return isSameDay(new Date(release.timestamp), day);
+//       }),
+//     };
+//   });
+// });
 </script>
 
 <template>
@@ -75,7 +73,7 @@ const dates = computed(() => {
       />
 
       <div
-        v-for="(date, index) in dates"
+        v-for="(release, index) in releases"
         :key="index"
         class="relative py-3 min-h-[24px] flex items-center justify-center"
       >
@@ -83,7 +81,7 @@ const dates = computed(() => {
           class="h-full w-0.5 bg-gray-200 dark:bg-gray-800 absolute top-0 inset-x-[50%] -ml-[1px] flex-shrink-0"
         />
 
-        <template v-if="date.release || isToday(date.day)">
+        <template v-if="release.version || isToday(release.timestamp)">
           <div
             class="flex items-start gap-8 relative w-[50%]"
             :class="
@@ -96,10 +94,10 @@ const dates = computed(() => {
               class="h-[8px] w-[8px] bg-gray-400 dark:bg-gray-400 rounded-full z-[1] mt-2 ring-2 ring-gray-300 dark:ring-gray-600 flex-shrink-0"
             />
 
-            <!-- <ReleasesItem
-              :date="date"
+            <ReleasesItem
+              :date="release"
               :class="index % 2 === 0 ? '' : 'text-right'"
-            /> -->
+            />
           </div>
         </template>
       </div>
