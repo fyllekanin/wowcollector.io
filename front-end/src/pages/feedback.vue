@@ -37,10 +37,22 @@ const bugreportStateValid = computed(
 
 const modal = useModal();
 
-function openConfirmationModal() {
+function openConfirmationModal(reportKind: 'feedback' | 'bug') {
   modal.open(ConfirmationModal, {
-    title: 'Submit Feedback',
-    message: 'Are you sure you want to submit your feedback?',
+    title: `Submit ${reportKind}`,
+    message: `Are you sure you want to submit your ${reportKind}?`,
+    buttonText: 'Submit',
+    onConfirm: () => {
+      console.log('Feedback submitted');
+      modal.close();
+    },
+    onCancel: () => {
+      console.log('Feedback not submitted');
+      modal.close();
+    },
+    onClose() {
+      console.log('Feedback modal closed');
+    },
   });
 }
 
@@ -111,6 +123,11 @@ watch(
                     :disabled="!feedbackState.attachments.length"
                   />
                 </UButtonGroup>
+                <p class="text-xs italic mt-2">
+                  Attachments are optional, however any screenshots or videos
+                  that you have can greatly help us replicate and identify the
+                  bug.
+                </p>
               </UFormGroup>
             </UCard>
 
@@ -178,14 +195,81 @@ watch(
             </UCard>
           </div>
 
-          <div v-else-if="item.feedbackType === 'bug'" class="space-y-6"></div>
+          <div v-else-if="item.feedbackType === 'bug'" class="space-y-6">
+            <UCard>
+              <template #header>
+                <UFormGroup label="Description" name="bugreport" required>
+                  <UTextarea
+                    v-model="bugreportState.description"
+                    resize
+                    autoresize
+                    :rows="10"
+                    placeholder="Enter the details of the bug you encountered here, be as detailed as possible."
+                  />
+                </UFormGroup>
+              </template>
+            </UCard>
+
+            <UCard>
+              <UFormGroup label="Attachments" name="attachments">
+                <UButtonGroup>
+                  <UInput
+                    type="file"
+                    size="md"
+                    icon="i-heroicons-folder"
+                    accept="image/*,video/*"
+                    multiple
+                  />
+                  <UButton
+                    icon="i-heroicons-trash"
+                    color="red"
+                    :disabled="!bugreportState.attachments.length"
+                  />
+                </UButtonGroup>
+                <p class="text-xs italic mt-2">
+                  Attachments are optional, however any screenshots or videos
+                  that you have can greatly help us replicate and identify the
+                  bug.
+                </p>
+              </UFormGroup>
+            </UCard>
+
+            <UCard>
+              <div class="flex flex-col sm:flex-row gap-6">
+                <div class="flex flex-col gap-4">
+                  <UFormGroup label="Email Address" name="email">
+                    <UInput
+                      v-model="feedbackState.email"
+                      class="max-w-[250px] min-w-[150px]"
+                      icon="i-heroicons-envelope"
+                      type="email"
+                      placeholder="Email Address"
+                    />
+                  </UFormGroup>
+                  <UFormGroup label="Battle tag" name="battleTag">
+                    <UInput
+                      v-model="feedbackState.battleTag"
+                      class="max-w-[250px] min-w-[200px]"
+                      icon="simple-icons:battledotnet"
+                      type="text"
+                      placeholder="Battle tag"
+                    />
+                  </UFormGroup>
+                </div>
+                <p class="text-sm italic self-end">
+                  We will only use your contact information to follow up on your
+                  feedback if necessary. (Completely optional)
+                </p>
+              </div>
+            </UCard>
+          </div>
         </UContainer>
 
         <div class="flex w-full justify-end mt-2">
           <UButton
             color="primary"
             :disabled="!feedbackStateValid && !bugreportStateValid"
-            @click="() => console.log('test')"
+            @click="() => openConfirmationModal(item.feedbackType)"
           >
             Submit {{ item.label }}</UButton
           >

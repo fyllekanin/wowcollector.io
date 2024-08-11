@@ -7,5 +7,5 @@ tabs:
   - label: Bug Report
     icon: mdi:bug
     feedbackType: bug
-    description: Please provide the details of the bug here
+    description: Help us improve wowcollector.io by reporting any bugs or issues you've encountered. Your feedback is essential to ensuring a smooth and enjoyable experience for all users.
     additionalNotes: Fields marked with * are required.

@@ -9,6 +9,10 @@ defineProps({
     type: String,
     required: true,
   },
+  buttonText: {
+    type: String,
+    default: 'Confirm',
+  },
 });
 
 const loading = ref(false);
@@ -40,7 +44,7 @@ const loading = ref(false);
                 $emit('confirm');
               }
             "
-            >Confirm</UButton
+            >{{ buttonText }}</UButton
           >
         </div>
       </template>
