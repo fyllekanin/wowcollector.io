@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+// Temporary disables the page until the content is ready
+definePageMeta({
+  middleware: () => navigateTo('/'),
+});
+
 const { data: page } = await useAsyncData('about', () =>
   queryContent('/footer/about').findOne()
 );
