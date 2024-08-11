@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { eachDayOfInterval, isSameDay, isToday } from 'date-fns';
+import { isToday } from 'date-fns';
 
 const { data: page } = await useAsyncData('releases', () =>
   queryContent('/footer/releases').findOne()
@@ -24,26 +24,17 @@ useSeoMeta({
 
 const { data: releases } = await useFetch('/api/changelog.json');
 
-// const dates = computed(() => {
-//   if (!releases.value) return [];
+const router = useRouter();
 
-//   const first = releases.value[releases.value.length - 1];
-//   if (!first) return [];
+onMounted(() => {
+  const hash = router.currentRoute.value.hash;
+  if (!hash) return;
 
-//   const days = eachDayOfInterval({
-//     start: new Date(first.timestamp),
-//     end: new Date(),
-//   });
+  const el = document.getElementById(hash.slice(1));
+  if (!el) return;
 
-//   return days.reverse().map((day, i) => {
-//     return {
-//       day,
-//       release: releases.value?.find((release) => {
-//         return isSameDay(new Date(release.timestamp), day);
-//       }),
-//     };
-//   });
-// });
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
 </script>
 
 <template>
@@ -75,7 +66,7 @@ const { data: releases } = await useFetch('/api/changelog.json');
       <div
         v-for="(release, index) in releases"
         :key="index"
-        class="relative py-3 min-h-[24px] flex items-center justify-center"
+        class="relative py-36 min-h-[24px] flex items-center justify-center"
       >
         <div
           class="h-full w-0.5 bg-gray-200 dark:bg-gray-800 absolute top-0 inset-x-[50%] -ml-[1px] flex-shrink-0"

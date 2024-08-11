@@ -22,6 +22,7 @@ useIntersectionObserver(
 <template>
   <div
     ref="target"
+    :id="date.version"
     class="flex flex-col transition-opacity duration-500"
     :class="targetIsVisible ? 'opacity-100' : 'opacity-25'"
   >
