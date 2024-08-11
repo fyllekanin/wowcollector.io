@@ -40,13 +40,13 @@ useIntersectionObserver(
 
     <p
       v-if="date.version"
-      class="text-gray-900 dark:text-white font-bold text-3xl mt-2 group hover:text-primary-500 dark:hover:text-primary-400 transition-[color]"
+      class="text-gray-900 dark:text-white font-bold text-3xl mt-2 group hover:text-primary-500 dark:hover:text-primary-400 transition-[color] cursor-default"
     >
       {{ date.version }}
     </p>
     <ul
       v-if="date.changes?.length"
-      class="mt-2 space-y-1 text-gray-600 dark:text-gray-300"
+      class="mt-2 space-y-1 text-gray-600 dark:text-gray-300 list-disc list-inside"
     >
       <li
         v-for="(change, i) in date.changes"
