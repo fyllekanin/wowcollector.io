@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import ConfirmationModal from '~/components/modals/ConfirmationModal.vue';
+
 const { data: page } = await useAsyncData('feedback', () =>
   queryContent('/footer/feedback').findOne()
 );
@@ -11,21 +13,60 @@ if (!page.value) {
   });
 }
 
-const feedBackState = reactive({
-  feedback: '',
+const feedbackState = reactive({
+  description: '',
   attachments: [],
-  currentUserExperience: 0,
+  currentUserExperience: {
+    rating: 0,
+    preferNotToSay: true,
+  },
   email: '',
   battleTag: '',
 });
+const bugreportState = reactive({
+  description: '',
+  attachments: [],
+  email: '',
+  battleTag: '',
+});
+
+const feedbackStateValid = computed(() => feedbackState.description.length > 0);
+const bugreportStateValid = computed(
+  () => bugreportState.description.length > 0
+);
+
+const modal = useModal();
+
+function openConfirmationModal() {
+  modal.open(ConfirmationModal, {
+    title: 'Submit Feedback',
+    message: 'Are you sure you want to submit your feedback?',
+  });
+}
+
+watch(
+  () => feedbackState.currentUserExperience.preferNotToSay,
+  (value) => {
+    if (value) {
+      feedbackState.currentUserExperience.rating = 0;
+    }
+  }
+);
 </script>
 
 <template>
-  <UContainer class="flex max-w-[1200px] mx-auto mb-10">
+  <UContainer class="flex max-w-[1000px] mx-auto mb-10">
     <UTabs class="w-full" :items="page?.tabs" orientation="horizontal">
       <template #item="{ item }">
-        <UCard @submit.prevent="">
-          <template #header>
+        <UContainer
+          class="flex flex-col gap-4"
+          :ui="{
+            base: 'mx-0',
+            padding: 'px-0 sm:px-0 lg:px-0',
+            constrained: 'max-w-full',
+          }"
+        >
+          <UCard>
             <div class="flex flex-col gap-2">
               <p class="text-xl font-semibold leading-6">
                 {{ item.label }}
@@ -37,85 +78,118 @@ const feedBackState = reactive({
                 {{ item.additionalNotes }}
               </p>
             </div>
-          </template>
+          </UCard>
 
           <div v-if="item.feedbackType === 'feedback'" class="space-y-6">
-            <UFormGroup label="Description" name="feedback" required>
-              <UTextarea
-                v-model="feedBackState.feedback"
-                resize
-                autoresize
-                :rows="10"
-                placeholder="Enter your suggestions here, be as detailed as possible."
-              />
-            </UFormGroup>
+            <UCard>
+              <template #header>
+                <UFormGroup label="Description" name="feedback" required>
+                  <UTextarea
+                    v-model="feedbackState.description"
+                    resize
+                    autoresize
+                    :rows="10"
+                    placeholder="Enter your suggestions here, be as detailed as possible."
+                  />
+                </UFormGroup>
+              </template>
+            </UCard>
 
-            <UFormGroup label="Attachments" name="attachments">
-              <UButtonGroup>
-                <UInput
-                  type="file"
-                  size="md"
-                  icon="i-heroicons-folder"
-                  accept="image/*,video/*"
-                  multiple
-                />
-                <UButton
-                  icon="i-heroicons-trash"
-                  color="red"
-                  :disabled="!feedBackState.attachments.length"
-                />
-              </UButtonGroup>
-            </UFormGroup>
+            <UCard>
+              <UFormGroup label="Attachments" name="attachments">
+                <UButtonGroup>
+                  <UInput
+                    type="file"
+                    size="md"
+                    icon="i-heroicons-folder"
+                    accept="image/*,video/*"
+                    multiple
+                  />
+                  <UButton
+                    icon="i-heroicons-trash"
+                    color="red"
+                    :disabled="!feedbackState.attachments.length"
+                  />
+                </UButtonGroup>
+              </UFormGroup>
+            </UCard>
 
-            <UFormGroup
-              class="flex flex-col gap-4"
-              label="How would you rate the current user experience so far?"
-              name="currentUserExperience"
-            >
-              <div class="flex items-center gap-8">
-                <p>Poor</p>
-                <URadio
-                  class="flex flex-col-reverse gap-2 items-center"
-                  :ui="{
-                    inner: 'ms-0 flex flex-col gap-2',
-                  }"
-                  v-for="i in 5"
-                  :key="i"
-                >
-                  <template #label>
-                    {{ i }}
-                  </template>
-                </URadio>
-                <p>Excellent</p>
+            <UCard>
+              <UFormGroup
+                class="flex flex-col gap-4"
+                label="How would you rate the current user experience so far?"
+                name="currentUserExperience"
+              >
+                <div class="flex items-center justify-between max-w-sm">
+                  <p>Poor</p>
+                  <URadio
+                    v-model="feedbackState.currentUserExperience.rating"
+                    class="flex flex-col-reverse gap-2 items-center"
+                    :ui="{
+                      inner: 'ms-0 flex flex-col gap-2',
+                    }"
+                    :disabled="
+                      feedbackState.currentUserExperience.preferNotToSay
+                    "
+                    v-for="i in 5"
+                    :key="i"
+                  >
+                    <template #label>
+                      {{ i }}
+                    </template>
+                  </URadio>
+                  <p>Excellent</p>
+                </div>
+                <UCheckbox
+                  v-model="feedbackState.currentUserExperience.preferNotToSay"
+                  class="mt-6"
+                  label="I prefer not to say"
+                />
+              </UFormGroup>
+            </UCard>
+
+            <UCard>
+              <div class="flex flex-col sm:flex-row gap-6">
+                <div class="flex flex-col gap-4">
+                  <UFormGroup label="Email Address" name="email">
+                    <UInput
+                      v-model="feedbackState.email"
+                      class="max-w-[250px] min-w-[150px]"
+                      icon="i-heroicons-envelope"
+                      type="email"
+                      placeholder="Email Address"
+                    />
+                  </UFormGroup>
+                  <UFormGroup label="Battle tag" name="battleTag">
+                    <UInput
+                      v-model="feedbackState.battleTag"
+                      class="max-w-[250px] min-w-[200px]"
+                      icon="simple-icons:battledotnet"
+                      type="text"
+                      placeholder="Battle tag"
+                    />
+                  </UFormGroup>
+                </div>
+                <p class="text-sm italic self-end">
+                  We will only use your contact information to follow up on your
+                  feedback if necessary. (Completely optional)
+                </p>
               </div>
-            </UFormGroup>
-
-            <UFormGroup label="Email Address" name="email">
-              <UInput
-                v-model="feedBackState.email"
-                type="email"
-                placeholder="Email Address"
-              />
-            </UFormGroup>
-            <UFormGroup label="Battle tag" name="battleTag">
-              <UInput
-                v-model="feedBackState.battleTag"
-                type="text"
-                placeholder="Battle tag"
-              />
-            </UFormGroup>
+            </UCard>
           </div>
 
           <div v-else-if="item.feedbackType === 'bug'" class="space-y-6"></div>
+        </UContainer>
 
-          <template #footer>
-            <div class="flex w-full justify-end">
-              <UButton type="submit" color="primary">
-                Submit {{ item.label }}</UButton
-              >
-            </div>
-          </template>
-        </UCard>
+        <div class="flex w-full justify-end mt-2">
+          <UButton
+            color="primary"
+            :disabled="!feedbackStateValid && !bugreportStateValid"
+            @click="() => console.log('test')"
+          >
+            Submit {{ item.label }}</UButton
+          >
+        </div>
       </template>
     </UTabs>
   </UContainer>
