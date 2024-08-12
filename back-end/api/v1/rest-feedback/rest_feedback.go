@@ -26,7 +26,7 @@ func GetRoutes(r chi.Router) {
 // @Param attachments formData file false "Attachments (multiple files)"
 // @Param email formData string false "Email (optional)"
 // @Param battleTag formData string false "BattleTag (optional)"
-// @Param rating formData int true "Rating"
+// @Param rating formData int false "Rating"
 // @Param type formData string true "bug or feedback"
 // @success 200
 // @failure 400 {object} errorresponse.ErrorResponse
