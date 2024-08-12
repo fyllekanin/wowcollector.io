@@ -18,6 +18,16 @@ interface Change {
 const data: Changelog[] =
 [
   {
+    "version": "0.2.0",
+    "timestamp": "1723486955",
+    "changes": [
+      {
+        "type": "2",
+        "content": "Added feedback / bug report API"
+      }
+    ]
+  },
+  {
     "version": "0.1.0",
     "timestamp": "1723275848",
     "changes": [

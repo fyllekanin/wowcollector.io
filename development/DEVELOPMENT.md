@@ -50,6 +50,7 @@ docker run -p 8888:8888/tcp \
 -e DATABASE_PORT=27017 \
 -e BATTLE_NET_CLIENT_ID=clientId \
 -e BATTLE_NET_CLIENT_SECRET=clientSecret \
+-e GITHUB_TOKEN=githubPersonalToken \
 wowcollector.io-server
 ```
 
