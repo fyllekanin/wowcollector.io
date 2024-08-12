@@ -36,6 +36,7 @@ func postFeedback(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
+		zap.L().Error("Error parsing multipart form")
 		http.Error(w, "Unable to parse form", http.StatusBadRequest)
 		return
 	}
