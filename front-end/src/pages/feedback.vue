@@ -13,7 +13,7 @@ if (!page.value) {
   });
 }
 
-const feedbackState = reactive({
+const state = reactive({
   description: '',
   attachments: [],
   currentUserExperience: {
@@ -23,29 +23,54 @@ const feedbackState = reactive({
   email: '',
   battleTag: '',
 });
-const bugreportState = reactive({
-  description: '',
-  attachments: [],
-  email: '',
-  battleTag: '',
-});
 
-const feedbackStateValid = computed(() => feedbackState.description.length > 0);
-const bugreportStateValid = computed(
-  () => bugreportState.description.length > 0
-);
+const stateValid = computed(() => state.description.length > 0);
 
 const modal = useModal();
+const toast = useToast();
+
+async function onConfirm(reportKind: 'feedback' | 'bug') {
+  try {
+    const status = await $fetch('/api/feedback', {
+      method: 'POST',
+      body: JSON.stringify({
+        description: state.description,
+        attachments: state.attachments,
+        rating: state.currentUserExperience.rating,
+        email: state.email,
+        battleTag: state.battleTag,
+      }),
+    });
+
+    if (status && status >= 400) {
+      return toast.add({
+        title: 'Feedback not submitted',
+        description: `An error occurred while submitting your ${reportKind}. Please try again later.`,
+        color: 'red',
+      });
+    }
+
+    toast.add({
+      title: 'Feedback submitted',
+      description: `Your ${reportKind} has been submitted successfully.`,
+      color: 'green',
+    });
+    modal.close();
+  } catch (error) {
+    toast.add({
+      title: 'Feedback not submitted',
+      description: `An error occurred while submitting your ${reportKind}. Please try again later.`,
+      color: 'red',
+    });
+  }
+}
 
 function openConfirmationModal(reportKind: 'feedback' | 'bug') {
   modal.open(ConfirmationModal, {
     title: `Submit ${reportKind}`,
     message: `Are you sure you want to submit your ${reportKind}?`,
     buttonText: 'Submit',
-    onConfirm: () => {
-      console.log('Feedback submitted');
-      modal.close();
-    },
+    onConfirm: () => onConfirm(reportKind),
     onCancel: () => {
       console.log('Feedback not submitted');
       modal.close();
@@ -57,10 +82,10 @@ function openConfirmationModal(reportKind: 'feedback' | 'bug') {
 }
 
 watch(
-  () => feedbackState.currentUserExperience.preferNotToSay,
+  () => state.currentUserExperience?.preferNotToSay,
   (value) => {
-    if (value) {
-      feedbackState.currentUserExperience.rating = 0;
+    if (value && state.currentUserExperience?.rating !== 0) {
+      state.currentUserExperience.rating = 0;
     }
   }
 );
@@ -97,7 +122,7 @@ watch(
               <template #header>
                 <UFormGroup label="Description" name="feedback" required>
                   <UTextarea
-                    v-model="feedbackState.description"
+                    v-model="state.description"
                     resize
                     autoresize
                     :rows="10"
@@ -120,7 +145,7 @@ watch(
                   <UButton
                     icon="i-heroicons-trash"
                     color="red"
-                    :disabled="!feedbackState.attachments.length"
+                    :disabled="!state.attachments.length"
                   />
                 </UButtonGroup>
                 <p class="text-xs italic mt-2">
@@ -140,14 +165,12 @@ watch(
                 <div class="flex items-center justify-between max-w-sm">
                   <p>Poor</p>
                   <URadio
-                    v-model="feedbackState.currentUserExperience.rating"
+                    v-model="state.currentUserExperience.rating"
                     class="flex flex-col-reverse gap-2 items-center"
                     :ui="{
                       inner: 'ms-0 flex flex-col gap-2',
                     }"
-                    :disabled="
-                      feedbackState.currentUserExperience.preferNotToSay
-                    "
+                    :disabled="state.currentUserExperience.preferNotToSay"
                     v-for="i in 5"
                     :key="i"
                   >
@@ -158,7 +181,7 @@ watch(
                   <p>Excellent</p>
                 </div>
                 <UCheckbox
-                  v-model="feedbackState.currentUserExperience.preferNotToSay"
+                  v-model="state.currentUserExperience.preferNotToSay"
                   class="mt-6"
                   label="I prefer not to say"
                 />
@@ -170,7 +193,7 @@ watch(
                 <div class="flex flex-col gap-4">
                   <UFormGroup label="Email Address" name="email">
                     <UInput
-                      v-model="feedbackState.email"
+                      v-model="state.email"
                       class="max-w-[250px] min-w-[150px]"
                       icon="i-heroicons-envelope"
                       type="email"
@@ -179,7 +202,7 @@ watch(
                   </UFormGroup>
                   <UFormGroup label="Battle tag" name="battleTag">
                     <UInput
-                      v-model="feedbackState.battleTag"
+                      v-model="state.battleTag"
                       class="max-w-[250px] min-w-[200px]"
                       icon="simple-icons:battledotnet"
                       type="text"
@@ -200,7 +223,7 @@ watch(
               <template #header>
                 <UFormGroup label="Description" name="bugreport" required>
                   <UTextarea
-                    v-model="bugreportState.description"
+                    v-model="state.description"
                     resize
                     autoresize
                     :rows="10"
@@ -223,7 +246,7 @@ watch(
                   <UButton
                     icon="i-heroicons-trash"
                     color="red"
-                    :disabled="!bugreportState.attachments.length"
+                    :disabled="!state.attachments.length"
                   />
                 </UButtonGroup>
                 <p class="text-xs italic mt-2">
@@ -239,7 +262,7 @@ watch(
                 <div class="flex flex-col gap-4">
                   <UFormGroup label="Email Address" name="email">
                     <UInput
-                      v-model="feedbackState.email"
+                      v-model="state.email"
                       class="max-w-[250px] min-w-[150px]"
                       icon="i-heroicons-envelope"
                       type="email"
@@ -248,7 +271,7 @@ watch(
                   </UFormGroup>
                   <UFormGroup label="Battle tag" name="battleTag">
                     <UInput
-                      v-model="feedbackState.battleTag"
+                      v-model="state.battleTag"
                       class="max-w-[250px] min-w-[200px]"
                       icon="simple-icons:battledotnet"
                       type="text"
@@ -268,7 +291,7 @@ watch(
         <div class="flex w-full justify-end mt-2">
           <UButton
             color="primary"
-            :disabled="!feedbackStateValid && !bugreportStateValid"
+            :disabled="!stateValid"
             @click="() => openConfirmationModal(item.feedbackType)"
           >
             Submit {{ item.label }}</UButton
