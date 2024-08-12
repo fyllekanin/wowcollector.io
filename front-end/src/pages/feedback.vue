@@ -15,7 +15,7 @@ if (!page.value) {
 
 const state = reactive({
   description: '',
-  attachments: [],
+  attachments: null as FileList | null,
   currentUserExperience: {
     rating: 0,
     preferNotToSay: true,
@@ -24,22 +24,33 @@ const state = reactive({
   battleTag: '',
 });
 
+watchEffect(() => {
+  console.log(state.attachments);
+});
+
 const stateValid = computed(() => state.description.length > 0);
 
 const modal = useModal();
 const toast = useToast();
 
 async function onConfirm(reportKind: 'feedback' | 'bug') {
+  const formData = new FormData();
+  formData.append('description', state.description);
+  if (state.attachments) {
+    for (let i = 0; i < state.attachments.length; i++) {
+      formData.append('attachments', state.attachments[i]);
+    }
+  }
+  // @ts-ignore
+  formData.append('rating', state.currentUserExperience.rating);
+  formData.append('email', state.email);
+  formData.append('battleTag', state.battleTag);
+  formData.append('type', reportKind);
+
   try {
     const status = await $fetch('/api/feedback', {
       method: 'POST',
-      body: JSON.stringify({
-        description: state.description,
-        attachments: state.attachments,
-        rating: state.currentUserExperience.rating,
-        email: state.email,
-        battleTag: state.battleTag,
-      }),
+      body: formData,
     });
 
     if (status && status >= 400) {
@@ -141,11 +152,15 @@ watch(
                     icon="i-heroicons-folder"
                     accept="image/*,video/*"
                     multiple
+                    @change="($event: Event) => {
+                      const target = $event.target as HTMLInputElement;
+                      state.attachments = target.files;
+                    }"
                   />
                   <UButton
                     icon="i-heroicons-trash"
                     color="red"
-                    :disabled="!state.attachments.length"
+                    :disabled="!state.attachments?.length"
                   />
                 </UButtonGroup>
                 <p class="text-xs italic mt-2">
@@ -242,11 +257,15 @@ watch(
                     icon="i-heroicons-folder"
                     accept="image/*,video/*"
                     multiple
+                    @change="($event: Event) => {
+                      const target = $event.target as HTMLInputElement;
+                      state.attachments = target.files;
+                    }"
                   />
                   <UButton
                     icon="i-heroicons-trash"
                     color="red"
-                    :disabled="!state.attachments.length"
+                    :disabled="!state.attachments?.length"
                   />
                 </UButtonGroup>
                 <p class="text-xs italic mt-2">
