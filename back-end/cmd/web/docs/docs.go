@@ -196,6 +196,12 @@ const docTemplate = `{
                         "name": "character",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "View",
+                        "name": "view",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -339,6 +345,79 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/feedback": {
+            "post": {
+                "description": "Submit a feedback form which will create a github issue",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Feedback"
+                ],
+                "summary": "Submit a feedback form",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Description",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Attachments (multiple files)",
+                        "name": "attachments",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email (optional)",
+                        "name": "email",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "BattleTag (optional)",
+                        "name": "battleTag",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Rating",
+                        "name": "rating",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "bug or feedback",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/leaderboard/mounts": {
             "get": {
                 "description": "Get the leaderboard mounts",
@@ -391,14 +470,16 @@ const docTemplate = `{
                 "LOADING_BATTLE_NET_DATA",
                 "INTERNAL_ERROR",
                 "NO_DEFAULT_MOUNT_VIEW",
-                "NO_DEFAULT_TOY_VIEW"
+                "NO_DEFAULT_TOY_VIEW",
+                "NO_MOUNT_VIEW_WITH_NAME"
             ],
             "x-enum-varnames": [
                 "CHARACTER_NOT_FOUND",
                 "LOADING_BATTLE_NET_DATA",
                 "INTERNAL_ERROR",
                 "NO_DEFAULT_MOUNT_VIEW",
-                "NO_DEFAULT_TOY_VIEW"
+                "NO_DEFAULT_TOY_VIEW",
+                "NO_MOUNT_VIEW_WITH_NAME"
             ]
         },
         "errorresponse.ErrorResponse": {

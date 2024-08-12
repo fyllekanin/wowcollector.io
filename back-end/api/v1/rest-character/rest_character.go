@@ -99,6 +99,7 @@ func getCharacterAssets(media *httpresponses.BattleNetMedia) *response.Character
 // @param region path string true "Region"
 // @param realm path string true "Realm"
 // @param character path string true "Character"
+// @param view query string false "View"
 // @success 200 {object} []response.MountCollectionCategorySwagger
 // @failure 400 {object} errorresponse.ErrorResponse
 // @failure 404 {object} errorresponse.ErrorResponse
@@ -107,6 +108,7 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 	region := chi.URLParam(r, "region")
 	realm := chi.URLParam(r, "realm")
 	character := chi.URLParam(r, "character")
+	viewName := r.URL.Query().Get("view")
 	zap.L().Info(fmt.Sprintf("Fetching mount collection for %s on realm %s in region %s", character, realm, region))
 
 	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
@@ -125,12 +127,25 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 	}
 	go updateMountLeaderBoard(character, realm, region, len(collection.Mounts))
 
-	view, _ := mountviewrepository.GetRepository().GetDefaultMountView()
-	if view == nil {
-		zap.L().Error("Error finding default mount view")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_DEFAULT_MOUNT_VIEW, "No default mount view available"))
-		return
+	var view *documents.MountViewDocument
+	if viewName == "" {
+		viewResult, err := mountviewrepository.GetRepository().GetDefaultMountView()
+		if err != nil {
+			zap.L().Error("Error finding default mount view")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_DEFAULT_MOUNT_VIEW, "No default mount view available"))
+			return
+		}
+		view = viewResult
+	} else {
+		viewResult, err := mountviewrepository.GetRepository().GetMountView(viewName)
+		if err != nil {
+			zap.L().Error("Error finding mount view")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_MOUNT_VIEW_WITH_NAME, "No mount view with name: "+viewName))
+			return
+		}
+		view = viewResult
 	}
 
 	body, err := json.Marshal(mountaggregator.GetMountsAggregation(

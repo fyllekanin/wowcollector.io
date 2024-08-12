@@ -14,6 +14,7 @@ definitions:
     - INTERNAL_ERROR
     - NO_DEFAULT_MOUNT_VIEW
     - NO_DEFAULT_TOY_VIEW
+    - NO_MOUNT_VIEW_WITH_NAME
     type: string
     x-enum-varnames:
     - CHARACTER_NOT_FOUND
@@ -21,6 +22,7 @@ definitions:
     - INTERNAL_ERROR
     - NO_DEFAULT_MOUNT_VIEW
     - NO_DEFAULT_TOY_VIEW
+    - NO_MOUNT_VIEW_WITH_NAME
   errorresponse.ErrorResponse:
     properties:
       code:
@@ -359,6 +361,10 @@ paths:
         name: character
         required: true
         type: string
+      - description: View
+        in: query
+        name: view
+        type: string
       produces:
       - application/json
       responses:
@@ -457,6 +463,55 @@ paths:
       summary: Fetch character toy collection
       tags:
       - Character
+  /api/v1/feedback:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Submit a feedback form which will create a github issue
+      parameters:
+      - description: Description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Attachments (multiple files)
+        in: formData
+        name: attachments
+        type: file
+      - description: Email (optional)
+        in: formData
+        name: email
+        type: string
+      - description: BattleTag (optional)
+        in: formData
+        name: battleTag
+        type: string
+      - description: Rating
+        in: formData
+        name: rating
+        required: true
+        type: integer
+      - description: bug or feedback
+        in: formData
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Submit a feedback form
+      tags:
+      - Feedback
   /api/v1/leaderboard/mounts:
     get:
       description: Get the leaderboard mounts
