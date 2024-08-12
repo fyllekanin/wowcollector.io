@@ -3252,6 +3252,9 @@
                 },
                 {
                   "id": 999
+                },
+                {
+                  "id": 2158
                 }
               ]
             },
@@ -4363,6 +4366,43 @@
                 },
                 {
                   "id": 780
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Events",
+          "order": 17,
+          "mounts": [],
+          "categories": [
+            {
+              "name": "Remix: Pandaria",
+              "order": 1,
+              "mounts": [
+                {
+                  "id": 2068
+                },
+                {
+                  "id": 2078
+                },
+                {
+                  "id": 2148
+                },
+                {
+                  "id": 2063
+                }
+              ]
+            },
+            {
+              "name": "Plunderstorm",
+              "order": 1,
+              "mounts": [
+                {
+                  "id": 994
+                },
+                {
+                  "id": 1259
                 }
               ]
             }

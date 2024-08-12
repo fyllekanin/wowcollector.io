@@ -46,7 +46,7 @@ func getUnknownCategory(mounts map[int]*documents.MountDocument, collectedIds []
 
 	return response.MountCollectionCategory{
 		Name:   "Unknown",
-		Order:  99999,
+		Order:  -1,
 		Mounts: mountsResult,
 	}
 }
