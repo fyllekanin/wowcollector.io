@@ -12,7 +12,7 @@ defineProps({
 
 <template>
   <a
-    :href="`https://www.wowhead.com/achievement=${achievement.id}`"
+    :href="`https://www.wowhead.com/achievement/${achievement.id}`"
     target="_blank"
     :data-wowhead="`achievement=${achievement.id}`"
   >

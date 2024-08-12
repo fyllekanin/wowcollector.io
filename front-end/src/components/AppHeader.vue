@@ -91,9 +91,9 @@ const links = computed(() => [
     </template>
 
     <template #right>
-      <UButton icon="simple-icons:battledotnet" to="/login" color="gray"
+      <!-- <UButton icon="simple-icons:battledotnet" to="/login" color="gray"
         >Connect</UButton
-      >
+      > -->
       <UColorModeButton class="hidden lg:flex" />
       <ActiveCharacterDropdown v-if="character" class="hidden lg:flex" />
     </template>
@@ -102,7 +102,7 @@ const links = computed(() => [
       <div class="flex flex-col gap-8">
         <UNavigationTree :links="links" default-open />
         <UDivider />
-        <div class="flex grow flex-wrap items-center justify-between">
+        <div class="flex grow flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-3">
             <UAvatar :src="character?.assets?.avatar" />
             <div class="flex gap-1">

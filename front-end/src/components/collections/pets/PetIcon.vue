@@ -12,7 +12,7 @@ defineProps({
 
 <template>
   <a
-    :href="`https://www.wowhead.com/battle-pet=${pet.id}`"
+    :href="`https://www.wowhead.com/battle-pet/${pet.id}`"
     target="_blank"
     :data-wowhead="`battle-pet=${pet.id}`"
   >
