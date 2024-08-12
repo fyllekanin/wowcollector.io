@@ -66,3 +66,11 @@ export const remove = async <B, T>({
 }: HttpParamater<B>): Promise<AxiosResponse<T>> => {
   return http().delete(url, config);
 };
+
+export const postFormData = async <B, T>({
+  url,
+  body,
+  config,
+}: HttpParamater<B>): Promise<AxiosResponse<T>> => {
+  return http().postForm(url, body, config);
+};

@@ -24,33 +24,23 @@ const state = reactive({
   battleTag: '',
 });
 
-watchEffect(() => {
-  console.log(state.attachments);
-});
-
 const stateValid = computed(() => state.description.length > 0);
 
 const modal = useModal();
 const toast = useToast();
 
 async function onConfirm(reportKind: 'feedback' | 'bug') {
-  const formData = new FormData();
-  formData.append('description', state.description);
-  if (state.attachments) {
-    for (let i = 0; i < state.attachments.length; i++) {
-      formData.append('attachments', state.attachments[i]);
-    }
-  }
-  // @ts-ignore
-  formData.append('rating', state.currentUserExperience.rating);
-  formData.append('email', state.email);
-  formData.append('battleTag', state.battleTag);
-  formData.append('type', reportKind);
-
   try {
     const status = await $fetch('/api/feedback', {
       method: 'POST',
-      body: formData,
+      body: JSON.stringify({
+        description: state.description,
+        attachments: state.attachments,
+        email: state.email,
+        battleTag: state.battleTag,
+        rating: state.currentUserExperience.rating,
+        type: reportKind,
+      }),
     });
 
     if (status && status >= 400) {
@@ -66,6 +56,9 @@ async function onConfirm(reportKind: 'feedback' | 'bug') {
       description: `Your ${reportKind} has been submitted successfully.`,
       color: 'green',
     });
+
+    resetState();
+
     modal.close();
   } catch (error) {
     toast.add({
@@ -83,13 +76,18 @@ function openConfirmationModal(reportKind: 'feedback' | 'bug') {
     buttonText: 'Submit',
     onConfirm: () => onConfirm(reportKind),
     onCancel: () => {
-      console.log('Feedback not submitted');
       modal.close();
     },
-    onClose() {
-      console.log('Feedback modal closed');
-    },
   });
+}
+
+function resetState() {
+  state.description = '';
+  state.attachments = null;
+  state.currentUserExperience.rating = 0;
+  state.currentUserExperience.preferNotToSay = true;
+  state.email = '';
+  state.battleTag = '';
 }
 
 watch(
