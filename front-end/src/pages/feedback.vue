@@ -25,6 +25,7 @@ const state = reactive({
 });
 
 const stateValid = computed(() => state.description.length > 0);
+const hasAttachments = computed(() => state.attachments !== null);
 
 const modal = useModal();
 const toast = useToast();
@@ -145,20 +146,22 @@ watch(
               <UFormGroup label="Attachments" name="attachments">
                 <UButtonGroup>
                   <UInput
+                    v-model="state.attachments as any"
                     type="file"
                     size="md"
                     icon="i-heroicons-folder"
                     accept="image/*,video/*"
                     multiple
-                    @change="($event: Event) => {
-                      const target = $event.target as HTMLInputElement;
-                      state.attachments = target.files;
-                    }"
                   />
                   <UButton
                     icon="i-heroicons-trash"
                     color="red"
-                    :disabled="!state.attachments?.length"
+                    :disabled="!hasAttachments"
+                    @click="
+                      () => {
+                        state.attachments = null;
+                      }
+                    "
                   />
                 </UButtonGroup>
                 <p class="text-xs italic mt-2">
@@ -250,20 +253,22 @@ watch(
               <UFormGroup label="Attachments" name="attachments">
                 <UButtonGroup>
                   <UInput
+                    v-model="state.attachments as any"
                     type="file"
                     size="md"
                     icon="i-heroicons-folder"
                     accept="image/*,video/*"
                     multiple
-                    @change="($event: Event) => {
-                      const target = $event.target as HTMLInputElement;
-                      state.attachments = target.files;
-                    }"
                   />
                   <UButton
                     icon="i-heroicons-trash"
                     color="red"
-                    :disabled="!state.attachments?.length"
+                    :disabled="!hasAttachments"
+                    @click="
+                      () => {
+                        state.attachments = null;
+                      }
+                    "
                   />
                 </UButtonGroup>
                 <p class="text-xs italic mt-2">
