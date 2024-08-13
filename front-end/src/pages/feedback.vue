@@ -25,12 +25,19 @@ const state = reactive({
 });
 
 const stateValid = computed(() => state.description.length > 0);
-const hasAttachments = computed(() => state.attachments !== null);
 
 const modal = useModal();
 const toast = useToast();
 
 async function onConfirm(reportKind: 'feedback' | 'bug') {
+  if (!state.description) {
+    return toast.add({
+      title: 'Feedback not submitted',
+      description: `Please provide a description for your ${reportKind}.`,
+      color: 'red',
+    });
+  }
+
   try {
     const status = await $fetch('/api/feedback', {
       method: 'POST',
@@ -146,20 +153,14 @@ watch(
               <UFormGroup label="Attachments" name="attachments">
                 <UButtonGroup>
                   <UInput
-                    v-model="state.attachments as any"
                     type="file"
                     size="md"
                     icon="i-heroicons-folder"
                     accept="image/*,video/*"
                     multiple
-                  />
-                  <UButton
-                    icon="i-heroicons-trash"
-                    color="red"
-                    :disabled="!hasAttachments"
-                    @click="
-                      () => {
-                        state.attachments = null;
+                    @change="
+                      ($event) => {
+                        state.attachments = $event.target.files;
                       }
                     "
                   />
@@ -253,20 +254,14 @@ watch(
               <UFormGroup label="Attachments" name="attachments">
                 <UButtonGroup>
                   <UInput
-                    v-model="state.attachments as any"
                     type="file"
                     size="md"
                     icon="i-heroicons-folder"
                     accept="image/*,video/*"
                     multiple
-                  />
-                  <UButton
-                    icon="i-heroicons-trash"
-                    color="red"
-                    :disabled="!hasAttachments"
-                    @click="
-                      () => {
-                        state.attachments = null;
+                    @change="
+                      ($event) => {
+                        state.attachments = $event.target.files;
                       }
                     "
                   />
