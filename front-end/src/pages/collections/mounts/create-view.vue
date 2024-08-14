@@ -146,7 +146,7 @@ function removeWowheadTooltips() {
       </div>
     </template>
     <template #main-content>
-      <div class="flex flex-col w-full h-full p-10 gap-2">
+      <div class="flex flex-col w-full h-full p-10 gap-2 overflow-y-auto">
         <draggable
           class="flex flex-col gap-4 h-full w-full"
           v-model="categories"
