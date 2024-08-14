@@ -36,7 +36,7 @@ func getUnknownCategory(mounts map[int]*documents.MountDocument, collectedIds []
 			Description: mount.Description,
 			Id:          mount.Id,
 			IsCollected: slices.Contains(collectedIds, mount.Id),
-			Assets: &response.MountCollectionMountAssets{
+			Assets: &response.MountAssets{
 				Display:   mount.Assets.Display,
 				SmallIcon: mount.Assets.SmallIcon,
 				LargeIcon: mount.Assets.LargeIcon,
@@ -69,7 +69,7 @@ func getMountCategory(category documents.MountViewCategory, mounts map[int]*docu
 			Description: mount.Description,
 			Id:          mount.Id,
 			IsCollected: slices.Contains(collectedIds, categoryMount.Id),
-			Assets: &response.MountCollectionMountAssets{
+			Assets: &response.MountAssets{
 				Display:   mount.Assets.Display,
 				SmallIcon: mount.Assets.SmallIcon,
 				LargeIcon: mount.Assets.LargeIcon,

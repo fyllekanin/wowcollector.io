@@ -20,6 +20,35 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/battle-net/mounts": {
+            "get": {
+                "description": "Get all the realms and regions",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BattleNet"
+                ],
+                "summary": "Fetch all mounts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.MountResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/battle-net/realms-regions": {
             "get": {
                 "description": "Get all the realms and regions",
@@ -29,7 +58,7 @@ const docTemplate = `{
                 "tags": [
                     "BattleNet"
                 ],
-                "summary": "Fetch all realms ang regions",
+                "summary": "Fetch all realms and regions",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -388,8 +417,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Rating",
                         "name": "rating",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",
@@ -405,12 +433,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errorresponse.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/errorresponse.ErrorResponse"
                         }
@@ -596,6 +618,20 @@ const docTemplate = `{
                 }
             }
         },
+        "response.MountAssets": {
+            "type": "object",
+            "properties": {
+                "display": {
+                    "type": "string"
+                },
+                "largeIcon": {
+                    "type": "string"
+                },
+                "smallIcon": {
+                    "type": "string"
+                }
+            }
+        },
         "response.MountCollectionCategorySwagger": {
             "type": "object",
             "properties": {
@@ -623,7 +659,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "assets": {
-                    "$ref": "#/definitions/response.MountCollectionMountAssets"
+                    "$ref": "#/definitions/response.MountAssets"
                 },
                 "description": {
                     "type": "string"
@@ -639,16 +675,22 @@ const docTemplate = `{
                 }
             }
         },
-        "response.MountCollectionMountAssets": {
+        "response.MountResponse": {
             "type": "object",
             "properties": {
-                "display": {
+                "assets": {
+                    "$ref": "#/definitions/response.MountAssets"
+                },
+                "description": {
                     "type": "string"
                 },
-                "largeIcon": {
-                    "type": "string"
+                "id": {
+                    "type": "integer"
                 },
-                "smallIcon": {
+                "isUnobtainable": {
+                    "type": "boolean"
+                },
+                "name": {
                     "type": "string"
                 }
             }

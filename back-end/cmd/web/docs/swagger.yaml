@@ -97,6 +97,15 @@ definitions:
       region:
         type: string
     type: object
+  response.MountAssets:
+    properties:
+      display:
+        type: string
+      largeIcon:
+        type: string
+      smallIcon:
+        type: string
+    type: object
   response.MountCollectionCategorySwagger:
     properties:
       categories:
@@ -115,7 +124,7 @@ definitions:
   response.MountCollectionMount:
     properties:
       assets:
-        $ref: '#/definitions/response.MountCollectionMountAssets'
+        $ref: '#/definitions/response.MountAssets'
       description:
         type: string
       id:
@@ -125,13 +134,17 @@ definitions:
       name:
         type: string
     type: object
-  response.MountCollectionMountAssets:
+  response.MountResponse:
     properties:
-      display:
+      assets:
+        $ref: '#/definitions/response.MountAssets'
+      description:
         type: string
-      largeIcon:
-        type: string
-      smallIcon:
+      id:
+        type: integer
+      isUnobtainable:
+        type: boolean
+      name:
         type: string
     type: object
   response.PaginationResponse:
@@ -245,6 +258,25 @@ info:
   title: wowcollector.io
   version: "1.0"
 paths:
+  /api/v1/battle-net/mounts:
+    get:
+      description: Get all the realms and regions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.MountResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Fetch all mounts
+      tags:
+      - BattleNet
   /api/v1/battle-net/realms-regions:
     get:
       description: Get all the realms and regions
@@ -263,7 +295,7 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorresponse.ErrorResponse'
-      summary: Fetch all realms ang regions
+      summary: Fetch all realms and regions
       tags:
       - BattleNet
   /api/v1/character/{region}/{realm}/{character}:
@@ -489,7 +521,6 @@ paths:
       - description: Rating
         in: formData
         name: rating
-        required: true
         type: integer
       - description: bug or feedback
         in: formData
@@ -503,10 +534,6 @@ paths:
           description: OK
         "400":
           description: Bad Request
-          schema:
-            $ref: '#/definitions/errorresponse.ErrorResponse'
-        "404":
-          description: Not Found
           schema:
             $ref: '#/definitions/errorresponse.ErrorResponse'
       summary: Submit a feedback form
