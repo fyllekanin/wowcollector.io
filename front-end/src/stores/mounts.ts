@@ -3,6 +3,7 @@ import type { MountCategory, MountFilters, MountInformation } from '~/types';
 export const useMountsStore = defineStore('mounts', {
   state: () => ({
     _mounts: null as MountCategory[] | null,
+    _allMounts: null as MountInformation[] | null,
     filters: {
       search: '',
       sort: 'Default',
@@ -118,6 +119,9 @@ export const useMountsStore = defineStore('mounts', {
       // Misc Filters
       return result;
     },
+    allMounts(state) {
+      return state._allMounts || [];
+    },
     rootCategoryNames(state) {
       return getRootCategoryNames(state._mounts || []).sort((a, b) =>
         a.localeCompare(b)
@@ -132,6 +136,9 @@ export const useMountsStore = defineStore('mounts', {
   actions: {
     setMounts(newMounts: MountCategory[]) {
       this._mounts = newMounts;
+    },
+    setAllMounts(newMounts: MountInformation[]) {
+      this._allMounts = newMounts;
     },
     clearMounts() {
       this._mounts = null;

@@ -45,7 +45,7 @@ const { stop } = useIntersectionObserver(
         :class="[
           !mount.isCollected && !buildMode
             ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
-            : '',
+            : 'hover:ring-1 hover:ring-primary transition ease-in-out',
         ]"
         width="38"
         @error="

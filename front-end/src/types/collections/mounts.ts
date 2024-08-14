@@ -12,7 +12,7 @@ export interface MountInformation {
 }
 
 export interface MountCategory {
-  category: string;
+  id?: string;
   name: string;
   mounts: MountInformation[] | null;
   categories: MountCategory[];
