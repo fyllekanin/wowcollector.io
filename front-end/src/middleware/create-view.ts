@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware(async () => {
-  const mountsStore = useMountsStore();
+  const viewBuilderStore = useViewBuilderStore();
 
   const { data: mounts } = await useFetch('/api/battle-net/mounts');
 
@@ -7,5 +7,11 @@ export default defineNuxtRouteMiddleware(async () => {
     return abortNavigation();
   }
 
-  mountsStore.setAllMounts(mounts.value);
+  viewBuilderStore.setMounts(
+    mounts.value.map((mount) => ({
+      ...mount,
+      category: null,
+      level: null,
+    }))
+  );
 });
