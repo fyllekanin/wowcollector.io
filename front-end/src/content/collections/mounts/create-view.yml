@@ -1,0 +1,14 @@
+title: Create Mount View - WoW Collector
+description: Create a new mount view to display your collection.
+
+breadcrumbs:
+  - title: Home
+    icon: mdi:home
+    to: /
+  - title: Mounts
+    icon: mdi:horse-variant
+    to: mounts
+  - title: Create View
+    icon: mdi:plus
+    disabled: true
+    to: /collections/mounts/create-view

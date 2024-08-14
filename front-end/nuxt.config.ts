@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
     '@nuxt/icon',
-    "@nuxt/image"
+    '@nuxt/image',
   ],
   icon: {
     provider: 'server',
@@ -38,4 +38,5 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'dark',
   },
+  plugins: ['~/plugins/draggable.ts'],
 });
