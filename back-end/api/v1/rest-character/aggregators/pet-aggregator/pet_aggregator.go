@@ -35,7 +35,7 @@ func getUnknownCategory(pets map[int]*documents.PetDocument, collectedIds []int)
 			Name:        pet.Name,
 			Id:          pet.Id,
 			IsCollected: slices.Contains(collectedIds, pet.Id),
-			Assets: &response.PetCollectionPetAssets{
+			Assets: &response.PetAssets{
 				LargeIcon: pet.Icon,
 			},
 		})
@@ -65,7 +65,7 @@ func getPetCategory(category documents.PetViewCategory, pets map[int]*documents.
 			Name:        pet.Name,
 			Id:          pet.Id,
 			IsCollected: slices.Contains(collectedIds, categoryPet.Id),
-			Assets: &response.PetCollectionPetAssets{
+			Assets: &response.PetAssets{
 				LargeIcon: pet.Icon,
 			},
 		})

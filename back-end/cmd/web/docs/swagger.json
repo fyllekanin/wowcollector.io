@@ -15,7 +15,7 @@
     "paths": {
         "/api/v1/battle-net/mounts": {
             "get": {
-                "description": "Get all the realms and regions",
+                "description": "Get all the mounts",
                 "produces": [
                     "application/json"
                 ],
@@ -23,6 +23,35 @@
                     "BattleNet"
                 ],
                 "summary": "Fetch all mounts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.MountResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/battle-net/pets": {
+            "get": {
+                "description": "Get all the pets",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BattleNet"
+                ],
+                "summary": "Fetch all pets",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -67,6 +96,35 @@
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/battle-net/toys": {
+            "get": {
+                "description": "Get all the toys",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BattleNet"
+                ],
+                "summary": "Fetch all toys",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.ToyResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/errorresponse.ErrorResponse"
                         }
@@ -702,6 +760,14 @@
                 }
             }
         },
+        "response.PetAssets": {
+            "type": "object",
+            "properties": {
+                "largeIcon": {
+                    "type": "string"
+                }
+            }
+        },
         "response.PetCollectionCategorySwagger": {
             "type": "object",
             "properties": {
@@ -729,7 +795,7 @@
             "type": "object",
             "properties": {
                 "assets": {
-                    "$ref": "#/definitions/response.PetCollectionPetAssets"
+                    "$ref": "#/definitions/response.PetAssets"
                 },
                 "id": {
                     "type": "integer"
@@ -738,14 +804,6 @@
                     "type": "boolean"
                 },
                 "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "response.PetCollectionPetAssets": {
-            "type": "object",
-            "properties": {
-                "largeIcon": {
                     "type": "string"
                 }
             }
@@ -792,6 +850,14 @@
                 }
             }
         },
+        "response.ToyAssets": {
+            "type": "object",
+            "properties": {
+                "largeIcon": {
+                    "type": "string"
+                }
+            }
+        },
         "response.ToyCollectionCategorySwagger": {
             "type": "object",
             "properties": {
@@ -819,7 +885,7 @@
             "type": "object",
             "properties": {
                 "assets": {
-                    "$ref": "#/definitions/response.ToyCollectionToyAssets"
+                    "$ref": "#/definitions/response.ToyAssets"
                 },
                 "id": {
                     "type": "integer"
@@ -835,10 +901,22 @@
                 }
             }
         },
-        "response.ToyCollectionToyAssets": {
+        "response.ToyResponse": {
             "type": "object",
             "properties": {
-                "largeIcon": {
+                "assets": {
+                    "$ref": "#/definitions/response.ToyAssets"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isUnobtainable": {
+                    "type": "boolean"
+                },
+                "itemId": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }

@@ -36,7 +36,7 @@ func getUnknownCategory(toys map[int]*documents.ToyDocument, collectedIds []int)
 			Id:          toy.Id,
 			ItemId:      toy.ItemId,
 			IsCollected: slices.Contains(collectedIds, toy.Id),
-			Assets: &response.ToyCollectionToyAssets{
+			Assets: &response.ToyAssets{
 				LargeIcon: toy.Icon,
 			},
 		})
@@ -67,7 +67,7 @@ func getToyCategory(category documents.ToyViewCategory, toys map[int]*documents.
 			Id:          toy.Id,
 			ItemId:      toy.ItemId,
 			IsCollected: slices.Contains(collectedIds, categoryToy.Id),
-			Assets: &response.ToyCollectionToyAssets{
+			Assets: &response.ToyAssets{
 				LargeIcon: toy.Icon,
 			},
 		})

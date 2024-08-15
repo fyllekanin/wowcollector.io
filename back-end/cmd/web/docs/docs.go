@@ -22,7 +22,7 @@ const docTemplate = `{
     "paths": {
         "/api/v1/battle-net/mounts": {
             "get": {
-                "description": "Get all the realms and regions",
+                "description": "Get all the mounts",
                 "produces": [
                     "application/json"
                 ],
@@ -30,6 +30,35 @@ const docTemplate = `{
                     "BattleNet"
                 ],
                 "summary": "Fetch all mounts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.MountResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/battle-net/pets": {
+            "get": {
+                "description": "Get all the pets",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BattleNet"
+                ],
+                "summary": "Fetch all pets",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -74,6 +103,35 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/battle-net/toys": {
+            "get": {
+                "description": "Get all the toys",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BattleNet"
+                ],
+                "summary": "Fetch all toys",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.ToyResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/errorresponse.ErrorResponse"
                         }
@@ -709,6 +767,14 @@ const docTemplate = `{
                 }
             }
         },
+        "response.PetAssets": {
+            "type": "object",
+            "properties": {
+                "largeIcon": {
+                    "type": "string"
+                }
+            }
+        },
         "response.PetCollectionCategorySwagger": {
             "type": "object",
             "properties": {
@@ -736,7 +802,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "assets": {
-                    "$ref": "#/definitions/response.PetCollectionPetAssets"
+                    "$ref": "#/definitions/response.PetAssets"
                 },
                 "id": {
                     "type": "integer"
@@ -745,14 +811,6 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "response.PetCollectionPetAssets": {
-            "type": "object",
-            "properties": {
-                "largeIcon": {
                     "type": "string"
                 }
             }
@@ -799,6 +857,14 @@ const docTemplate = `{
                 }
             }
         },
+        "response.ToyAssets": {
+            "type": "object",
+            "properties": {
+                "largeIcon": {
+                    "type": "string"
+                }
+            }
+        },
         "response.ToyCollectionCategorySwagger": {
             "type": "object",
             "properties": {
@@ -826,7 +892,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "assets": {
-                    "$ref": "#/definitions/response.ToyCollectionToyAssets"
+                    "$ref": "#/definitions/response.ToyAssets"
                 },
                 "id": {
                     "type": "integer"
@@ -842,10 +908,22 @@ const docTemplate = `{
                 }
             }
         },
-        "response.ToyCollectionToyAssets": {
+        "response.ToyResponse": {
             "type": "object",
             "properties": {
-                "largeIcon": {
+                "assets": {
+                    "$ref": "#/definitions/response.ToyAssets"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isUnobtainable": {
+                    "type": "boolean"
+                },
+                "itemId": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }
