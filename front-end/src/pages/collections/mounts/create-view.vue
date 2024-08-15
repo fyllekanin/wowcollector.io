@@ -1,4 +1,4 @@
-<!-- <script lang="ts" setup>
+<script lang="ts" setup>
 import type { BuilderMountCategory, BuilderMountInformation } from '~/types';
 
 // Set all mounts as one big array with two additional properties `category` to identify the category it belongs to and `level` to identify if it's root or sub.
@@ -27,7 +27,11 @@ const modal = useModal();
 
 const search = ref('');
 const viewBuilderStore = useViewBuilderStore();
-const { mounts, flatMounts, mountCategories } = storeToRefs(viewBuilderStore);
+const { mounts, flatMounts, _mountCategories } = storeToRefs(viewBuilderStore);
+
+const mountCategories = computed(() => {
+  return _mountCategories.value;
+});
 
 console.log(mounts.value);
 
@@ -43,7 +47,7 @@ function startDragClone(event: DragEvent, item: BuilderMountCategory) {
   if (!event.dataTransfer) return;
 
   event.dataTransfer.dropEffect = 'move';
-  event.dataTransfer.effectAllowed = 'copy';
+  event.dataTransfer.effectAllowed = 'move';
   event.dataTransfer.setData('text/plain', JSON.stringify(item));
 }
 function startDrag(
@@ -55,7 +59,7 @@ function startDrag(
 
   event.dataTransfer.dropEffect = 'move';
   event.dataTransfer.effectAllowed = 'move';
-  event.dataTransfer.setData('itemId', item.id + '');
+  event.dataTransfer.setData('itemId', `${item.id}`);
 }
 
 // If null is passed as categoryId and level, it means the item is being dropped back to the sidebar
@@ -65,25 +69,48 @@ function onDrop(
   level: 'root' | 'sub' | null
 ) {
   const itemId = event.dataTransfer?.getData('itemId');
-  if (!itemId) return;
+  const jsonItem = JSON.parse(
+    event.dataTransfer?.getData('text/plain') || '{}'
+  );
+  const itemIsClonedCategory = jsonItem.hasOwnProperty('categories');
+
+  console.log('1', { itemId, id, level });
+  if (!itemId && !itemIsClonedCategory) return;
+
+  if (itemIsClonedCategory) {
+    if (level === null) return;
+
+    if (level === 'root') {
+      viewBuilderStore.addRootCategory(jsonItem as BuilderMountCategory);
+    } else if (level === 'sub' && id) {
+      viewBuilderStore.addSubCategory(jsonItem as BuilderMountCategory, id);
+    }
+
+    return;
+  }
 
   const item =
-    mountCategories.value?.find((cat) => cat.id === itemId) ||
+    _mountCategories.value?.find((cat) => cat.id === itemId) ||
     mounts.value?.find((mount) => mount.id == itemId);
+
+  console.log('2', { item });
   if (!item) return;
 
   const itemIsCategory = item.hasOwnProperty('categories');
+  console.log('3', { itemIsCategory });
+
   const itemIsMount = item.hasOwnProperty('icon');
+  console.log('4', { itemIsMount });
 
   if (itemIsCategory) {
     if (level === null) return;
     if (level === 'root') {
-      const category = mountCategories.value.find((cat) => cat.id === id);
+      const category = _mountCategories.value.find((cat) => cat.id === id);
       if (category) {
         category.categories?.push(item as BuilderMountCategory);
       }
     } else {
-      const category = mountCategories.value.find((cat) =>
+      const category = _mountCategories.value.find((cat) =>
         cat.categories?.find((subCat) => subCat.id === id)
       );
       if (category) {
@@ -121,6 +148,14 @@ function onDrop(
   // }
 }
 
+watch(
+  () => _mountCategories,
+  (newVal, oldVal) => {
+    console.log('categories changed', newVal.value, oldVal.value);
+  },
+  { deep: true }
+);
+
 onMounted(() => {
   window.addEventListener('mousedown', removeWowheadTooltips);
 });
@@ -143,12 +178,14 @@ function validate(event: Event) {
   const newName = target.innerText;
 
   if (isRootCategory) {
-    const category = mountCategories.value.find((cat) => cat.id === categoryId);
+    const category = _mountCategories.value.find(
+      (cat) => cat.id === categoryId
+    );
     if (category) {
       category.name = newName;
     }
   } else {
-    const category = mountCategories.value.find((cat) =>
+    const category = _mountCategories.value.find((cat) =>
       cat.categories?.find((subCat) => subCat.id === categoryId)
     );
     if (category) {
@@ -169,7 +206,7 @@ function validate(event: Event) {
       <div class="flex flex-col mt-6 gap-10">
         <UCard
           class="select-none cursor-grab"
-          draggable
+          :draggable="true"
           :ui="{
             ring: 'ring-0 border-[1px] border-dashed border-gray-400 dark:border-gray-600 hover:border-primary dark:hover:border-primary transition ease-in-out',
             rounded: 'rounded-none',
@@ -179,7 +216,7 @@ function validate(event: Event) {
           }"
           @dragstart="
             startDragClone($event, {
-              id: useId(),
+              id: newId(10),
               name: 'New category',
               categories: [],
               mounts: [],
@@ -223,6 +260,7 @@ function validate(event: Event) {
           class="flex flex-col gap-2 h-fit w-full p-2 pb-10 border-[1px] border-dashed border-gray-400 dark:border-gray-600 hover:border-primary dark:hover:border-primary transition ease-in-out cursor-grab"
           v-for="category in mountCategories"
           :key="category.id"
+          :draggable="true"
           @drop="onDrop($event, category.id as string, 'root')"
           @dragenter.prevent
           @dragover.prevent
@@ -240,9 +278,9 @@ function validate(event: Event) {
       </div>
     </template>
   </CreateViewContainer>
-</template> -->
+</template>
 
-<script lang="ts" setup>
+<!-- <script lang="ts" setup>
 import draggable from 'vuedraggable';
 import type { MountCategory } from '~/types';
 
@@ -438,4 +476,4 @@ function removeWowheadTooltips() {
       </div>
     </template>
   </CreateViewContainer>
-</template>
+</template> -->
