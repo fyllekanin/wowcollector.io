@@ -46,6 +46,12 @@ export const useViewBuilderStore = defineStore('view-builder', {
     addRootCategory(category: BuilderMountCategory) {
       this._mountCategories.push(category);
     },
+    updateRootOrder(idOrder: Array<string>): void {
+
+    },
+    updateOrder(category: BuilderMountCategory, idOrder: Array<string>): void {
+
+    },
     addSubCategory(category: BuilderMountCategory, parentId: string) {
       const parentCategory = this._mountCategories.find(
         (category) => category.id === parentId

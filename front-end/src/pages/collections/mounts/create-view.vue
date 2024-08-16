@@ -22,9 +22,12 @@ const toast = useToast();
 const modal = useModal();
 
 const search = ref('');
+
+const root = ref();
+
 const viewBuilderStore = useViewBuilderStore();
 const { mounts, flatMounts, _mountCategories } = storeToRefs(viewBuilderStore);
-
+ 0
 const mountCategories = computed(() => {
   return _mountCategories.value;
 });
@@ -51,6 +54,7 @@ function startDrag(
   item: BuilderMountInformation | BuilderMountCategory,
   from?: BuilderMountCategory
 ) {
+  event.stopPropagation();
   if (!event.dataTransfer) return;
 
   event.dataTransfer.dropEffect = 'move';
@@ -100,114 +104,37 @@ function onDrop(
 
   if (itemIsCategory) {
     if (options?.dropZoneKind === 'root') {
-      const alreadyExists = _mountCategories.value.find(
+      const alreadyExists = _mountCategories.value.some(
         (cat) => cat.id === parsedItem.id
       );
-      if (alreadyExists) return;
+      if (!alreadyExists) {
+        viewBuilderStore.addRootCategory(parsedItem as BuilderMountCategory);
+      }
 
-      viewBuilderStore.addRootCategory(parsedItem as BuilderMountCategory);
+      viewBuilderStore.updateRootOrder([...root.value.children].map(item => item.id))
     } else if (options?.dropZoneKind === 'sub') {
       const category = _mountCategories.value.find(
         (cat) => cat.id === options.dropZoneParentId
       );
 
       if (category) {
-        const alreadyExists = category.categories?.find(
+        const alreadyExists = category.categories?.some(
           (subCat) => subCat.id === parsedItem.id
         );
-        if (alreadyExists) return;
+        if (!alreadyExists) {
+          viewBuilderStore.addSubCategory(
+            parsedItem as BuilderMountCategory,
+            options.dropZoneParentId!
+          );
+        }
 
-        viewBuilderStore.addSubCategory(
-          parsedItem as BuilderMountCategory,
-          options.dropZoneParentId!
-        );
+        // here
       }
     }
 
     return;
   }
 }
-
-// function onDrop(
-//   event: DragEvent,
-//   id: string | null,
-//   level: 'root' | 'sub' | null
-// ) {
-//   event.stopPropagation();
-//   const itemId = event.dataTransfer?.getData('itemId');
-//   const jsonItem = getParsedJsonOr(
-//     event.dataTransfer?.getData('text/plain') || '',
-//     {}
-//   );
-
-//   console.log(
-//     // 'event',
-//     // event,
-//     'id',
-//     id,
-//     'level',
-//     level,
-//     'itemId',
-//     itemId,
-//     'jsonItem',
-//     jsonItem
-//   );
-
-//   const itemIsClonedCategory =
-//     jsonItem.hasOwnProperty('categories') && id === null;
-
-//   if (!itemId && !itemIsClonedCategory) return;
-
-//   if (itemIsClonedCategory) {
-//     console.log('cloned category');
-//     if (level === null) return;
-
-//     if (level === 'root') {
-//       viewBuilderStore.addRootCategory(jsonItem as BuilderMountCategory);
-//     } else if (level === 'sub' && id) {
-//       viewBuilderStore.addSubCategory(jsonItem as BuilderMountCategory, id);
-//     }
-
-//     return;
-//   }
-
-//   const item =
-//     _mountCategories.value?.find((cat) => cat.id === itemId) ||
-//     flatMounts.value?.find((mount) => mount.id == Number(itemId));
-
-//   console.log('item', item);
-
-//   if (!item) return;
-
-//   const itemIsCategory = item.hasOwnProperty('categories');
-//   const itemIsMount = item.hasOwnProperty('assets');
-
-//   if (itemIsCategory) {
-//     if (level === null) return;
-
-//     if (level === 'root') {
-//       const category = _mountCategories.value.find((cat) => cat.id === id);
-//       if (category) {
-//         category.categories?.push(item as BuilderMountCategory);
-//       }
-//     } else {
-//       const category = _mountCategories.value.find((cat) => cat.id === id);
-//       console.log('category', category);
-//       if (category) {
-//         category.categories?.push(item as BuilderMountCategory);
-//         _mountCategories.value = _mountCategories.value.filter(
-//           (cat) => cat.id !== itemId
-//         );
-//       }
-//     }
-//   }
-//   if (itemIsMount) {
-//     const category = _mountCategories.value?.find((cat) => {
-//       return cat.id === id;
-//     });
-//     category?.mounts.push(item as any);
-//   }
-// }
 
 watch(
   () => _mountCategories,
@@ -312,6 +239,7 @@ function validate(event: Event) {
     </template>
     <template #main-content>
       <div
+        ref="root"
         class="flex flex-col w-full h-full p-10 gap-2 border-[1px] overflow-y-auto"
         @drop="onDrop($event, { dropZoneKind: 'root' })"
         @dragenter.prevent
@@ -322,6 +250,7 @@ function validate(event: Event) {
           v-for="category in mountCategories"
           :key="category.id"
           :draggable="true"
+          :id="category.id"
           @drop="
             onDrop($event, {
               dropZoneKind: 'sub',
@@ -351,12 +280,14 @@ function validate(event: Event) {
             v-for="subCategory in category.categories"
             :key="subCategory.id"
             :draggable="true"
+            :id="subCategory.id"
             @drop="
               onDrop($event, {
                 dropZoneKind: 'sub-mount',
                 dropZoneParentId: subCategory.id,
               })
             "
+            @dragstart="startDrag($event, subCategory)"
             @dragenter.prevent
             @dragover.prevent
           >
