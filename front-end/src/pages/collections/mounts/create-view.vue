@@ -1,10 +1,6 @@
 <script lang="ts" setup>
 import type { BuilderMountCategory, BuilderMountInformation } from '~/types';
 
-// Set all mounts as one big array with two additional properties `category` to identify the category it belongs to and `level` to identify if it's root or sub.
-// `level` is enum with values `root` and `sub`.
-// The state in the store should have these properties and the getter should map the mounts to a regular mount category structure.
-
 definePageMeta({
   layout: 'empty',
   middleware: 'create-view',
@@ -43,98 +39,175 @@ const filteredMounts = computed(() => {
 });
 
 function startDragClone(event: DragEvent, item: BuilderMountCategory) {
-  console.log('startDragClone', event, item);
   if (!event.dataTransfer) return;
 
   event.dataTransfer.dropEffect = 'move';
   event.dataTransfer.effectAllowed = 'move';
-  event.dataTransfer.setData('text/plain', JSON.stringify(item));
+  event.dataTransfer.setData('item', JSON.stringify(item));
+  event.dataTransfer.setData('isNew', 'true');
 }
 function startDrag(
   event: DragEvent,
-  item: BuilderMountInformation | BuilderMountCategory
+  item: BuilderMountInformation | BuilderMountCategory,
+  from?: BuilderMountCategory
 ) {
-  console.log('startDrag', event, item);
   if (!event.dataTransfer) return;
 
   event.dataTransfer.dropEffect = 'move';
   event.dataTransfer.effectAllowed = 'move';
-  event.dataTransfer.setData('itemId', `${item.id}`);
+  event.dataTransfer.setData('item', JSON.stringify(item));
+  if (from) event.dataTransfer.setData('from', JSON.stringify(from));
 }
 
-function getParsedJsonOr<T>(value: string, defaultValue: T): T {
+function getParsedJsonOr(value: string) {
   try {
     return JSON.parse(value);
-  } catch(e) {
-    return defaultValue;
+  } catch (e) {
+    return {};
   }
 }
 
-// If null is passed as categoryId and level, it means the item is being dropped back to the sidebar
 function onDrop(
   event: DragEvent,
-  id: string | null,
-  level: 'root' | 'sub' | null
+  options?: {
+    dropZoneParentId?: string;
+    dropZoneKind?: 'root' | 'sub' | 'sub-mount' | 'side';
+  }
 ) {
   event.stopPropagation();
-  const itemId = event.dataTransfer?.getData('itemId');
-  const jsonItem = getParsedJsonOr(event.dataTransfer?.getData('text/plain') || '', {})
+  const item = event.dataTransfer?.getData('item');
+  const parsedItem = getParsedJsonOr(item || '');
 
-  const itemIsClonedCategory = jsonItem.hasOwnProperty('categories');
+  const isNew = event.dataTransfer?.getData('isNew');
 
-  if (!itemId && !itemIsClonedCategory) return;
+  const itemIsMount = parsedItem.hasOwnProperty('assets');
+  const itemIsCategory = parsedItem.hasOwnProperty('categories');
 
-  if (itemIsClonedCategory) {
-    if (level === null) return;
+  if (!itemIsMount && options?.dropZoneKind === 'sub-mount') return;
 
-    if (level === 'root') {
-      viewBuilderStore.addRootCategory(jsonItem as BuilderMountCategory);
-    } else if (level === 'sub' && id) {
-      viewBuilderStore.addSubCategory(jsonItem as BuilderMountCategory, id);
+  if (isNew) {
+    if (options?.dropZoneKind === 'root') {
+      viewBuilderStore.addRootCategory(parsedItem as BuilderMountCategory);
+    } else if (options?.dropZoneKind === 'sub') {
+      viewBuilderStore.addSubCategory(
+        parsedItem as BuilderMountCategory,
+        options.dropZoneParentId!
+      );
     }
 
     return;
   }
 
-  const item =
-    _mountCategories.value?.find((cat) => cat.id === itemId) ||
-    flatMounts.value?.find((mount) => mount.id == Number(itemId));
-
-  if (!item) return;
-
-  const itemIsCategory = item.hasOwnProperty('categories');
-  const itemIsMount = item.hasOwnProperty('assets');
-
   if (itemIsCategory) {
-    if (level === null) return;
-    if (level === 'root') {
-      const category = _mountCategories.value.find((cat) => cat.id === id);
-      if (category) {
-        category.categories?.push(item as BuilderMountCategory);
-      }
-    } else {
-      const category = _mountCategories.value.find((cat) =>
-        cat.categories?.find((subCat) => subCat.id === id)
+    if (options?.dropZoneKind === 'root') {
+      const alreadyExists = _mountCategories.value.find(
+        (cat) => cat.id === parsedItem.id
       );
+      if (alreadyExists) return;
+
+      viewBuilderStore.addRootCategory(parsedItem as BuilderMountCategory);
+    } else if (options?.dropZoneKind === 'sub') {
+      const category = _mountCategories.value.find(
+        (cat) => cat.id === options.dropZoneParentId
+      );
+
       if (category) {
-        const subCategory = category.categories?.find(
-          (subCat) => subCat.id === id
+        const alreadyExists = category.categories?.find(
+          (subCat) => subCat.id === parsedItem.id
         );
-        if (subCategory) {
-          subCategory.categories?.push(item as BuilderMountCategory);
-        }
+        if (alreadyExists) return;
+
+        viewBuilderStore.addSubCategory(
+          parsedItem as BuilderMountCategory,
+          options.dropZoneParentId!
+        );
       }
     }
-  }
-  if (itemIsMount) {
-    const category = _mountCategories.value?.find((cat) => {
 
-      return cat.id === id;
-    });
-    category?.mounts.push(item as any) 
+    return;
   }
-
 }
+
+// function onDrop(
+//   event: DragEvent,
+//   id: string | null,
+//   level: 'root' | 'sub' | null
+// ) {
+//   event.stopPropagation();
+//   const itemId = event.dataTransfer?.getData('itemId');
+//   const jsonItem = getParsedJsonOr(
+//     event.dataTransfer?.getData('text/plain') || '',
+//     {}
+//   );
+
+//   console.log(
+//     // 'event',
+//     // event,
+//     'id',
+//     id,
+//     'level',
+//     level,
+//     'itemId',
+//     itemId,
+//     'jsonItem',
+//     jsonItem
+//   );
+
+//   const itemIsClonedCategory =
+//     jsonItem.hasOwnProperty('categories') && id === null;
+
+//   if (!itemId && !itemIsClonedCategory) return;
+
+//   if (itemIsClonedCategory) {
+//     console.log('cloned category');
+//     if (level === null) return;
+
+//     if (level === 'root') {
+//       viewBuilderStore.addRootCategory(jsonItem as BuilderMountCategory);
+//     } else if (level === 'sub' && id) {
+//       viewBuilderStore.addSubCategory(jsonItem as BuilderMountCategory, id);
+//     }
+
+//     return;
+//   }
+
+//   const item =
+//     _mountCategories.value?.find((cat) => cat.id === itemId) ||
+//     flatMounts.value?.find((mount) => mount.id == Number(itemId));
+
+//   console.log('item', item);
+
+//   if (!item) return;
+
+//   const itemIsCategory = item.hasOwnProperty('categories');
+//   const itemIsMount = item.hasOwnProperty('assets');
+
+//   if (itemIsCategory) {
+//     if (level === null) return;
+
+//     if (level === 'root') {
+//       const category = _mountCategories.value.find((cat) => cat.id === id);
+//       if (category) {
+//         category.categories?.push(item as BuilderMountCategory);
+//       }
+//     } else {
+//       const category = _mountCategories.value.find((cat) => cat.id === id);
+//       console.log('category', category);
+//       if (category) {
+//         category.categories?.push(item as BuilderMountCategory);
+//         _mountCategories.value = _mountCategories.value.filter(
+//           (cat) => cat.id !== itemId
+//         );
+//       }
+//     }
+//   }
+//   if (itemIsMount) {
+//     const category = _mountCategories.value?.find((cat) => {
+//       return cat.id === id;
+//     });
+//     category?.mounts.push(item as any);
+//   }
+// }
 
 watch(
   () => _mountCategories,
@@ -221,7 +294,7 @@ function validate(event: Event) {
         />
         <div
           class="flex grow flex-wrap gap-4 justify-center"
-          @drop="onDrop($event, null, null)"
+          @drop="onDrop($event, { dropZoneKind: 'side' })"
           @dragenter.prevent
           @dragover.prevent
         >
@@ -240,7 +313,7 @@ function validate(event: Event) {
     <template #main-content>
       <div
         class="flex flex-col w-full h-full p-10 gap-2 border-[1px] overflow-y-auto"
-        @drop="onDrop($event, null, 'root')"
+        @drop="onDrop($event, { dropZoneKind: 'root' })"
         @dragenter.prevent
         @dragover.prevent
       >
@@ -249,7 +322,13 @@ function validate(event: Event) {
           v-for="category in mountCategories"
           :key="category.id"
           :draggable="true"
-          @drop="onDrop($event, category.id as string, 'sub')"
+          @drop="
+            onDrop($event, {
+              dropZoneKind: 'sub',
+              dropZoneParentId: category.id,
+            })
+          "
+          @dragstart="startDrag($event, category)"
           @dragenter.prevent
           @dragover.prevent
         >
@@ -272,7 +351,12 @@ function validate(event: Event) {
             v-for="subCategory in category.categories"
             :key="subCategory.id"
             :draggable="true"
-            @drop="onDrop($event, subCategory.id as string, 'sub')"
+            @drop="
+              onDrop($event, {
+                dropZoneKind: 'sub-mount',
+                dropZoneParentId: subCategory.id,
+              })
+            "
             @dragenter.prevent
             @dragover.prevent
           >

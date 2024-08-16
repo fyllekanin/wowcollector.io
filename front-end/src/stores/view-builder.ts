@@ -44,18 +44,15 @@ export const useViewBuilderStore = defineStore('view-builder', {
       this._mountCategories = newCategories;
     },
     addRootCategory(category: BuilderMountCategory) {
-      console.log({ category });
       this._mountCategories.push(category);
     },
     addSubCategory(category: BuilderMountCategory, parentId: string) {
       const parentCategory = this._mountCategories.find(
         (category) => category.id === parentId
       );
-      console.log({ parentCategory });
 
       if (parentCategory) {
         parentCategory.categories.push(category);
-        console.log({ parentCategory });
       }
     },
     resetMountCategories() {
