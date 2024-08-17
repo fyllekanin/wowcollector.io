@@ -5,4 +5,3 @@ export * from './changelog';
 export * from './feedback';
 
 export * from './collections';
-export * from './view-builder';

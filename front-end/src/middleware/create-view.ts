@@ -7,11 +7,5 @@ export default defineNuxtRouteMiddleware(async () => {
     return abortNavigation();
   }
 
-  viewBuilderStore.setMounts(
-    mounts.value.map((mount) => ({
-      ...mount,
-      category: null,
-      level: null,
-    }))
-  );
+  viewBuilderStore.setMounts(mounts.value);
 });

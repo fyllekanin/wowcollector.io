@@ -1,8 +1,9 @@
-import type { BuilderMountCategory, BuilderMountInformation } from '~/types';
+import type { MountCategory, MountInformation } from '~/types';
 
 export const useViewBuilderStore = defineStore('view-builder', {
   state: () => ({
-    _mounts: [] as BuilderMountInformation[],
+    _allMounts: [] as MountInformation[], // Used as a fallback to reset the state
+    _mounts: [] as MountInformation[],
     _mountCategories: [
       {
         id: newId(10),
@@ -11,54 +12,77 @@ export const useViewBuilderStore = defineStore('view-builder', {
         mounts: [],
         order: 0,
       },
-    ] as BuilderMountCategory[],
+    ] as MountCategory[],
+    _cloneableCategory: [
+      {
+        id: newId(10),
+        name: 'New Category',
+        categories: [],
+        mounts: [],
+        order: 0,
+      },
+    ] as MountCategory[],
+    _dragState: {
+      state: false,
+      type: '' as 'mount' | 'category' | '',
+    },
+    _searchFilter: '',
   }),
   getters: {
-    mounts(state) {
-      // return state._mounts || [];
-      // // should map the mounts into a category structure
-      const mapMountsToCategories = (
-        mounts: BuilderMountInformation[],
-        categories: BuilderMountCategory[]
-      ): BuilderMountCategory[] => {
-        return categories.map((category) => {
-          return {
-            ...category,
-            mounts: mounts.filter((mount) => mount.category === category.id),
-            categories: mapMountsToCategories(mounts, category.categories),
-          };
-        });
-      };
-
-      return mapMountsToCategories(state._mounts || [], state._mountCategories);
-    },
-    flatMounts(state) {
+    flatMounts(state): MountInformation[] {
       return state._mounts || [];
+    },
+    dragState(state) {
+      return state._dragState;
     },
   },
   actions: {
-    setMounts(newMounts: BuilderMountInformation[]) {
+    setMounts(newMounts: MountInformation[]) {
       this._mounts = newMounts;
     },
-    setMountCategories(newCategories: BuilderMountCategory[]) {
+    setMountCategories(newCategories: MountCategory[]) {
       this._mountCategories = newCategories;
     },
-    addRootCategory(category: BuilderMountCategory) {
+    addMounts(mounts: MountInformation[]) {
+      this._mounts.push(...mounts);
+    },
+    addRootCategory(category: MountCategory) {
       this._mountCategories.push(category);
     },
-    updateRootOrder(idOrder: Array<string>): void {
-
+    setNewIdForCloneableCategory() {
+      this._cloneableCategory = [
+        {
+          id: newId(10),
+          name: 'New Category',
+          categories: [],
+          mounts: [],
+          order: 0,
+        },
+      ];
     },
-    updateOrder(category: BuilderMountCategory, idOrder: Array<string>): void {
-
-    },
-    addSubCategory(category: BuilderMountCategory, parentId: string) {
+    addSubCategory(category: MountCategory, parentId: string) {
       const parentCategory = this._mountCategories.find(
         (category) => category.id === parentId
       );
 
       if (parentCategory) {
         parentCategory.categories.push(category);
+      }
+    },
+    removeRootCategory(categoryId: string) {
+      this._mountCategories = this._mountCategories.filter(
+        (category) => category.id !== categoryId
+      );
+    },
+    removeSubCategory(categoryId: string, parentId: string) {
+      const parentCategory = this._mountCategories.find(
+        (category) => category.id === parentId
+      );
+
+      if (parentCategory) {
+        parentCategory.categories = parentCategory.categories.filter(
+          (category) => category.id !== categoryId
+        );
       }
     },
     resetMountCategories() {
@@ -71,6 +95,21 @@ export const useViewBuilderStore = defineStore('view-builder', {
           order: 0,
         },
       ];
+    },
+    setDragState(state: boolean, type: 'mount' | 'category') {
+      this._dragState = {
+        state,
+        type,
+      };
+    },
+    clearDragState() {
+      this._dragState = {
+        state: false,
+        type: '',
+      };
+    },
+    setSearchFilter(filter: string) {
+      this._searchFilter = filter;
     },
   },
   // persist: {

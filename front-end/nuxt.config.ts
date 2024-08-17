@@ -21,6 +21,7 @@ export default defineNuxtConfig({
     '@pinia-plugin-persistedstate/nuxt',
     '@nuxt/icon',
     '@nuxt/image',
+    '@vueuse/nuxt',
   ],
   icon: {
     provider: 'server',
