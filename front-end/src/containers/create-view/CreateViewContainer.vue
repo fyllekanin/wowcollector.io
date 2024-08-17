@@ -10,6 +10,7 @@ function openModal() {
     onConfirm: () => {
       const router = useRouter();
       router.push('/');
+      modal.close();
     },
     onCancel: () => {
       modal.close();
@@ -41,15 +42,6 @@ function openModal() {
                     WoW Collector
                   </h2>
                 </div>
-                <!-- <UButton variant="ghost" color="gray">Need help?</UButton> -->
-                <!-- <UTooltip
-                  text="Grab an icon or category and drop it inside the content panel"
-                >
-                  <UIcon
-                    name="material-symbols-light:help-outline"
-                    class="scale-125"
-                  />
-                </UTooltip> -->
               </div>
             </template>
           </UDashboardNavbar>

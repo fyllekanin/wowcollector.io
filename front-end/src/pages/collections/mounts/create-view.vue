@@ -21,7 +21,7 @@ if (!page.value) {
 const { debounce } = useDebounce();
 
 const viewBuilderStore = useViewBuilderStore();
-const { _cloneableCategory, _mounts, _searchFilter, _mountCategories } =
+const { _cloneableCategory, _mounts, _searchFilter, _settings } =
   storeToRefs(viewBuilderStore);
 
 const debouncableSearch = ref('');
@@ -51,7 +51,7 @@ function removeWowheadTooltips() {
 <template>
   <CreateViewContainer>
     <template #sidebar-content>
-      <div class="flex flex-col mt-6 gap-10">
+      <div class="flex flex-col mt-6 gap-5">
         <draggable
           :list="_cloneableCategory"
           :group="{ name: 'category', pull: 'clone', put: false }"
@@ -72,6 +72,20 @@ function removeWowheadTooltips() {
             </UCard>
           </template>
         </draggable>
+        <UDivider />
+        <div class="flex flex-col gap-4 w-full">
+          <h2 class="text-md font-semibold self-center">Settings</h2>
+          <UDivider />
+          <div class="flex gap-2 items-center justify-between">
+            <span class="text-sm">Show borders</span>
+            <UToggle v-model="_settings.showBorders" />
+          </div>
+          <div class="flex gap-2 items-center justify-between">
+            <span class="text-sm">Show mount tooltips</span>
+            <UToggle v-model="_settings.showMountTooltips" />
+          </div>
+          <UDivider />
+        </div>
         <UInput
           v-model="debouncableSearch"
           placeholder="Search for a mount"
@@ -91,6 +105,8 @@ function removeWowheadTooltips() {
               :mount="mount"
               :clickable="false"
               build-mode
+              :show-tooltip="_settings.showMountTooltips"
+              :use-intersection-observer="false"
             />
           </template>
         </draggable>

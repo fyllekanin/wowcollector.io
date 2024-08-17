@@ -27,6 +27,10 @@ export const useViewBuilderStore = defineStore('view-builder', {
       type: '' as 'mount' | 'category' | '',
     },
     _searchFilter: '',
+    _settings: {
+      showBorders: true,
+      showMountTooltips: true,
+    },
   }),
   getters: {
     flatMounts(state): MountInformation[] {
@@ -110,6 +114,9 @@ export const useViewBuilderStore = defineStore('view-builder', {
     },
     setSearchFilter(filter: string) {
       this._searchFilter = filter;
+    },
+    setSettings(settings: Partial<typeof this._settings>) {
+      Object.assign(this._settings, settings);
     },
   },
   // persist: {

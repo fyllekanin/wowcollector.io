@@ -4,7 +4,7 @@ import { useIntersectionObserver } from '@vueuse/core';
 import type { PropType } from 'vue';
 import type { MountInformation } from '~/types';
 
-defineProps({
+const props = defineProps({
   mount: {
     type: Object as PropType<MountInformation>,
     required: true,
@@ -17,17 +17,27 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  showTooltip: {
+    type: Boolean,
+    default: true,
+  },
+  useIntersectionObserver: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const target = ref(null);
-const targetIsVisible = ref(false);
+const targetIsVisible = ref(!props.useIntersectionObserver);
 
-const { stop } = useIntersectionObserver(
-  target,
-  ([{ isIntersecting }], observerElement) => {
-    targetIsVisible.value = isIntersecting;
-  }
-);
+if (props.useIntersectionObserver) {
+  const { stop } = useIntersectionObserver(
+    target,
+    ([{ isIntersecting }], observerElement) => {
+      targetIsVisible.value = isIntersecting;
+    }
+  );
+}
 </script>
 
 <template>
@@ -36,7 +46,7 @@ const { stop } = useIntersectionObserver(
       :class="[buildMode ? 'cursor-grab' : '']"
       :href="clickable ? `https://www.wowhead.com/mount/${mount.id}` : '#'"
       target="_blank"
-      :data-wowhead="`mount=${mount.id}`"
+      :data-wowhead="showTooltip ? `mount=${mount.id}` : ''"
       @click="!clickable && $event.preventDefault()"
     >
       <nuxt-img

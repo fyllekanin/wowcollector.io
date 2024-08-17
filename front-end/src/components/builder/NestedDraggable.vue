@@ -3,7 +3,7 @@ import draggable from 'vuedraggable';
 import type { MountCategory, MountInformation } from '~/types';
 
 const viewBuilderStore = useViewBuilderStore();
-const { _mountCategories } = storeToRefs(viewBuilderStore);
+const { _mountCategories, _settings } = storeToRefs(viewBuilderStore);
 
 const dragging = ref(false);
 const dragItem = ref<MountCategory | MountInformation>();
@@ -110,16 +110,25 @@ function dragRootEnd() {
       >
         <UCard
           :ui="{
-            ring: 'ring-0 border-[1px] border-dashed border-gray-400 dark:border-gray-600 hover:border-primary dark:hover:border-primary transition ease-in-out cursor-move',
+            ring: `ring-0 ${
+              _settings.showBorders
+                ? 'border-[1px] border-dashed border-gray-400 dark:border-gray-600 hover:border-primary dark:hover:border-primary transition ease-in-out cursor-move'
+                : ''
+            }`,
             rounded: 'rounded-none',
             body: {
               padding: 'p-0 sm:p-0',
             },
+            shadow: _settings.showBorders ? '' : 'shadow-none',
           }"
         >
           <div class="flex justify-between">
             <h2
-              class="p-2 ml-4 mt-4 border-[1px] border-dashed border-gray-400 dark:border-gray-600 cursor-text w-min text-nowrap shadow-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none"
+              :class="[
+                _settings.showBorders
+                  ? 'p-2 ml-4 mt-4 border-[1px] border-dashed border-gray-400 dark:border-gray-600 cursor-text w-min text-nowrap shadow-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none'
+                  : 'p-2 ml-4 mt-4 cursor-text w-min text-nowrap text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none',
+              ]"
               contenteditable
               :spellcheck="false"
               @keydown.enter="validate"
@@ -149,6 +158,8 @@ function dragRootEnd() {
                 :mount="mount"
                 :clickable="false"
                 build-mode
+                :show-tooltip="_settings.showMountTooltips"
+                :use-intersection-observer="false"
               />
             </template>
           </draggable>
@@ -164,16 +175,23 @@ function dragRootEnd() {
               <div class="flex flex-col gap-5 p-4">
                 <UCard
                   :ui="{
-                    ring: 'ring-0 border-[1px] border-dashed border-gray-400 dark:border-gray-600 hover:border-primary dark:hover:border-primary transition ease-in-out cursor-move',
+                    ring: _settings.showBorders
+                      ? 'ring-0 border-[1px] border-dashed border-gray-400 dark:border-gray-600 hover:border-primary dark:hover:border-primary transition ease-in-out cursor-move'
+                      : 'ring-0',
                     rounded: 'rounded-none',
                     body: {
                       padding: 'p-3 sm:p-3',
                     },
+                    shadow: _settings.showBorders ? '' : 'shadow-none',
                   }"
                 >
                   <div class="flex justify-between items-center gap-8">
                     <h2
-                      class="p-2 border-[1px] border-dashed border-gray-400 dark:border-gray-600 cursor-text w-min text-nowrap shadow-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none"
+                      :class="[
+                        _settings.showBorders
+                          ? 'p-2 border-[1px] border-dashed border-gray-400 dark:border-gray-600 cursor-text w-min text-nowrap shadow-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none'
+                          : 'p-2 cursor-text w-min text-nowrap text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none',
+                      ]"
                       contenteditable
                       :spellcheck="false"
                       @keydown.enter="validate"
@@ -205,6 +223,8 @@ function dragRootEnd() {
                         :mount="mount"
                         :clickable="false"
                         build-mode
+                        :show-tooltip="_settings.showMountTooltips"
+                        :use-intersection-observer="false"
                       />
                     </template>
                   </draggable>
