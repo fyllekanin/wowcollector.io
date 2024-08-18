@@ -58,6 +58,9 @@ export const useViewBuilderStore = defineStore('view-builder', {
 
       return false;
     },
+    isValid(state) {
+      return state._mountCategories.length;
+    },
   },
   actions: {
     setMounts(newMounts: MountInformation[]) {

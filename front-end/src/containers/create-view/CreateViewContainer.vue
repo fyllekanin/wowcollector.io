@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ConfirmationModal from '~/components/modals/ConfirmationModal.vue';
 import FAQModal from '~/components/modals/builder/FAQModal.vue';
+import PromptViewNameModal from '~/components/modals/builder/PromptViewNameModal.vue';
 
 const viewBuilderStore = useViewBuilderStore();
 
@@ -37,6 +38,19 @@ function openHelpModal() {
     },
   });
 }
+
+function openNamePromptModal() {
+  modal.open(PromptViewNameModal, {
+    onConfirm: (name: string) => {
+      // viewBuilderStore.saveView(name);
+      console.log(name);
+      modal.close();
+    },
+    onCancel: () => {
+      modal.close();
+    },
+  });
+}
 </script>
 
 <template>
@@ -50,7 +64,7 @@ function openHelpModal() {
         <div class="flex flex-col w-full h-full">
           <UDashboardNavbar
             class="!border-transparent"
-            :ui="{ left: 'flex-1', wrapper: 'pb-4' }"
+            :ui="{ left: 'flex-1', wrapper: 'pb-4 px-0' }"
           >
             <template #left>
               <div class="flex grow flex-wrap items-center justify-between">
@@ -85,7 +99,12 @@ function openHelpModal() {
           >
         </template>
         <template #right>
-          <UButton :disabled="!viewBuilderStore.hasChanges" icon="mdi:plus"
+          <UButton
+            :disabled="
+              !viewBuilderStore.hasChanges || !viewBuilderStore.isValid
+            "
+            icon="mdi:plus"
+            @click="openNamePromptModal"
             >Create view</UButton
           >
         </template>
