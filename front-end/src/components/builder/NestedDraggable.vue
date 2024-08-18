@@ -219,7 +219,7 @@ function dragRootEnd() {
                   >
                     <template #item="{ element: mount }">
                       <MountIcon
-                        class="select-none cursor-grab"
+                        class="select-none cursor-move"
                         :mount="mount"
                         :clickable="false"
                         build-mode

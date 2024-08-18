@@ -1,3 +1,5 @@
+import equal from 'fast-deep-equal';
+
 import type { MountCategory, MountInformation } from '~/types';
 
 export const useViewBuilderStore = defineStore('view-builder', {
@@ -38,6 +40,23 @@ export const useViewBuilderStore = defineStore('view-builder', {
     },
     dragState(state) {
       return state._dragState;
+    },
+    hasChanges(state) {
+      const cloned = [...state._mountCategories];
+      if (cloned.length !== 1) return true;
+
+      if (cloned.length === 1) {
+        const [category] = cloned;
+        delete category.id;
+        return !equal(category, {
+          name: 'New Category',
+          categories: [],
+          mounts: [],
+          order: 0,
+        });
+      }
+
+      return false;
     },
   },
   actions: {
@@ -89,7 +108,8 @@ export const useViewBuilderStore = defineStore('view-builder', {
         );
       }
     },
-    resetMountCategories() {
+    resetStore() {
+      this._mounts = this._allMounts;
       this._mountCategories = [
         {
           id: newId(10),

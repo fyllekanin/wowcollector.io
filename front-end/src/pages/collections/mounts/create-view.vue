@@ -49,7 +49,8 @@ function removeWowheadTooltips() {
 </script>
 
 <template>
-  <CreateViewContainer>
+  <ScreenTooSmall class="lg:hidden" />
+  <CreateViewContainer class="hidden lg:flex">
     <template #sidebar-content>
       <div class="flex flex-col mt-6 gap-5">
         <draggable
@@ -59,7 +60,7 @@ function removeWowheadTooltips() {
         >
           <template #item="{ element: category }">
             <UCard
-              class="select-none cursor-grab"
+              class="select-none cursor-move"
               :ui="{
                 ring: 'ring-0 border-[1px] border-dashed border-gray-400 dark:border-gray-600 hover:border-primary dark:hover:border-primary transition ease-in-out',
                 rounded: 'rounded-none',
@@ -101,7 +102,7 @@ function removeWowheadTooltips() {
               v-if="
                 mount.name.toLowerCase().includes(_searchFilter.toLowerCase())
               "
-              class="select-none cursor-grab"
+              class="select-none cursor-move"
               :mount="mount"
               :clickable="false"
               build-mode

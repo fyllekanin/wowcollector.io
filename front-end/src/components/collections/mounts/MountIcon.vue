@@ -27,6 +27,13 @@ const props = defineProps({
   },
 });
 
+const viewBuilderStore = useViewBuilderStore();
+const { _settings } = storeToRefs(viewBuilderStore);
+
+const showTooltip = computed(() => {
+  return _settings.value.showMountTooltips;
+});
+
 const target = ref(null);
 const targetIsVisible = ref(!props.useIntersectionObserver);
 
@@ -43,7 +50,7 @@ if (props.useIntersectionObserver) {
 <template>
   <div ref="target">
     <a
-      :class="[buildMode ? 'cursor-grab' : '']"
+      :class="[buildMode ? 'cursor-move' : '']"
       :href="clickable ? `https://www.wowhead.com/mount/${mount.id}` : '#'"
       target="_blank"
       :data-wowhead="showTooltip ? `mount=${mount.id}` : ''"
