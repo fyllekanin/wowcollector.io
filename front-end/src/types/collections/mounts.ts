@@ -9,6 +9,7 @@ export interface MountInformation {
     smallIcon: string;
     largeIcon: string;
   };
+  order?: number;
 }
 
 export interface MountCategory {

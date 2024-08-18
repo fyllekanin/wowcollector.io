@@ -3,11 +3,11 @@ import draggable from 'vuedraggable';
 
 definePageMeta({
   layout: 'empty',
-  middleware: 'create-view',
+  middleware: 'mount-view-builder',
 });
 
 const { data: page } = await useAsyncData('mounts', () =>
-  queryContent('/collections/mounts/create-view').findOne()
+  queryContent('/collections/mounts/view-builder').findOne()
 );
 if (!page.value) {
   throw createError({
@@ -20,16 +20,17 @@ if (!page.value) {
 
 const { debounce } = useDebounce();
 
-const viewBuilderStore = useViewBuilderStore();
-const { _cloneableCategory, _mounts, _searchFilter, _settings } =
-  storeToRefs(viewBuilderStore);
+const mountViewBuilderStore = useMountViewBuilderStore();
+const { _cloneableCategory, _mounts, _searchFilter, _settings } = storeToRefs(
+  mountViewBuilderStore
+);
 
 const debouncableSearch = ref('');
 
 watch(
   () => debouncableSearch.value,
   debounce((value) => {
-    viewBuilderStore.setSearchFilter(value);
+    mountViewBuilderStore.setSearchFilter(value);
   }, 300),
   { immediate: true }
 );
@@ -50,13 +51,13 @@ function removeWowheadTooltips() {
 
 <template>
   <ScreenTooSmall class="lg:hidden" />
-  <CreateViewContainer class="hidden lg:flex">
+  <MountViewBuilderContainer class="hidden lg:flex">
     <template #sidebar-content>
       <div class="flex flex-col mt-6 gap-5">
         <draggable
           :list="_cloneableCategory"
           :group="{ name: 'category', pull: 'clone', put: false }"
-          @start="viewBuilderStore.setNewIdForCloneableCategory"
+          @start="mountViewBuilderStore.setNewIdForCloneableCategory"
         >
           <template #item="{ element: category }">
             <UCard
@@ -116,5 +117,5 @@ function removeWowheadTooltips() {
     <template #main-content>
       <NestedDraggable />
     </template>
-  </CreateViewContainer>
+  </MountViewBuilderContainer>
 </template>

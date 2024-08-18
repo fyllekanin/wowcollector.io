@@ -1,5 +1,5 @@
-title: Create Mount View - WoW Collector
-description: Create a new mount view to display your collection.
+title: Achievement View Builder - WoW Collector
+description: Create a new achievement view to display your collection.
 
 breadcrumbs:
   - title: Home
@@ -11,4 +11,4 @@ breadcrumbs:
   - title: Create View
     icon: mdi:plus
     disabled: true
-    to: /collections/mounts/create-view
+    to: /collections/achievements/view-builder

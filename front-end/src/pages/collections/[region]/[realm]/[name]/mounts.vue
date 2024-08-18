@@ -48,14 +48,8 @@ const percentageMountsCollected = computed(() => {
 
 <template>
   <UContainer class="flex flex-col gap-4 pb-6">
-    <div class="flex justify-between items-center">
+    <div class="flex items-center">
       <UBreadcrumb :links="mapContentNavigation(page?.breadcrumbs)" />
-      <UButton
-        color="primary"
-        to="/collections/mounts/create-view"
-        icon="heroicons-outline:plus"
-        >Create view</UButton
-      >
     </div>
     <CollectionHeader
       :progress="percentageMountsCollected"

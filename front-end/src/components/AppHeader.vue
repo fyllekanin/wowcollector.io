@@ -72,13 +72,30 @@ const links = computed(() => [
       },
     ],
   },
-  // {
-  //   label: 'Leaderboards',
-  //   to: '/leaderboards',
-  // },
   {
     label: 'Character Search',
     to: '/search',
+  },
+  {
+    label: 'View Builder',
+    children: [
+      {
+        label: 'Mounts',
+        to: '/collections/mounts/view-builder',
+      },
+      {
+        label: 'Achievements',
+        to: '/collections/achievements/view-builder',
+      },
+      {
+        label: 'Pets',
+        to: '/collections/pets/view-builder',
+      },
+      {
+        label: 'Toys',
+        to: '/collections/toys/view-builder',
+      },
+    ],
   },
 ]) as ComputedRef<HeaderLink[]>;
 </script>
@@ -91,9 +108,6 @@ const links = computed(() => [
     </template>
 
     <template #right>
-      <!-- <UButton icon="simple-icons:battledotnet" to="/login" color="gray"
-        >Connect</UButton
-      > -->
       <UColorModeButton class="hidden lg:flex" />
       <ActiveCharacterDropdown v-if="character" class="hidden lg:flex" />
     </template>

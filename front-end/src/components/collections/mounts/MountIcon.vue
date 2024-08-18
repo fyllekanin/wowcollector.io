@@ -27,8 +27,8 @@ const props = defineProps({
   },
 });
 
-const viewBuilderStore = useViewBuilderStore();
-const { _settings } = storeToRefs(viewBuilderStore);
+const mountViewBuilderStore = useMountViewBuilderStore();
+const { _settings } = storeToRefs(mountViewBuilderStore);
 
 const showTooltip = computed(() => {
   return _settings.value.showMountTooltips;

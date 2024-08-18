@@ -13,7 +13,7 @@ export interface AchievementCategory {
   achievements: AchievementInformation[] | null;
   categories: AchievementCategory[];
   displayOrder: number;
-  id: number;
+  id: number | string;
 }
 
 export interface AchievementCategoryAccordion extends AchievementCategory {

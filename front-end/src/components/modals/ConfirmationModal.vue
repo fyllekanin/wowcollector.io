@@ -9,6 +9,10 @@ defineProps({
     type: String,
     required: true,
   },
+  additionaInformation: {
+    type: String,
+    default: '',
+  },
   buttonText: {
     type: String,
     default: 'Confirm',
@@ -30,7 +34,12 @@ const loading = ref(false);
         <h2 class="text-lg font-semibold">{{ title }}</h2>
       </template>
 
-      <p class="p-4">{{ message }}</p>
+      <div class="flex flex-col">
+        <p class="p-4">{{ message }}</p>
+        <p v-if="additionaInformation" class="p-4">
+          {{ additionaInformation }}
+        </p>
+      </div>
 
       <template #footer>
         <div class="flex justify-end space-x-4 p-4">

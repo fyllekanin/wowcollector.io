@@ -2,7 +2,7 @@ import equal from 'fast-deep-equal';
 
 import type { MountCategory, MountInformation } from '~/types';
 
-export const useViewBuilderStore = defineStore('view-builder', {
+export const useMountViewBuilderStore = defineStore('view-builder', {
   state: () => ({
     _allMounts: [] as MountInformation[], // Used as a fallback to reset the state
     _mounts: [] as MountInformation[],
@@ -38,6 +38,24 @@ export const useViewBuilderStore = defineStore('view-builder', {
     flatMounts(state): MountInformation[] {
       return state._mounts || [];
     },
+    getFinalCategories(state): MountCategory[] {
+      const setOrder = (category: MountCategory, order: number) => {
+        category.order = order;
+        category.categories.forEach((subCategory, index) => {
+          setOrder(subCategory, index);
+        });
+        if (category.mounts)
+          category.mounts.forEach((mount, index) => {
+            mount.order = index;
+          });
+      };
+
+      const categories = [...state._mountCategories];
+      return categories.map((category, index) => {
+        setOrder(category, index);
+        return category;
+      });
+    },
     dragState(state) {
       return state._dragState;
     },
@@ -46,8 +64,8 @@ export const useViewBuilderStore = defineStore('view-builder', {
       if (cloned.length !== 1) return true;
 
       if (cloned.length === 1) {
-        const [category] = cloned;
-        delete category.id;
+        const [{ id, ...category }] = cloned;
+
         return !equal(category, {
           name: 'New Category',
           categories: [],
@@ -142,8 +160,4 @@ export const useViewBuilderStore = defineStore('view-builder', {
       Object.assign(this._settings, settings);
     },
   },
-  // persist: {
-  //   paths: ['_mounts', '_mountCategories'],
-  //   storage: persistedState.localStorage,
-  // },
 });

@@ -2,8 +2,8 @@
 import draggable from 'vuedraggable';
 import type { MountCategory, MountInformation } from '~/types';
 
-const viewBuilderStore = useViewBuilderStore();
-const { _mountCategories, _settings } = storeToRefs(viewBuilderStore);
+const mountViewBuilderStore = useMountViewBuilderStore();
+const { _mountCategories, _settings } = storeToRefs(mountViewBuilderStore);
 
 const dragging = ref(false);
 const dragItem = ref<MountCategory | MountInformation>();
@@ -53,15 +53,17 @@ function removeCategory(categoryId: string, parentId?: string) {
     );
     if (!category) return;
 
-    if (category.mounts?.length) viewBuilderStore.addMounts(category.mounts);
+    if (category.mounts?.length)
+      mountViewBuilderStore.addMounts(category.mounts);
 
     if (category.categories?.length) {
       category.categories.forEach((subCat) => {
-        if (subCat.mounts?.length) viewBuilderStore.addMounts(subCat.mounts);
+        if (subCat.mounts?.length)
+          mountViewBuilderStore.addMounts(subCat.mounts);
       });
     }
 
-    viewBuilderStore.removeRootCategory(categoryId);
+    mountViewBuilderStore.removeRootCategory(categoryId);
     return;
   }
 
@@ -74,12 +76,12 @@ function removeCategory(categoryId: string, parentId?: string) {
   if (!subCategory) return;
 
   if (subCategory.mounts?.length)
-    viewBuilderStore.addMounts(subCategory.mounts);
-  viewBuilderStore.removeSubCategory(categoryId, parentId);
+    mountViewBuilderStore.addMounts(subCategory.mounts);
+  mountViewBuilderStore.removeSubCategory(categoryId, parentId);
 }
 
 function dragRootStart(event: any) {
-  viewBuilderStore.setDragState(true, 'category');
+  mountViewBuilderStore.setDragState(true, 'category');
   const { category } = event.item.dataset;
   if (!category) return;
   dragItem.value = JSON.parse(category);
@@ -87,7 +89,7 @@ function dragRootStart(event: any) {
 }
 
 function dragRootEnd() {
-  viewBuilderStore.clearDragState();
+  mountViewBuilderStore.clearDragState();
   dragItem.value = undefined;
   dragging.value = false;
 }
@@ -168,8 +170,8 @@ function dragRootEnd() {
             class="flex grow flex-wrap justify-start gap-2 min-h-10"
             :list="category.categories"
             :group="{ name: 'category' }"
-            @start="viewBuilderStore.setDragState(true, 'category')"
-            @end="viewBuilderStore.clearDragState"
+            @start="mountViewBuilderStore.setDragState(true, 'category')"
+            @end="mountViewBuilderStore.clearDragState"
           >
             <template #item="{ element: subCategory }">
               <div class="flex flex-col gap-5 p-4">
