@@ -51,7 +51,7 @@ func getUnknownCategory(mounts map[int]*documents.MountDocument, collectedIds []
 	}
 }
 
-func getMountCategory(category documents.MountViewCategory, mounts map[int]*documents.MountDocument, collectedIds []int) response.MountCollectionCategory {
+func getMountCategory(category *documents.MountViewCategory, mounts map[int]*documents.MountDocument, collectedIds []int) response.MountCollectionCategory {
 	var subCategories []response.MountCollectionCategory
 	for _, category := range category.Categories {
 		subCategories = append(subCategories, getMountCategory(category, mounts, collectedIds))

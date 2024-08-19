@@ -99,7 +99,7 @@ func getCharacterAssets(media *httpresponses.BattleNetMedia) *response.Character
 // @param region path string true "Region"
 // @param realm path string true "Realm"
 // @param character path string true "Character"
-// @param view query string false "View"
+// @param viewId query string false "ViewID"
 // @success 200 {object} []response.MountCollectionCategorySwagger
 // @failure 400 {object} errorresponse.ErrorResponse
 // @failure 404 {object} errorresponse.ErrorResponse
@@ -108,7 +108,7 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 	region := chi.URLParam(r, "region")
 	realm := chi.URLParam(r, "realm")
 	character := chi.URLParam(r, "character")
-	viewName := r.URL.Query().Get("view")
+	viewId := r.URL.Query().Get("viewId")
 	zap.L().Info(fmt.Sprintf("Fetching mount collection for %s on realm %s in region %s", character, realm, region))
 
 	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
@@ -128,7 +128,7 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 	go updateMountLeaderBoard(character, realm, region, len(collection.Mounts))
 
 	var view *documents.MountViewDocument
-	if viewName == "" {
+	if viewId == "" {
 		viewResult, err := mountviewrepository.GetRepository().GetDefaultMountView()
 		if err != nil {
 			zap.L().Error("Error finding default mount view")
@@ -138,11 +138,11 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 		}
 		view = viewResult
 	} else {
-		viewResult, err := mountviewrepository.GetRepository().GetMountView(viewName)
+		viewResult, err := mountviewrepository.GetRepository().GetMountView(viewId)
 		if err != nil {
 			zap.L().Error("Error finding mount view")
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_MOUNT_VIEW_WITH_NAME, "No mount view with name: "+viewName))
+			w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_MOUNT_VIEW_WITH_NAME, "No mount view with id: "+viewId))
 			return
 		}
 		view = viewResult

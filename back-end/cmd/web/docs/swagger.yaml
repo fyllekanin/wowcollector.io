@@ -7,6 +7,78 @@ definitions:
     x-enum-varnames:
     - REGION_EU
     - REGION_US
+  documents.MountViewCategory:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/documents.MountViewCategory'
+        type: array
+      id:
+        type: string
+      mounts:
+        items:
+          $ref: '#/definitions/documents.MountViewCategoryMount'
+        type: array
+      name:
+        type: string
+      order:
+        type: integer
+    type: object
+  documents.MountViewCategoryMount:
+    properties:
+      id:
+        type: integer
+      order:
+        type: integer
+    type: object
+  documents.PetViewCategory:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/documents.PetViewCategory'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      order:
+        type: integer
+      pets:
+        items:
+          $ref: '#/definitions/documents.PetViewCategoryPet'
+        type: array
+    type: object
+  documents.PetViewCategoryPet:
+    properties:
+      id:
+        type: integer
+      order:
+        type: integer
+    type: object
+  documents.ToyViewCategory:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/documents.ToyViewCategory'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      order:
+        type: integer
+      toys:
+        items:
+          $ref: '#/definitions/documents.ToyViewCategoryToy'
+        type: array
+    type: object
+  documents.ToyViewCategoryToy:
+    properties:
+      id:
+        type: integer
+      order:
+        type: integer
+    type: object
   errorcodes.ErrorCode:
     enum:
     - CHARACTER_NOT_FOUND
@@ -28,6 +100,43 @@ definitions:
       code:
         $ref: '#/definitions/errorcodes.ErrorCode'
       message:
+        type: string
+    type: object
+  httprequests.MountViewRequest:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/documents.MountViewCategory'
+        type: array
+      isUnknownIncluded:
+        type: boolean
+      name:
+        type: string
+    type: object
+  httprequests.PetViewRequest:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/documents.PetViewCategory'
+        type: array
+      isUnknownIncluded:
+        type: boolean
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  httprequests.ToyViewRequest:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/documents.ToyViewCategory'
+        type: array
+      isUnknownIncluded:
+        type: boolean
+      name:
+        type: string
+      type:
         type: string
     type: object
   response.AchievementCollectionAchievement:
@@ -444,9 +553,9 @@ paths:
         name: character
         required: true
         type: string
-      - description: View
+      - description: ViewID
         in: query
-        name: view
+        name: viewId
         type: string
       produces:
       - application/json
@@ -590,6 +699,84 @@ paths:
       summary: Submit a feedback form
       tags:
       - Feedback
+  /api/v1/item-view/mount:
+    post:
+      consumes:
+      - application/json
+      description: Create an mount view
+      parameters:
+      - description: View JSON
+        in: body
+        name: view
+        required: true
+        schema:
+          $ref: '#/definitions/httprequests.MountViewRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Create mount view
+      tags:
+      - ItemView
+  /api/v1/item-view/pet:
+    post:
+      consumes:
+      - application/json
+      description: Create an pet view
+      parameters:
+      - description: View JSON
+        in: body
+        name: view
+        required: true
+        schema:
+          $ref: '#/definitions/httprequests.PetViewRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Create pet view
+      tags:
+      - ItemView
+  /api/v1/item-view/toy:
+    post:
+      consumes:
+      - application/json
+      description: Create an toy view
+      parameters:
+      - description: View JSON
+        in: body
+        name: view
+        required: true
+        schema:
+          $ref: '#/definitions/httprequests.ToyViewRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Create toy view
+      tags:
+      - ItemView
   /api/v1/leaderboard/mounts:
     get:
       description: Get the leaderboard mounts

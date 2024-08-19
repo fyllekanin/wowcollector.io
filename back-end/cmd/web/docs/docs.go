@@ -286,8 +286,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "View",
-                        "name": "view",
+                        "description": "ViewID",
+                        "name": "viewId",
                         "in": "query"
                     }
                 ],
@@ -498,6 +498,126 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/item-view/mount": {
+            "post": {
+                "description": "Create an mount view",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ItemView"
+                ],
+                "summary": "Create mount view",
+                "parameters": [
+                    {
+                        "description": "View JSON",
+                        "name": "view",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/httprequests.MountViewRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/item-view/pet": {
+            "post": {
+                "description": "Create an pet view",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ItemView"
+                ],
+                "summary": "Create pet view",
+                "parameters": [
+                    {
+                        "description": "View JSON",
+                        "name": "view",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/httprequests.PetViewRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/item-view/toy": {
+            "post": {
+                "description": "Create an toy view",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ItemView"
+                ],
+                "summary": "Create toy view",
+                "parameters": [
+                    {
+                        "description": "View JSON",
+                        "name": "view",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/httprequests.ToyViewRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/leaderboard/mounts": {
             "get": {
                 "description": "Get the leaderboard mounts",
@@ -543,6 +663,117 @@ const docTemplate = `{
                 "REGION_US"
             ]
         },
+        "documents.MountViewCategory": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/documents.MountViewCategory"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "mounts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/documents.MountViewCategoryMount"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                }
+            }
+        },
+        "documents.MountViewCategoryMount": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "order": {
+                    "type": "integer"
+                }
+            }
+        },
+        "documents.PetViewCategory": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/documents.PetViewCategory"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "pets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/documents.PetViewCategoryPet"
+                    }
+                }
+            }
+        },
+        "documents.PetViewCategoryPet": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "order": {
+                    "type": "integer"
+                }
+            }
+        },
+        "documents.ToyViewCategory": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/documents.ToyViewCategory"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "toys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/documents.ToyViewCategoryToy"
+                    }
+                }
+            }
+        },
+        "documents.ToyViewCategoryToy": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "order": {
+                    "type": "integer"
+                }
+            }
+        },
         "errorcodes.ErrorCode": {
             "type": "string",
             "enum": [
@@ -569,6 +800,63 @@ const docTemplate = `{
                     "$ref": "#/definitions/errorcodes.ErrorCode"
                 },
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "httprequests.MountViewRequest": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/documents.MountViewCategory"
+                    }
+                },
+                "isUnknownIncluded": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "httprequests.PetViewRequest": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/documents.PetViewCategory"
+                    }
+                },
+                "isUnknownIncluded": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "httprequests.ToyViewRequest": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/documents.ToyViewCategory"
+                    }
+                },
+                "isUnknownIncluded": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }

@@ -5,6 +5,7 @@ import (
 	restbattlenet "wowcollector.io/api/v1/rest-battle-net"
 	restcharacter "wowcollector.io/api/v1/rest-character"
 	restfeedback "wowcollector.io/api/v1/rest-feedback"
+	restitemview "wowcollector.io/api/v1/rest-item-view"
 	restleaderboard "wowcollector.io/api/v1/rest-leaderboard"
 )
 
@@ -14,5 +15,6 @@ func GetRoutes(r chi.Router) {
 		restcharacter.GetRoutes(r)
 		restleaderboard.GetRoutes(r)
 		restfeedback.GetRoutes(r)
+		restitemview.GetRoutes(r)
 	})
 }

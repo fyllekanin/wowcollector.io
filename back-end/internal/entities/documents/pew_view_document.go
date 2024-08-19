@@ -3,10 +3,12 @@ package documents
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type PetViewCategoryPet struct {
-	Id int `bson:"id" json:"id"`
+	Id    int `bson:"id" json:"id"`
+	Order int `bson:"order" json:"order"`
 }
 
 type PetViewCategory struct {
+	Id         string               `bson:"id" json:"id"`
 	Name       string               `bson:"name" json:"name"`
 	Order      int                  `bson:"order" json:"order"`
 	Pets       []PetViewCategoryPet `bson:"pets" json:"pets"`

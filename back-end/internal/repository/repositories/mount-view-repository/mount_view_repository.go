@@ -73,14 +73,14 @@ func (r *MountViewRepository) GetDefaultMountView() (*documents.MountViewDocumen
 	return mountView, nil
 }
 
-func (r *MountViewRepository) GetMountView(name string) (*documents.MountViewDocument, error) {
-	filter := bson.D{{"name", name}}
+func (r *MountViewRepository) GetMountView(id string) (*documents.MountViewDocument, error) {
+	filter := bson.D{{"_id", id}}
 	var mountView *documents.MountViewDocument
 
 	err := r.collection.FindOne(context.TODO(), filter).Decode(&mountView)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			zap.L().Info("No mount view found with name: " + name)
+			zap.L().Info("No mount view found with id: " + id)
 			return nil, nil
 		}
 		zap.L().Error("Error fetching mount view" + err.Error())
