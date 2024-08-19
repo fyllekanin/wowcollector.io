@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"wowcollector.io/internal/entities/documents"
@@ -74,17 +75,22 @@ func (r *MountViewRepository) GetDefaultMountView() (*documents.MountViewDocumen
 }
 
 func (r *MountViewRepository) GetMountView(id string) (*documents.MountViewDocument, error) {
-	filter := bson.D{{"_id", id}}
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		zap.L().Error("Error parsing id to ObjectID: " + id)
+		return nil, err
+	}
+	filter := bson.D{{"_id", objId}}
 	var mountView *documents.MountViewDocument
 
-	err := r.collection.FindOne(context.TODO(), filter).Decode(&mountView)
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
+	findErr := r.collection.FindOne(context.TODO(), filter).Decode(&mountView)
+	if findErr != nil {
+		if findErr == mongo.ErrNoDocuments {
 			zap.L().Info("No mount view found with id: " + id)
-			return nil, nil
+			return nil, findErr
 		}
 		zap.L().Error("Error fetching mount view" + err.Error())
-		return nil, err
+		return nil, findErr
 	}
 
 	return mountView, nil
