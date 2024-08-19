@@ -835,9 +835,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                },
-                "type": {
-                    "type": "string"
                 }
             }
         },
@@ -854,9 +851,6 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "name": {
-                    "type": "string"
-                },
-                "type": {
                     "type": "string"
                 }
             }

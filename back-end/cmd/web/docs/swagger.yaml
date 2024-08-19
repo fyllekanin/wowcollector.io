@@ -123,8 +123,6 @@ definitions:
         type: boolean
       name:
         type: string
-      type:
-        type: string
     type: object
   httprequests.ToyViewRequest:
     properties:
@@ -135,8 +133,6 @@ definitions:
       isUnknownIncluded:
         type: boolean
       name:
-        type: string
-      type:
         type: string
     type: object
   response.AchievementCollectionAchievement:

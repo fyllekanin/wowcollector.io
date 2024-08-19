@@ -828,9 +828,6 @@
                 },
                 "name": {
                     "type": "string"
-                },
-                "type": {
-                    "type": "string"
                 }
             }
         },
@@ -847,9 +844,6 @@
                     "type": "boolean"
                 },
                 "name": {
-                    "type": "string"
-                },
-                "type": {
                     "type": "string"
                 }
             }
