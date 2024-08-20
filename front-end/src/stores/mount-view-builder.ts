@@ -2,7 +2,7 @@ import equal from 'fast-deep-equal';
 
 import type { MountCategory, MountInformation } from '~/types';
 
-export const useMountViewBuilderStore = defineStore('view-builder', {
+export const useMountViewBuilderStore = defineStore('mount-view-builder', {
   state: () => ({
     _allMounts: [] as MountInformation[], // Used as a fallback to reset the state
     _mounts: [] as MountInformation[],

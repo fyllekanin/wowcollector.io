@@ -115,7 +115,7 @@ function removeWowheadTooltips() {
       </div>
     </template>
     <template #main-content>
-      <NestedDraggable />
+      <MountNestedDraggable />
     </template>
   </MountViewBuilderContainer>
 </template>

@@ -83,7 +83,7 @@ function removeWowheadTooltips() {
           </div>
           <div class="flex gap-2 items-center justify-between">
             <span class="text-sm">Show achievement tooltips</span>
-            <UToggle v-model="_settings.showMountTooltips" />
+            <UToggle v-model="_settings.showAchievementTooltips" />
           </div>
           <UDivider />
         </div>
@@ -108,7 +108,7 @@ function removeWowheadTooltips() {
               :achievement="achievement"
               :clickable="false"
               build-mode
-              :show-tooltip="_settings.showMountTooltips"
+              :show-tooltip="_settings.showAchievementTooltips"
               :use-intersection-observer="false"
             />
           </template>
@@ -116,7 +116,7 @@ function removeWowheadTooltips() {
       </div>
     </template>
     <template #main-content>
-      <NestedDraggable />
+      <AchievementNestedDraggable />
     </template>
   </CreateViewContainer>
 </template>

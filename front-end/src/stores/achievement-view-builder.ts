@@ -33,12 +33,30 @@ export const useAchievementViewBuilderStore = defineStore(
       _searchFilter: '',
       _settings: {
         showBorders: true,
-        showMountTooltips: true,
+        showAchievementTooltips: true,
       },
     }),
     getters: {
       flatAchievements(state): AchievementInformation[] {
         return state._achievements || [];
+      },
+      getFinalCategories(state): AchievementCategory[] {
+        const setOrder = (category: AchievementCategory, order: number) => {
+          category.displayOrder = order;
+          category.categories.forEach((subCategory, index) => {
+            setOrder(subCategory, index);
+          });
+          if (category.achievements)
+            category.achievements.forEach((achievement, index) => {
+              achievement.displayOrder = index;
+            });
+        };
+
+        const categories = [...state._achievementCategories];
+        return categories.map((category, index) => {
+          setOrder(category, index);
+          return category;
+        });
       },
       dragState(state) {
         return state._dragState;

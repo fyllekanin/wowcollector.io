@@ -3,12 +3,12 @@ import ConfirmationModal from '~/components/modals/ConfirmationModal.vue';
 import FAQModal from '~/components/modals/builder/FAQModal.vue';
 import PromptViewNameModal from '~/components/modals/builder/PromptViewNameModal.vue';
 
-const mountViewBuilderStore = useMountViewBuilderStore();
+const achievementViewBuilderStore = useAchievementViewBuilderStore();
 
 const modal = useModal();
 
 function openModal() {
-  if (!mountViewBuilderStore.hasChanges) {
+  if (!achievementViewBuilderStore.hasChanges) {
     const router = useRouter();
     router.push('/');
     return;
@@ -20,7 +20,7 @@ function openModal() {
       'You have made some changes, are you sure you want to exit build mode?',
     additionaInformation: 'All progress will be lost.',
     onConfirm: () => {
-      mountViewBuilderStore.resetStore();
+      achievementViewBuilderStore.resetStore();
       const router = useRouter();
       router.push('/');
       modal.close();
@@ -43,8 +43,7 @@ function openHelpModal() {
 function openNamePromptModal() {
   modal.open(PromptViewNameModal, {
     onConfirm: (name: string) => {
-      // mountViewBuilderStore.saveView(name);
-      console.log(mountViewBuilderStore.getFinalCategories);
+      console.log(achievementViewBuilderStore.getFinalCategories);
       modal.close();
     },
     onCancel: () => {
@@ -106,8 +105,8 @@ function openNamePromptModal() {
         <template #right>
           <UButton
             :disabled="
-              !mountViewBuilderStore.hasChanges ||
-              !mountViewBuilderStore.isValid
+              !achievementViewBuilderStore.hasChanges ||
+              !achievementViewBuilderStore.isValid
             "
             icon="mdi:plus"
             @click="openNamePromptModal"
