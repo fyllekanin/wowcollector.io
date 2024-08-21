@@ -12,7 +12,7 @@ if (!page.value) {
 }
 
 definePageMeta({
-  middleware: 'toys',
+  middleware: 'collection-toys',
 });
 useHead({
   title: 'WoW Collector - Toys',

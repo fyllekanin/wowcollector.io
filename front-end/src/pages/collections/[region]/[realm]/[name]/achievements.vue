@@ -12,7 +12,7 @@ if (!page.value) {
 }
 
 definePageMeta({
-  middleware: 'achievements',
+  middleware: 'collection-achievements',
 });
 useHead({
   title: 'WoW Collector - Achievements',

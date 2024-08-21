@@ -2,7 +2,9 @@ import { get } from './HttpService';
 import type {
   AchievementInformation,
   MountInformation,
+  PetInformation,
   RealmsRegions,
+  ToyInformation,
 } from '~/types';
 
 export default class BattlenetService {
@@ -36,6 +38,32 @@ export default class BattlenetService {
     try {
       const response = await get<AchievementInformation[]>({
         url: '/api/v1/battle-net/achievements',
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  static async getToys() {
+    try {
+      const response = await get<ToyInformation[]>({
+        url: '/api/v1/battle-net/toys',
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  static async getPets() {
+    try {
+      const response = await get<PetInformation[]>({
+        url: '/api/v1/battle-net/pets',
       });
 
       return response.data;

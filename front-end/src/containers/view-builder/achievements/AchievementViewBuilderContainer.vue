@@ -33,7 +33,7 @@ function openModal() {
 
 function openHelpModal() {
   modal.open(FAQModal, {
-    kind: 'mounts',
+    kind: 'achievements',
     onClose: () => {
       modal.close();
     },
@@ -92,7 +92,7 @@ function openNamePromptModal() {
         <template #title>
           <div class="flex gap-2 items-center">
             <UIcon class="scale-125" name="mdi:tools" />
-            <h2 class="text-lg font-semibold">Mount View Builder</h2>
+            <h2 class="text-lg font-semibold">Achievement View Builder</h2>
           </div>
         </template>
 

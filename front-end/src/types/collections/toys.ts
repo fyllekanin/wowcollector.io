@@ -1,8 +1,9 @@
 export interface ToyInformation {
   name: string;
-  id: number;
+  id: number | string;
   isCollected: boolean;
   itemId: number;
+  order: number;
   assets: {
     largeIcon: string;
   };
@@ -13,6 +14,7 @@ export interface ToyCategory {
   toys: ToyInformation[] | null;
   categories: ToyCategory[];
   order: number;
+  id: string;
 }
 
 export interface ToyFilters {

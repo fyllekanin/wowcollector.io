@@ -12,7 +12,7 @@ if (!page.value) {
 }
 
 definePageMeta({
-  middleware: 'pets',
+  middleware: 'collection-pets',
 });
 useHead({
   title: 'WoW Collector - Pets',

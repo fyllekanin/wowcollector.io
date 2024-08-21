@@ -3,33 +3,33 @@ import draggable from 'vuedraggable';
 
 definePageMeta({
   layout: 'empty',
-  middleware: 'view-builder-achievements',
+  middleware: 'view-builder-pets',
 });
 
-const { data: page } = await useAsyncData('achievements', () =>
-  queryContent('/collections/achievements/view-builder').findOne()
+const { data: page } = await useAsyncData('pets', () =>
+  queryContent('/collections/pets/view-builder').findOne()
 );
 if (!page.value) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page not found',
     fatal: true,
-    cause: 'No mounts create view page found in the content.',
+    cause: 'No pets create view page found in the content.',
   });
 }
 
 const { debounce } = useDebounce();
 
-const achievementViewBuilderStore = useAchievementViewBuilderStore();
-const { _cloneableCategory, _achievements, _searchFilter, _settings } =
-  storeToRefs(achievementViewBuilderStore);
+const petViewBuilderStore = usePetViewBuilderStore();
+const { _cloneableCategory, _pets, _searchFilter, _settings } =
+  storeToRefs(petViewBuilderStore);
 
 const debouncableSearch = ref('');
 
 watch(
   () => debouncableSearch.value,
   debounce((value) => {
-    achievementViewBuilderStore.setSearchFilter(value);
+    petViewBuilderStore.setSearchFilter(value);
   }, 300),
   { immediate: true }
 );
@@ -50,13 +50,13 @@ function removeWowheadTooltips() {
 
 <template>
   <ScreenTooSmall class="lg:hidden" />
-  <CreateViewContainer class="hidden lg:flex">
+  <PetViewBuilderContainer class="hidden lg:flex">
     <template #sidebar-content>
       <div class="flex flex-col mt-6 gap-5">
         <draggable
           :list="_cloneableCategory"
           :group="{ name: 'category', pull: 'clone', put: false }"
-          @start="achievementViewBuilderStore.setNewIdForCloneableCategory"
+          @start="petViewBuilderStore.setNewIdForCloneableCategory"
         >
           <template #item="{ element: category }">
             <UCard
@@ -82,33 +82,31 @@ function removeWowheadTooltips() {
             <UToggle v-model="_settings.showBorders" />
           </div>
           <div class="flex gap-2 items-center justify-between">
-            <span class="text-sm">Show achievement tooltips</span>
-            <UToggle v-model="_settings.showAchievementTooltips" />
+            <span class="text-sm">Show pet tooltips</span>
+            <UToggle v-model="_settings.showPetTooltips" />
           </div>
           <UDivider />
         </div>
         <UInput
           v-model="debouncableSearch"
-          placeholder="Search for an achievement"
+          placeholder="Search for a pet"
           icon="heroicons-outline:search"
         />
         <draggable
           class="flex grow flex-wrap gap-4 justify-center"
-          :list="_achievements"
-          :group="{ name: 'achievement' }"
+          :list="_pets"
+          :group="{ name: 'pet' }"
         >
-          <template #item="{ element: achievement }">
-            <AchievementIcon
+          <template #item="{ element: pet }">
+            <PetIcon
               v-if="
-                achievement.name
-                  .toLowerCase()
-                  .includes(_searchFilter.toLowerCase())
+                pet.name.toLowerCase().includes(_searchFilter.toLowerCase())
               "
               class="select-none cursor-move"
-              :achievement="achievement"
+              :pet="pet"
               :clickable="false"
               build-mode
-              :show-tooltip="_settings.showAchievementTooltips"
+              :show-tooltip="_settings.showPetTooltips"
               :use-intersection-observer="false"
             />
           </template>
@@ -116,7 +114,7 @@ function removeWowheadTooltips() {
       </div>
     </template>
     <template #main-content>
-      <AchievementNestedDraggable />
+      <PetNestedDraggable />
     </template>
-  </CreateViewContainer>
+  </PetViewBuilderContainer>
 </template>

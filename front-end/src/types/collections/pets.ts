@@ -1,10 +1,11 @@
 export interface PetInformation {
   name: string;
-  id: number;
+  id: number | string;
   isCollected: boolean;
   assets: {
     largeIcon: string;
   };
+  order: number;
 }
 
 export interface PetCategory {
@@ -12,6 +13,7 @@ export interface PetCategory {
   pets: PetInformation[] | null;
   categories: PetCategory[];
   order: number;
+  id: string;
 }
 
 export interface PetFilters {

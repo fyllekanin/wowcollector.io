@@ -159,7 +159,7 @@ watch(
                     accept="image/*,video/*"
                     multiple
                     @change="
-                      ($event) => {
+                      ($event: any) => {
                         state.attachments = $event.target.files;
                       }
                     "
@@ -260,7 +260,7 @@ watch(
                     accept="image/*,video/*"
                     multiple
                     @change="
-                      ($event) => {
+                      ($event: any) => {
                         state.attachments = $event.target.files;
                       }
                     "

@@ -1,0 +1,14 @@
+title: Toy View Builder - WoW Collector
+description: Create a new toy view to display your collection.
+
+breadcrumbs:
+  - title: Home
+    icon: mdi:home
+    to: /
+  - title: Pets
+    icon: mdi:paw
+    to: pets
+  - title: Create View
+    icon: mdi:plus
+    disabled: true
+    to: /collections/pets/view-builder

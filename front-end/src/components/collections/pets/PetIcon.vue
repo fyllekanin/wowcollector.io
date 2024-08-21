@@ -1,27 +1,67 @@
 <script lang="ts" setup>
+import { useIntersectionObserver } from '@vueuse/core';
+
 import type { PropType } from 'vue';
 import type { PetInformation } from '~/types';
 
-defineProps({
+const props = defineProps({
   pet: {
     type: Object as PropType<PetInformation>,
     required: true,
   },
+  clickable: {
+    type: Boolean,
+    default: true,
+  },
+  buildMode: {
+    type: Boolean,
+    default: false,
+  },
+  showTooltip: {
+    type: Boolean,
+    default: true,
+  },
+  useIntersectionObserver: {
+    type: Boolean,
+    default: true,
+  },
 });
+
+const toyViewBuilderStore = useToyViewBuilderStore();
+const { _settings } = storeToRefs(toyViewBuilderStore);
+
+const showTooltip = computed(() => {
+  return _settings.value.showToyTooltips;
+});
+
+const target = ref(null);
+const targetIsVisible = ref(!props.useIntersectionObserver);
+
+if (props.useIntersectionObserver) {
+  const { stop } = useIntersectionObserver(
+    target,
+    ([{ isIntersecting }], observerElement) => {
+      targetIsVisible.value = isIntersecting;
+    }
+  );
+}
 </script>
 
 <template>
   <a
-    :href="`https://www.wowhead.com/battle-pet/${pet.id}`"
+    :class="[buildMode ? 'cursor-move' : '']"
+    :href="clickable ? `https://www.wowhead.com/battle-pet/${pet.id}` : '#'"
     target="_blank"
-    :data-wowhead="`battle-pet=${pet.id}`"
+    :data-wowhead="showTooltip ? `battle-pet=${pet.id}` : ''"
+    @click="!clickable && $event.preventDefault()"
   >
     <img
+      v-if="targetIsVisible"
       :src="pet.assets.largeIcon"
       :class="[
-        !pet.isCollected
+        !pet.isCollected && !buildMode
           ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
-          : '',
+          : 'hover:ring-1 hover:ring-primary transition ease-in-out',
       ]"
       width="38"
       @error="

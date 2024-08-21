@@ -3,7 +3,7 @@ import draggable from 'vuedraggable';
 
 definePageMeta({
   layout: 'empty',
-  middleware: 'mount-view-builder',
+  middleware: 'view-builder-mounts',
 });
 
 const { data: page } = await useAsyncData('mounts', () =>

@@ -12,7 +12,7 @@ if (!page.value) {
 }
 
 definePageMeta({
-  middleware: 'mounts',
+  middleware: 'collection-mounts',
 });
 useHead({
   title: 'WoW Collector - Mounts',

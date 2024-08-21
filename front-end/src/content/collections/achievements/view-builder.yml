@@ -5,9 +5,9 @@ breadcrumbs:
   - title: Home
     icon: mdi:home
     to: /
-  - title: Mounts
-    icon: mdi:horse-variant
-    to: mounts
+  - title: Toys
+    icon: mdi:trophy
+    to: achievements
   - title: Create View
     icon: mdi:plus
     disabled: true

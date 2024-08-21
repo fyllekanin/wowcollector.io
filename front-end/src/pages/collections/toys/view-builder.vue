@@ -3,33 +3,33 @@ import draggable from 'vuedraggable';
 
 definePageMeta({
   layout: 'empty',
-  middleware: 'view-builder-achievements',
+  middleware: 'view-builder-toys',
 });
 
-const { data: page } = await useAsyncData('achievements', () =>
-  queryContent('/collections/achievements/view-builder').findOne()
+const { data: page } = await useAsyncData('toys', () =>
+  queryContent('/collections/toys/view-builder').findOne()
 );
 if (!page.value) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page not found',
     fatal: true,
-    cause: 'No mounts create view page found in the content.',
+    cause: 'No toys create view page found in the content.',
   });
 }
 
 const { debounce } = useDebounce();
 
-const achievementViewBuilderStore = useAchievementViewBuilderStore();
-const { _cloneableCategory, _achievements, _searchFilter, _settings } =
-  storeToRefs(achievementViewBuilderStore);
+const toyViewBuilderStore = useToyViewBuilderStore();
+const { _cloneableCategory, _toys, _searchFilter, _settings } =
+  storeToRefs(toyViewBuilderStore);
 
 const debouncableSearch = ref('');
 
 watch(
   () => debouncableSearch.value,
   debounce((value) => {
-    achievementViewBuilderStore.setSearchFilter(value);
+    toyViewBuilderStore.setSearchFilter(value);
   }, 300),
   { immediate: true }
 );
@@ -50,13 +50,13 @@ function removeWowheadTooltips() {
 
 <template>
   <ScreenTooSmall class="lg:hidden" />
-  <CreateViewContainer class="hidden lg:flex">
+  <ToyViewBuilderContainer class="hidden lg:flex">
     <template #sidebar-content>
       <div class="flex flex-col mt-6 gap-5">
         <draggable
           :list="_cloneableCategory"
           :group="{ name: 'category', pull: 'clone', put: false }"
-          @start="achievementViewBuilderStore.setNewIdForCloneableCategory"
+          @start="toyViewBuilderStore.setNewIdForCloneableCategory"
         >
           <template #item="{ element: category }">
             <UCard
@@ -82,33 +82,31 @@ function removeWowheadTooltips() {
             <UToggle v-model="_settings.showBorders" />
           </div>
           <div class="flex gap-2 items-center justify-between">
-            <span class="text-sm">Show achievement tooltips</span>
-            <UToggle v-model="_settings.showAchievementTooltips" />
+            <span class="text-sm">Show toy tooltips</span>
+            <UToggle v-model="_settings.showToyTooltips" />
           </div>
           <UDivider />
         </div>
         <UInput
           v-model="debouncableSearch"
-          placeholder="Search for an achievement"
+          placeholder="Search for a toy"
           icon="heroicons-outline:search"
         />
         <draggable
           class="flex grow flex-wrap gap-4 justify-center"
-          :list="_achievements"
-          :group="{ name: 'achievement' }"
+          :list="_toys"
+          :group="{ name: 'toy' }"
         >
-          <template #item="{ element: achievement }">
-            <AchievementIcon
+          <template #item="{ element: toy }">
+            <ToyIcon
               v-if="
-                achievement.name
-                  .toLowerCase()
-                  .includes(_searchFilter.toLowerCase())
+                toy.name.toLowerCase().includes(_searchFilter.toLowerCase())
               "
               class="select-none cursor-move"
-              :achievement="achievement"
+              :toy="toy"
               :clickable="false"
               build-mode
-              :show-tooltip="_settings.showAchievementTooltips"
+              :show-tooltip="_settings.showToyTooltips"
               :use-intersection-observer="false"
             />
           </template>
@@ -116,7 +114,7 @@ function removeWowheadTooltips() {
       </div>
     </template>
     <template #main-content>
-      <AchievementNestedDraggable />
+      <ToyNestedDraggable />
     </template>
-  </CreateViewContainer>
+  </ToyViewBuilderContainer>
 </template>
