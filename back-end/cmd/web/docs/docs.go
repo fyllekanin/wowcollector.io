@@ -347,6 +347,12 @@ const docTemplate = `{
                         "name": "character",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ViewID",
+                        "name": "viewId",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -405,6 +411,12 @@ const docTemplate = `{
                         "name": "character",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ViewID",
+                        "name": "viewId",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -782,7 +794,9 @@ const docTemplate = `{
                 "INTERNAL_ERROR",
                 "NO_DEFAULT_MOUNT_VIEW",
                 "NO_DEFAULT_TOY_VIEW",
-                "NO_MOUNT_VIEW_WITH_NAME"
+                "NO_MOUNT_VIEW_WITH_NAME",
+                "NO_TOY_VIEW_WITH_NAME",
+                "NO_PET_VIEW_WITH_NAME"
             ],
             "x-enum-varnames": [
                 "CHARACTER_NOT_FOUND",
@@ -790,7 +804,9 @@ const docTemplate = `{
                 "INTERNAL_ERROR",
                 "NO_DEFAULT_MOUNT_VIEW",
                 "NO_DEFAULT_TOY_VIEW",
-                "NO_MOUNT_VIEW_WITH_NAME"
+                "NO_MOUNT_VIEW_WITH_NAME",
+                "NO_TOY_VIEW_WITH_NAME",
+                "NO_PET_VIEW_WITH_NAME"
             ]
         },
         "errorresponse.ErrorResponse": {

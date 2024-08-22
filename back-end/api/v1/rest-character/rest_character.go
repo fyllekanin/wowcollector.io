@@ -172,6 +172,7 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 // @param region path string true "Region"
 // @param realm path string true "Realm"
 // @param character path string true "Character"
+// @param viewId query string false "ViewID"
 // @success 200 {object} []response.ToyCollectionCategorySwagger
 // @failure 400 {object} errorresponse.ErrorResponse
 // @failure 404 {object} errorresponse.ErrorResponse
@@ -180,6 +181,7 @@ func getCharacterToyCollection(w http.ResponseWriter, r *http.Request) {
 	region := chi.URLParam(r, "region")
 	realm := chi.URLParam(r, "realm")
 	character := chi.URLParam(r, "character")
+	viewId := r.URL.Query().Get("viewId")
 	zap.L().Info(fmt.Sprintf("Fetching toy collection for %s on realm %s in region %s", character, realm, region))
 
 	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
@@ -197,12 +199,25 @@ func getCharacterToyCollection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	view, _ := toyviewrepository.GetRepository().GetDefaultToyView()
-	if view == nil {
-		zap.L().Error("Error finding default toy view")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_DEFAULT_TOY_VIEW, "No default toy view available"))
-		return
+	var view *documents.ToyViewDocument
+	if viewId == "" {
+		viewResult, err := toyviewrepository.GetRepository().GetDefaultToyView()
+		if err != nil {
+			zap.L().Error("Error finding default toy view")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_DEFAULT_TOY_VIEW, "No default toy view available"))
+			return
+		}
+		view = viewResult
+	} else {
+		viewResult, err := toyviewrepository.GetRepository().GetToyView(viewId)
+		if err != nil {
+			zap.L().Error("Error finding toy view")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_TOY_VIEW_WITH_NAME, "No toy view with id: "+viewId))
+			return
+		}
+		view = viewResult
 	}
 
 	body, err := json.Marshal(toyaggregator.GetToysAggregation(
@@ -228,6 +243,7 @@ func getCharacterToyCollection(w http.ResponseWriter, r *http.Request) {
 // @param region path string true "Region"
 // @param realm path string true "Realm"
 // @param character path string true "Character"
+// @param viewId query string false "ViewID"
 // @success 200 {object} []response.PetCollectionCategorySwagger
 // @failure 400 {object} errorresponse.ErrorResponse
 // @failure 404 {object} errorresponse.ErrorResponse
@@ -236,6 +252,7 @@ func getCharacterPetCollection(w http.ResponseWriter, r *http.Request) {
 	region := chi.URLParam(r, "region")
 	realm := chi.URLParam(r, "realm")
 	character := chi.URLParam(r, "character")
+	viewId := r.URL.Query().Get("viewId")
 	zap.L().Info(fmt.Sprintf("Fetching pet collection for %s on realm %s in region %s", character, realm, region))
 
 	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
@@ -253,12 +270,25 @@ func getCharacterPetCollection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	view, _ := petviewrepository.GetRepository().GetDefaultPetView()
-	if view == nil {
-		zap.L().Error("Error finding default pet view")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_DEFAULT_TOY_VIEW, "No default pet view available"))
-		return
+	var view *documents.PetViewDocument
+	if viewId == "" {
+		viewResult, err := petviewrepository.GetRepository().GetDefaultPetView()
+		if err != nil {
+			zap.L().Error("Error finding default pet view")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_PET_VIEW_WITH_NAME, "No default pet view available"))
+			return
+		}
+		view = viewResult
+	} else {
+		viewResult, err := petviewrepository.GetRepository().GetPetView(viewId)
+		if err != nil {
+			zap.L().Error("Error finding pet view")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(errorresponse.GenerateErrorBody(errorcodes.NO_PET_VIEW_WITH_NAME, "No pet view with id: "+viewId))
+			return
+		}
+		view = viewResult
 	}
 
 	body, err := json.Marshal(petaggregator.GetPetsAggregation(

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"wowcollector.io/internal/entities/documents"
@@ -71,6 +72,28 @@ func (r *ToyViewRepository) GetDefaultToyView() (*documents.ToyViewDocument, err
 	}
 
 	return ToyView, nil
+}
+
+func (r *ToyViewRepository) GetToyView(id string) (*documents.ToyViewDocument, error) {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		zap.L().Error("Error parsing id to ObjectID: " + id)
+		return nil, err
+	}
+	filter := bson.D{{"_id", objId}}
+	var toyView *documents.ToyViewDocument
+
+	findErr := r.collection.FindOne(context.TODO(), filter).Decode(&toyView)
+	if findErr != nil {
+		if findErr == mongo.ErrNoDocuments {
+			zap.L().Info("No toy view found with id: " + id)
+			return nil, findErr
+		}
+		zap.L().Error("Error fetching toy view" + err.Error())
+		return nil, findErr
+	}
+
+	return toyView, nil
 }
 
 func (r *ToyViewRepository) UpdateToyView(document *documents.ToyViewDocument) error {

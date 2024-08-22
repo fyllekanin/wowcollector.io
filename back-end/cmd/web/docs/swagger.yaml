@@ -87,6 +87,8 @@ definitions:
     - NO_DEFAULT_MOUNT_VIEW
     - NO_DEFAULT_TOY_VIEW
     - NO_MOUNT_VIEW_WITH_NAME
+    - NO_TOY_VIEW_WITH_NAME
+    - NO_PET_VIEW_WITH_NAME
     type: string
     x-enum-varnames:
     - CHARACTER_NOT_FOUND
@@ -95,6 +97,8 @@ definitions:
     - NO_DEFAULT_MOUNT_VIEW
     - NO_DEFAULT_TOY_VIEW
     - NO_MOUNT_VIEW_WITH_NAME
+    - NO_TOY_VIEW_WITH_NAME
+    - NO_PET_VIEW_WITH_NAME
   errorresponse.ErrorResponse:
     properties:
       code:
@@ -592,6 +596,10 @@ paths:
         name: character
         required: true
         type: string
+      - description: ViewID
+        in: query
+        name: viewId
+        type: string
       produces:
       - application/json
       responses:
@@ -630,6 +638,10 @@ paths:
         in: path
         name: character
         required: true
+        type: string
+      - description: ViewID
+        in: query
+        name: viewId
         type: string
       produces:
       - application/json
