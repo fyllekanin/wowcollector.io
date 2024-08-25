@@ -20,7 +20,7 @@ spec:
           image: tovven/wowcollector:scanner-latest
           imagePullPolicy: Always
           env:
-            - name: MONGODB_CONNECTION_STRING
+            - name: DATABASE_CONNECTION
               valueFrom:
                 secretKeyRef:
                   name: mongo-staging-creds
@@ -64,7 +64,7 @@ spec:
               port: 8000
             initialDelaySeconds: 10
           env:
-            - name: MONGODB_CONNECTION_STRING
+            - name: DATABASE_CONNECTION
               valueFrom:
                 secretKeyRef:
                   name: mongo-staging-creds
