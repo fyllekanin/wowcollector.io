@@ -1,3 +1,5 @@
+import type { ToyCategory } from '~/types';
+
 export default defineNuxtRouteMiddleware(async (to) => {
   const { region, realm, name } = to.params as Record<string, string>;
 
@@ -25,9 +27,15 @@ export default defineNuxtRouteMiddleware(async (to) => {
     characterStore.setCharacter(characterData.value);
   }
 
-  const { data: toyData } = await useFetch(
-    `/api/character/${region}/${realm}/${name}/toys`
-  );
+  const { viewId } = to.query as Record<string, string>;
+
+  const path = (() => {
+    if (viewId)
+      return `/api/character/${region}/${realm}/${name}/toys?viewId=${viewId}`;
+    else return `/api/character/${region}/${realm}/${name}/toys`;
+  })();
+
+  const { data: toyData } = await useFetch<ToyCategory[]>(path);
 
   if (!toyData.value) {
     return abortNavigation();

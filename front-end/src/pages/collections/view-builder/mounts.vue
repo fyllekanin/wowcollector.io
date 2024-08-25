@@ -57,6 +57,12 @@ function onSuccess(value: string) {
   createdViewId.value = value;
   mountViewBuilderStore.setSuccessfulCreation(true);
 }
+
+function onLeave() {
+  mountViewBuilderStore.resetStore();
+  mountViewBuilderStore.setSuccessfulCreation(false);
+  createdViewId.value = '';
+}
 </script>
 
 <template>
@@ -64,6 +70,7 @@ function onSuccess(value: string) {
     v-if="successfulCreation"
     v-model="createdViewId"
     to="mounts"
+    @leave="onLeave"
   />
   <div v-else class="w-full h-full">
     <ScreenTooSmall class="lg:hidden" />
@@ -113,6 +120,8 @@ function onSuccess(value: string) {
             class="flex grow flex-wrap gap-4 justify-center"
             :list="_mounts"
             :group="{ name: 'mount' }"
+            @start="_settings.showMountTooltips = false"
+            @end="_settings.showMountTooltips = true"
           >
             <template #item="{ element: mount }">
               <MountIcon

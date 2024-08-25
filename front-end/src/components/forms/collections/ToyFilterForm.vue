@@ -24,7 +24,7 @@ watch(
   <UContainer
     class="w-full h-fit flex flex-col sm:flex-row sm:flex-wrap gap-5 items-center"
   >
-    <UButtonGroup class="sm:self-end">
+    <UButtonGroup class="w-full md:w-auto sm:self-end">
       <UInput
         v-model="debouncableSearch"
         class="w-full sm:w-[250px]"

@@ -63,7 +63,12 @@ export default class CharacterService {
     }
   }
 
-  static async getCharacterToys(name: string, realm: string, region: string) {
+  static async getCharacterToys(
+    name: string,
+    realm: string,
+    region: string,
+    viewId?: string
+  ) {
     try {
       const response = await get<ToyCategory[]>({
         url: `/api/v1/character/${region}/${realm}/${name}/toys`,
@@ -76,7 +81,12 @@ export default class CharacterService {
     }
   }
 
-  static async getCharacterPets(name: string, realm: string, region: string) {
+  static async getCharacterPets(
+    name: string,
+    realm: string,
+    region: string,
+    viewId?: string
+  ) {
     try {
       const response = await get<PetCategory[]>({
         url: `/api/v1/character/${region}/${realm}/${name}/pets`,

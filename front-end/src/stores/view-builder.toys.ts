@@ -33,6 +33,7 @@ export const useToyViewBuilderStore = defineStore('toy-view-builder', {
       showBorders: true,
       showToyTooltips: true,
     },
+    successfulCreation: false,
   }),
   getters: {
     flatToys(state): ToyInformation[] {
@@ -158,6 +159,9 @@ export const useToyViewBuilderStore = defineStore('toy-view-builder', {
     },
     setSettings(settings: Partial<typeof this._settings>) {
       Object.assign(this._settings, settings);
+    },
+    setSuccessfulCreation(successful: boolean) {
+      this.successfulCreation = successful;
     },
   },
 });

@@ -3,9 +3,14 @@ import ConfirmationModal from '~/components/modals/ConfirmationModal.vue';
 import FAQModal from '~/components/modals/builder/FAQModal.vue';
 import SubmitViewModal from '~/components/modals/builder/SubmitViewModal.vue';
 
+import type { EmitState } from '~/types';
+
 const petViewBuilderStore = usePetViewBuilderStore();
 
 const modal = useModal();
+const toast = useToast();
+
+const emit = defineEmits(['success']);
 
 function openModal() {
   if (!petViewBuilderStore.hasChanges) {
@@ -42,8 +47,33 @@ function openHelpModal() {
 
 function openNamePromptModal() {
   modal.open(SubmitViewModal, {
-    onConfirm: (name: string) => {
-      modal.close();
+    onConfirm: async (state: EmitState) => {
+      try {
+        const viewId = await $fetch('/api/item-view/pet', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: state.name,
+            categories: petViewBuilderStore.getFinalCategories,
+            isUnknownIncluded: state.isUnknownIncluded,
+          }),
+        });
+
+        if (!viewId) {
+          throw new Error('Failed to create view');
+        }
+
+        emit('success', viewId);
+
+        modal.close();
+      } catch (error) {
+        console.error(error);
+
+        toast.add({
+          title: 'Failed to create view',
+          description: 'An error occurred while creating the view.',
+          color: 'red',
+        });
+      }
     },
     onCancel: () => {
       modal.close();

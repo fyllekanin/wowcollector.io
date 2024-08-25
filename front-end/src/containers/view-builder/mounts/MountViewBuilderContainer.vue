@@ -3,6 +3,8 @@ import ConfirmationModal from '~/components/modals/ConfirmationModal.vue';
 import FAQModal from '~/components/modals/builder/FAQModal.vue';
 import SubmitViewModal from '~/components/modals/builder/SubmitViewModal.vue';
 
+import type { EmitState } from '~/types';
+
 const mountViewBuilderStore = useMountViewBuilderStore();
 
 const modal = useModal();
@@ -45,14 +47,14 @@ function openHelpModal() {
 
 function openNamePromptModal() {
   modal.open(SubmitViewModal, {
-    onConfirm: async (state: { name: string; isUnknownIncluded: boolean }) => {
+    onConfirm: async (state: EmitState) => {
       try {
         const viewId = await $fetch('/api/item-view/mount', {
           method: 'POST',
           body: JSON.stringify({
             name: state.name,
             categories: mountViewBuilderStore.getFinalCategories,
-            unknown: state.isUnknownIncluded,
+            isUnknownIncluded: state.isUnknownIncluded,
           }),
         });
 

@@ -16,34 +16,6 @@ const categoryCanBeDroppedInCategory = computed(() => {
   return !item.categories?.length;
 });
 
-function validate(event: Event) {
-  const target = event.target as HTMLInputElement;
-  target.blur();
-  const { isRootCategory } = target.dataset;
-
-  const categoryId = target.dataset.categoryId;
-  const newName = target.innerText;
-
-  if (isRootCategory) {
-    const category = _toyCategories.value.find((cat) => cat.id === categoryId);
-    if (category) {
-      category.name = newName;
-    }
-  } else {
-    const category = _toyCategories.value.find((cat) =>
-      cat.categories?.find((subCat) => subCat.id === categoryId)
-    );
-    if (category) {
-      const subCategory = category.categories?.find(
-        (subCat) => subCat.id === categoryId
-      );
-      if (subCategory) {
-        subCategory.name = newName;
-      }
-    }
-  }
-}
-
 function removeCategory(categoryId: string, parentId?: string) {
   if (!parentId) {
     const category = _toyCategories.value.find((cat) => cat.id === categoryId);
@@ -86,6 +58,11 @@ function dragRootEnd() {
   dragItem.value = undefined;
   dragging.value = false;
 }
+
+function unFocus(event: Event) {
+  const target = event.target as HTMLInputElement;
+  target.blur();
+}
 </script>
 
 <template>
@@ -118,21 +95,17 @@ function dragRootEnd() {
           }"
         >
           <div class="flex justify-between">
-            <h2
-              :class="[
-                _settings.showBorders
-                  ? 'p-2 ml-4 mt-4 border-[1px] border-dashed border-gray-400 dark:border-gray-600 cursor-text w-min text-nowrap shadow-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none'
-                  : 'p-2 ml-4 mt-4 cursor-text w-min text-nowrap text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none',
-              ]"
-              contenteditable
-              :spellcheck="false"
-              @keydown.enter="validate"
-              @blur="validate"
+            <UInput
+              v-model="category.name"
+              :ui="{
+                wrapper: 'p-2',
+                base: 'border-[1px] border-dashed border-gray-400 dark:border-gray-600 cursor-text w-min text-nowrap shadow-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none',
+                rounded: 'rounded-none',
+              }"
               :data-is-root-category="true"
               :data-category-id="category.id"
-            >
-              {{ category.name }}
-            </h2>
+              @keydown.enter="unFocus"
+            />
             <UTooltip class="h-min mr-4 mt-4" text="Remove category">
               <UButton
                 variant="ghost"
@@ -146,6 +119,8 @@ function dragRootEnd() {
             class="flex flex-wrap gap-2 min-h-10 p-4"
             :list="category.toys"
             :group="{ name: 'toy' }"
+            @start="_settings.showToyTooltips = false"
+            @end="_settings.showToyTooltips = true"
           >
             <template #item="{ element: toy }">
               <ToyIcon
@@ -181,21 +156,17 @@ function dragRootEnd() {
                   }"
                 >
                   <div class="flex justify-between items-center gap-8">
-                    <h2
-                      :class="[
-                        _settings.showBorders
-                          ? 'p-2 border-[1px] border-dashed border-gray-400 dark:border-gray-600 cursor-text w-min text-nowrap shadow-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none'
-                          : 'p-2 cursor-text w-min text-nowrap text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none',
-                      ]"
-                      contenteditable
-                      :spellcheck="false"
-                      @keydown.enter="validate"
-                      @blur="validate"
+                    <UInput
+                      v-model="subCategory.name"
+                      :ui="{
+                        wrapper: 'p-2',
+                        base: 'border-[1px] border-dashed border-gray-400 dark:border-gray-600 cursor-text w-min text-nowrap shadow-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:outline-none',
+                        rounded: 'rounded-none',
+                      }"
                       :data-is-root-category="false"
                       :data-category-id="subCategory.id"
-                    >
-                      {{ subCategory.name }}
-                    </h2>
+                      @keydown.enter="unFocus"
+                    />
                     <UTooltip class="h-min" text="Remove category">
                       <UButton
                         variant="ghost"
@@ -211,6 +182,8 @@ function dragRootEnd() {
                     class="flex flex-wrap gap-2 py-5"
                     :list="subCategory.toys"
                     :group="{ name: 'toy' }"
+                    @start="_settings.showToyTooltips = false"
+                    @end="_settings.showToyTooltips = true"
                   >
                     <template #item="{ element: toy }">
                       <ToyIcon

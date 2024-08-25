@@ -33,6 +33,7 @@ export const usePetViewBuilderStore = defineStore('pet-view-builder', {
       showBorders: true,
       showPetTooltips: true,
     },
+    successfulCreation: false,
   }),
   getters: {
     flatPets(state): PetInformation[] {
@@ -158,6 +159,9 @@ export const usePetViewBuilderStore = defineStore('pet-view-builder', {
     },
     setSettings(settings: Partial<typeof this._settings>) {
       Object.assign(this._settings, settings);
+    },
+    setSuccessfulCreation(successful: boolean) {
+      this.successfulCreation = successful;
     },
   },
 });
