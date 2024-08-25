@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -53,7 +52,7 @@ func GetRepositoryFactory() *RepositoryFactory {
 }
 
 func GetDatabaseClient() *mongo.Client {
-	clientOptions := options.Client().ApplyURI(getDatabaseUri())
+	clientOptions := options.Client().ApplyURI(os.Getenv("DATABASE_CONNECTION"))
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		zap.L().Fatal(err.Error())
@@ -64,13 +63,4 @@ func GetDatabaseClient() *mongo.Client {
 	}
 	zap.L().Info("Connected to MongoDB")
 	return client
-}
-
-func getDatabaseUri() string {
-	username := os.Getenv("DATABASE_USERNAME")
-	password := os.Getenv("DATABASE_PASSWORD")
-	host := os.Getenv("DATABASE_HOST")
-	port := os.Getenv("DATABASE_PORT")
-
-	return fmt.Sprintf("mongodb://%s:%s@%s:%s", username, password, host, port)
 }

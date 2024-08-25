@@ -1,0 +1,124 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wowcollector-scanner-staging-deployment
+  namespace: wowcollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wowcollector-scanner-staging-app
+  template:
+    metadata:
+      labels:
+        app: wowcollector-scanner-staging-app
+        app/hash: {{hash}}
+    spec:
+      containers:
+        - name: wowcollector-scanner-staging-app
+          image: tovven/wowcollector:scanner-latest
+          imagePullPolicy: Always
+          env:
+            - name: MONGODB_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-staging-creds
+                  key: connection
+            - name: BATTLE_NET_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-staging-credentials
+                  key: scannerClientId
+            - name: BATTLE_NET_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-staging-credentials
+                  key: scannerSecret
+            - name: WOW_MONGODB_DATABASE
+              value: wow
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wowcollector-staging-deployment
+  namespace: wowcollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wowcollector-staging-app
+  template:
+    metadata:
+      labels:
+        app: wowcollector-staging-app
+        app/hash: {{hash}}
+    spec:
+      containers:
+        - name: wowcollector-staging-app
+          image: tovven/wowcollector:app-latest
+          imagePullPolicy: Always
+          readinessProbe:
+            httpGet:
+              path: /api/v1/monitoring/readiness
+              port: 8000
+            initialDelaySeconds: 10
+          env:
+            - name: MONGODB_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-staging-creds
+                  key: connection
+            - name: BATTLE_NET_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-staging-credentials
+                  key: clientId
+            - name: BATTLE_NET_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-staging-credentials
+                  key: secret
+            - name: WOW_MONGODB_DATABASE
+              value: wow
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wowcollector-staging-ingress
+  namespace: wowcollector
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - staging.wowcollector.io
+      secretName: k8s-consolejs-net
+  rules:
+    - host: "staging.wowcollector.io"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: wowcollector-staging-svc
+                port:
+                  number: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wowcollector-staging-svc
+  namespace: wowcollector
+spec:
+  selector:
+    app: wowcollector-staging-app
+  ports:
+    - name: wowcollector-staging-app
+      protocol: TCP
+      port: 80
+      targetPort: 80

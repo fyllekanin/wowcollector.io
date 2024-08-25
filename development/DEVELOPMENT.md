@@ -43,11 +43,7 @@ docker build -f ./back-end/DockerfileRest --tag=wowcollector.io-server ./back-en
 #### Start the image
 ```
 docker run -p 8888:8888/tcp \
--e DATABASE_USERNAME=admin \
--e DATABASE_PASSWORD=admin \
--e DATABASE_NAME=wowcollector \
--e DATABASE_HOST=localhost \
--e DATABASE_PORT=27017 \
+-e DATABASE_CONNECTION=mongodb://admin:admin@localhost:27017 \
 -e BATTLE_NET_CLIENT_ID=clientId \
 -e BATTLE_NET_CLIENT_SECRET=clientSecret \
 -e GITHUB_TOKEN=githubPersonalToken \
@@ -99,11 +95,7 @@ docker build -f ./back-end/DockerfileScanner --tag=wowcollector.io-scanner ./bac
 #### Start the image
 ```
 docker run -p 8888:8888/tcp \
--e DATABASE_USERNAME=admin \
--e DATABASE_PASSWORD=admin \
--e DATABASE_NAME=wowcollector \
--e DATABASE_HOST=localhost \
--e DATABASE_PORT=27017 \
+-e DATABASE_CONNECTION=mongodb://admin:admin@localhost:27017 \
 -e BATTLE_NET_CLIENT_ID=clientId \
 -e BATTLE_NET_CLIENT_SECRET=clientSecret \
 wowcollector.io-scanner
