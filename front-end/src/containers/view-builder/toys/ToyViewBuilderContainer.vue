@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ConfirmationModal from '~/components/modals/ConfirmationModal.vue';
 import FAQModal from '~/components/modals/builder/FAQModal.vue';
-import PromptViewNameModal from '~/components/modals/builder/PromptViewNameModal.vue';
+import SubmitViewModal from '~/components/modals/builder/SubmitViewModal.vue';
 
 const toyViewBuilderStore = useToyViewBuilderStore();
 
@@ -41,9 +41,8 @@ function openHelpModal() {
 }
 
 function openNamePromptModal() {
-  modal.open(PromptViewNameModal, {
+  modal.open(SubmitViewModal, {
     onConfirm: (name: string) => {
-      console.log(toyViewBuilderStore.getFinalCategories);
       modal.close();
     },
     onCancel: () => {

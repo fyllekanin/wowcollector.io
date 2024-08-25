@@ -81,19 +81,19 @@ const links = computed(() => [
     children: [
       {
         label: 'Mounts',
-        to: '/collections/mounts/view-builder',
+        to: '/collections/view-builder/mounts',
       },
-      {
-        label: 'Achievements',
-        to: '/collections/achievements/view-builder',
-      },
+      // {
+      //   label: 'Achievements',
+      //   to: '/collections/view-builder/achievements',
+      // },
       {
         label: 'Pets',
-        to: '/collections/pets/view-builder',
+        to: '/collections/view-builder/pets',
       },
       {
         label: 'Toys',
-        to: '/collections/toys/view-builder',
+        to: '/collections/view-builder/toys',
       },
     ],
   },

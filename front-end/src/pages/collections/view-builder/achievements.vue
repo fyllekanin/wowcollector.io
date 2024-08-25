@@ -3,7 +3,10 @@ import draggable from 'vuedraggable';
 
 definePageMeta({
   layout: 'empty',
-  middleware: 'view-builder-achievements',
+  // middleware: ['view-builder-achievements'],
+  middleware: () => {
+    return navigateTo('/');
+  },
 });
 
 const { data: page } = await useAsyncData('achievements', () =>

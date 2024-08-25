@@ -1,3 +1,5 @@
+import type { MountCategory } from '~/types';
+
 export default defineNuxtRouteMiddleware(async (to) => {
   const { region, realm, name } = to.params as Record<string, string>;
 
@@ -25,9 +27,15 @@ export default defineNuxtRouteMiddleware(async (to) => {
     characterStore.setCharacter(characterData.value);
   }
 
-  const { data: mountData } = await useFetch(
-    `/api/character/${region}/${realm}/${name}/mounts`
-  );
+  const { viewId } = to.query as Record<string, string>;
+
+  const path = (() => {
+    if (viewId)
+      return `/api/character/${region}/${realm}/${name}/mounts?viewId=${viewId}`;
+    else return `/api/character/${region}/${realm}/${name}/mounts`;
+  })();
+
+  const { data: mountData } = await useFetch<MountCategory[]>(path);
 
   if (!mountData.value) {
     return abortNavigation();

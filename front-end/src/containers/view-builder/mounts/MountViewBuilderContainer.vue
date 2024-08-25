@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import ConfirmationModal from '~/components/modals/ConfirmationModal.vue';
 import FAQModal from '~/components/modals/builder/FAQModal.vue';
-import PromptViewNameModal from '~/components/modals/builder/PromptViewNameModal.vue';
+import SubmitViewModal from '~/components/modals/builder/SubmitViewModal.vue';
 
 const mountViewBuilderStore = useMountViewBuilderStore();
 
 const modal = useModal();
+const toast = useToast();
+
+const emit = defineEmits(['success']);
 
 function openModal() {
   if (!mountViewBuilderStore.hasChanges) {
@@ -41,11 +44,34 @@ function openHelpModal() {
 }
 
 function openNamePromptModal() {
-  modal.open(PromptViewNameModal, {
-    onConfirm: (name: string) => {
-      // mountViewBuilderStore.saveView(name);
-      console.log(mountViewBuilderStore.getFinalCategories);
-      modal.close();
+  modal.open(SubmitViewModal, {
+    onConfirm: async (state: { name: string; isUnknownIncluded: boolean }) => {
+      try {
+        const viewId = await $fetch('/api/item-view/mount', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: state.name,
+            categories: mountViewBuilderStore.getFinalCategories,
+            unknown: state.isUnknownIncluded,
+          }),
+        });
+
+        if (!viewId) {
+          throw new Error('Failed to create view');
+        }
+
+        emit('success', viewId);
+
+        modal.close();
+      } catch (error) {
+        console.error(error);
+
+        toast.add({
+          title: 'Failed to create view',
+          description: 'An error occurred while creating the view.',
+          color: 'red',
+        });
+      }
     },
     onCancel: () => {
       modal.close();

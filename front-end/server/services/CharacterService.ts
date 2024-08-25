@@ -26,10 +26,17 @@ export default class CharacterService {
     }
   }
 
-  static async getCharacterMounts(name: string, realm: string, region: string) {
+  static async getCharacterMounts(
+    name: string,
+    realm: string,
+    region: string,
+    viewId?: string
+  ) {
     try {
       const response = await get<MountCategory[]>({
-        url: `/api/v1/character/${region}/${realm}/${name}/mounts`,
+        url: `/api/v1/character/${region}/${realm}/${name}/mounts${
+          viewId ? `?viewId=${viewId}` : ''
+        }`,
       });
 
       return response.data;

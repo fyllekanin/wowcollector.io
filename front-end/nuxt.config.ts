@@ -6,6 +6,9 @@ export default defineNuxtConfig({
   $development: {
     runtimeConfig: {
       baseURL: 'http://127.0.0.1:8888',
+      public: {
+        baseURLFront: 'http://localhost:3000',
+      },
     },
   },
   $production: {
@@ -22,6 +25,7 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/image',
     '@vueuse/nuxt',
+    'nuxt-gtag',
   ],
   icon: {
     provider: 'server',
@@ -40,4 +44,7 @@ export default defineNuxtConfig({
     preference: 'dark',
   },
   plugins: ['~/plugins/draggable.ts'],
+  gtag: {
+    id: 'G-XXXXXXXXXX',
+  },
 });

@@ -2,7 +2,11 @@
 defineEmits(['cancel', 'confirm']);
 
 const loading = ref(false);
-const name = ref('');
+
+const state = reactive({
+  name: '',
+  isUnknownIncluded: false,
+});
 </script>
 
 <template>
@@ -17,16 +21,26 @@ const name = ref('');
         <h2 class="text-lg font-semibold">Create View</h2>
       </template>
 
-      <div class="flex flex-col gap-2">
-        <p class="text-sm text-gray-600 dark:text-gray-400">
-          Provide a name for your new view
-        </p>
-        <UInput
-          v-model="name"
-          label="View Name"
-          placeholder="My Awesome View"
-          size="lg"
-        />
+      <div class="flex flex-col gap-10">
+        <div class="flex flex-col gap-2">
+          <p class="text-sm text-gray-600 dark:text-gray-400">
+            Provide a name for your new view
+          </p>
+          <UInput
+            v-model="state.name"
+            required
+            label="View Name"
+            placeholder="My Awesome View"
+            size="lg"
+          />
+        </div>
+
+        <div class="flex gap-2">
+          <UToggle v-model="state.isUnknownIncluded" />
+          <p class="text-sm text-gray-600 dark:text-gray-400">
+            Include any unselected mounts inside an "Unknown" category
+          </p>
+        </div>
       </div>
 
       <template #footer>
@@ -35,11 +49,11 @@ const name = ref('');
           <UButton
             variant="solid"
             :loading="loading"
-            :disabled="!name"
+            :disabled="!state.name"
             @click="
               {
                 loading = true;
-                $emit('confirm', name);
+                $emit('confirm', state);
               }
             "
             >Submit</UButton

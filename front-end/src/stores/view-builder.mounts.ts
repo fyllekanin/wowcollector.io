@@ -33,6 +33,7 @@ export const useMountViewBuilderStore = defineStore('mount-view-builder', {
       showBorders: true,
       showMountTooltips: true,
     },
+    successfulCreation: false,
   }),
   getters: {
     flatMounts(state): MountInformation[] {
@@ -158,6 +159,9 @@ export const useMountViewBuilderStore = defineStore('mount-view-builder', {
     },
     setSettings(settings: Partial<typeof this._settings>) {
       Object.assign(this._settings, settings);
+    },
+    setSuccessfulCreation(successful: boolean) {
+      this.successfulCreation = successful;
     },
   },
 });
