@@ -76,13 +76,13 @@ jobs:
         
     - name: Build and push - web
       uses: docker/build-push-action@v5
-      env:
-        NUXT_UI_PRO_LICENSE: ${{ secrets.NUXT_OVERPAID }}
       with:
         context: ./front-end/
         file: ./front-end/DockerfileNuxt
         push: true
         tags: tovven/wowcollector:web-${{ env.new_version }}
+        build-args: |
+          "NUXT_UI_PRO_LICENSE=${{ secrets.NUXT_OVERPAID }}"
 
     - name: Move JSON files to release folder
       run: |
