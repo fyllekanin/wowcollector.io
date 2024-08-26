@@ -6,16 +6,19 @@ COPY . .
 
 RUN go mod download && go mod verify
 
+RUN go build -v -o migration-seeder ./cmd/migration-seeder/
 RUN go build -v -o app ./cmd/scanner/
 
 RUN mkdir /output
 RUN mv app /output/app
+RUN mv migration-seeder /output/migration-seeder
 
 FROM alpine:latest
 
 COPY --from=builder /output/app ./app
+COPY --from=builder /output/migration-seeder ./migration-seeder
 COPY ./resources/seeds /resources/seeds
 
 EXPOSE 8888
 
-CMD ["./app"]
+CMD ["./migration-seeder && ./app"]
