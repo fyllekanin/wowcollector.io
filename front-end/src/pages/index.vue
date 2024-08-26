@@ -13,9 +13,22 @@ if (!page.value) {
   });
 }
 
+useHead({
+  title: 'WoW Collector',
+  meta: [
+    {
+      name: 'description',
+      content:
+        'The only World of Warcraft collections tracker you will ever need.',
+    },
+  ],
+});
 useSeoMeta({
   title: page.value.title,
   description: page.value.description,
+  ogTitle: page.value.og.title,
+  ogDescription: page.value.og.description,
+  ogImage: page.value.og.image,
 });
 
 const characterStore = useCharacterStore();

@@ -1,5 +1,10 @@
 title: Home - WoW Collector
-description: Welcome to the only World of Warcraft collection tracker you will ever need.
+description: Welcome to the only World of Warcraft collections tracker you will ever need.
+
+og:
+  title: WoW Collector
+  description: The only World of Warcraft collections tracker you will ever need.
+  image: https://cdn.discordapp.com/attachments/1161263238554599464/1277688427248226304/image.png?ex=66ce1393&is=66ccc213&hm=85a94fde2ecb4feb5285a094fda056cac78cff56a548c4494d201cff7637566a&
 
 collections:
   - title: Mounts

@@ -11,11 +11,14 @@ export default defineNuxtConfig({
   $production: {
     runtimeConfig: {},
   },
+  ogImage: {
+    enabled: false,
+  },
   site: {
     url: 'https://wowcollector.io',
     name: 'WoW Collector',
     description:
-      'The only World of Warcraft collection tracker you will ever need.',
+      'The only World of Warcraft collections tracker you will ever need.',
     defaultLocale: 'en', // not needed if you have @nuxtjs/i18n installed
     indexable: true,
   },

@@ -1,5 +1,11 @@
 title: Pets - WoW Collector
 description: Discover battle pets in your collection or others' across Azeroth.
+ogImage: https://cdn.discordapp.com/attachments/1161263238554599464/1277688427248226304/image.png?ex=66ce1393&is=66ccc213&hm=85a94fde2ecb4feb5285a094fda056cac78cff56a548c4494d201cff7637566a&
+
+og:
+  title: Pets - WoW Collector
+  description: Discover battle pets in your collection or others' across Azeroth.
+  image: https://cdn.discordapp.com/attachments/1161263238554599464/1277688427248226304/image.png?ex=66ce1393&is=66ccc213&hm=85a94fde2ecb4feb5285a094fda056cac78cff56a548c4494d201cff7637566a&
 
 breadcrumbs:
   - title: Home

@@ -1,3 +1,11 @@
+title: Feedback - WoW Collector
+description: Share your ideas and feedback to help enhance wowcollector.io. Your suggestions are vital in shaping the future of the site.
+
+og:
+  title: Feedback - WoW Collector
+  description: Share your ideas and feedback to help enhance wowcollector.io. Your suggestions are vital in shaping the future of the site.
+  image: https://cdn.discordapp.com/attachments/1161263238554599464/1277688427248226304/image.png?ex=66ce1393&is=66ccc213&hm=85a94fde2ecb4feb5285a094fda056cac78cff56a548c4494d201cff7637566a&
+
 tabs:
   - label: Feedback
     icon: mdi:comment-text

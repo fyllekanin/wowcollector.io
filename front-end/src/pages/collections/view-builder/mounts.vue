@@ -7,7 +7,7 @@ definePageMeta({
 });
 
 const { data: page } = await useAsyncData('mounts', () =>
-  queryContent('/collections/mounts/view-builder').findOne()
+  queryContent('/collections/view-builder/mounts').findOne()
 );
 if (!page.value) {
   throw createError({
@@ -17,6 +17,14 @@ if (!page.value) {
     cause: 'No mounts create view page found in the content.',
   });
 }
+
+useSeoMeta({
+  title: page.value.title,
+  description: page.value.description,
+  ogTitle: page.value.og.title,
+  ogDescription: page.value.og.description,
+  ogImage: page.value.og.image,
+});
 
 const { debounce } = useDebounce();
 

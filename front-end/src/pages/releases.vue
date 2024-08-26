@@ -18,8 +18,9 @@ useSeoMeta({
   titleTemplate: '%s - WoW Collector',
   title,
   description,
-  ogTitle: `${title} - WoW Collector`,
-  ogDescription: description,
+  ogTitle: page.value.og.title,
+  ogDescription: page.value.og.description,
+  ogImage: page.value.og.image,
 });
 
 const { data: releases } = await useFetch('/api/changelog.json');

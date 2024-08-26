@@ -15,6 +15,14 @@ if (!page.value) {
     cause: 'No about page found in the content.',
   });
 }
+
+useSeoMeta({
+  title: page.value.title,
+  description: page.value.introduction,
+  ogTitle: page.value.og.title,
+  ogDescription: page.value.og.description,
+  ogImage: page.value.og.image,
+});
 </script>
 
 <template>

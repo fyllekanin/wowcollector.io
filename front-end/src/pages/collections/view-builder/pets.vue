@@ -7,7 +7,7 @@ definePageMeta({
 });
 
 const { data: page } = await useAsyncData('pets', () =>
-  queryContent('/collections/pets/view-builder').findOne()
+  queryContent('/collections/view-builder/pets').findOne()
 );
 if (!page.value) {
   throw createError({
@@ -17,6 +17,14 @@ if (!page.value) {
     cause: 'No pets create view page found in the content.',
   });
 }
+
+useSeoMeta({
+  title: page.value.title,
+  description: page.value.description,
+  ogTitle: page.value.og.title,
+  ogDescription: page.value.og.description,
+  ogImage: page.value.og.image,
+});
 
 const { debounce } = useDebounce();
 

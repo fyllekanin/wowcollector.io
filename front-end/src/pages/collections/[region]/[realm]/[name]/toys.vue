@@ -26,6 +26,9 @@ useHead({
 useSeoMeta({
   title: page.value.title,
   description: page.value.description,
+  ogTitle: page.value.og.title,
+  ogDescription: page.value.og.description,
+  ogImage: page.value.og.image,
 });
 
 const toast = useToast();
