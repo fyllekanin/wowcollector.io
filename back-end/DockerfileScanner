@@ -1,4 +1,3 @@
-# First stage: build the Go app
 FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
@@ -7,12 +6,11 @@ COPY . .
 
 RUN go mod download && go mod verify
 
-RUN go build -v -o app ./apcmdps/scanner/
+RUN go build -v -o app ./cmd/scanner/
 
 RUN mkdir /output
 RUN mv app /output/app
 
-# Second stage: create the final image
 FROM alpine:latest
 
 COPY --from=builder /output/app ./app
