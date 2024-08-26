@@ -103,8 +103,7 @@ const links = computed(() => [
 <template>
   <UHeader :links="links">
     <template #logo>
-      <Logo width="48px" height="48px" />
-      <p class="hidden min-[375px]:block self-center mt-1">WoW Collector</p>
+      <LogoFull />
     </template>
 
     <template #right>

@@ -6,13 +6,26 @@ export default defineNuxtConfig({
   $development: {
     runtimeConfig: {
       baseURL: 'http://127.0.0.1:8888',
-      public: {
-        baseURLFront: 'http://localhost:3000',
-      },
     },
   },
   $production: {
     runtimeConfig: {},
+  },
+  site: {
+    url: 'https://wowcollector.io',
+    name: 'WoW Collector',
+    description:
+      'The only World of Warcraft collection tracker you will ever need.',
+    defaultLocale: 'en', // not needed if you have @nuxtjs/i18n installed
+    indexable: true,
+  },
+  seo: {
+    fallbackTitle: true,
+    enabled: true,
+  },
+  robots: {
+    allow: ['/'],
+    disallow: ['/admin'],
   },
   srcDir: 'src',
   serverDir: 'server',
@@ -26,6 +39,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@vueuse/nuxt',
     'nuxt-gtag',
+    '@nuxtjs/seo',
   ],
   icon: {
     provider: 'server',
