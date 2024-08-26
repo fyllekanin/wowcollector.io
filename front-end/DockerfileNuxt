@@ -20,9 +20,6 @@ WORKDIR /app
 # Copy the build output from the builder stage
 COPY --from=builder /app/.output ./.output
 
-# Install PM2 to manage the application process (optional)
-RUN npm install -g pm2
-
 # Expose the port the app runs on
 EXPOSE 3000
 
