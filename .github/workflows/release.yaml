@@ -48,7 +48,7 @@ jobs:
 
     - name: Move JSON files to release folder
       run: |
-        mv changelog/current/*.json "${{ env.release_folder }}/"
+        mv changelog/current/*.json "${{ env.release_folder }}/" 2>/dev/null
 
     - name: Commit and push changes
       run: |
