@@ -46,18 +46,22 @@ jobs:
         mkdir -p "$release_folder"
         echo "release_folder=$release_folder" >> $GITHUB_ENV
 
+    - name: Move JSON files to release folder
+      run: |
+        mv changelog/current/*.json "${{ env.release_folder }}/" 2>/dev/null
+
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
-      
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-      
+
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
-        
+
     - name: Build and push - server
       uses: docker/build-push-action@v5
       with:
@@ -65,7 +69,7 @@ jobs:
         file: ./back-end/DockerfileRest
         push: true
         tags: tovven/wowcollector:server-${{ env.new_version }}
-        
+
     - name: Build and push - scanner
       uses: docker/build-push-action@v5
       with:
@@ -73,7 +77,7 @@ jobs:
         file: ./back-end/DockerfileScanner
         push: true
         tags: tovven/wowcollector:scanner-${{ env.new_version }}
-        
+
     - name: Build and push - web
       uses: docker/build-push-action@v5
       with:
@@ -83,10 +87,6 @@ jobs:
         tags: tovven/wowcollector:web-${{ env.new_version }}
         build-args: |
           "NUXT_UI_PRO_LICENSE=${{ secrets.NUXT_OVERPAID }}"
-
-    - name: Move JSON files to release folder
-      run: |
-        mv changelog/current/*.json "${{ env.release_folder }}/" 2>/dev/null
 
     - name: Commit and push changes
       run: |
@@ -101,4 +101,4 @@ jobs:
       run: |
         git tag "release-${{ env.new_version }}"
         git push origin "release-${{ env.new_version }}"
-      
+
