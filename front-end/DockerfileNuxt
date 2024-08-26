@@ -6,7 +6,6 @@ WORKDIR /app
 
 # Install dependencies
 COPY . .
-COPY ./../changelog /changelog
 RUN npm install
 
 # Build the Nuxt application

@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import semver from 'semver';
 
-const changelogDir = join(import.meta.url ? new URL('../changelog/releases', import.meta.url).pathname : '../changelog/releases');
+const changelogDir = join(import.meta.url ? new URL('changelog/releases', import.meta.url).pathname : 'changelog/releases');
 
 function getSortedFolders() {
     const folders = readdirSync(changelogDir).filter((folder) => {

@@ -48,6 +48,6 @@ EOF
 
 filename="${timestamp}.json"
 
-echo "$json_content" > "changelog/current/$filename"
+echo "$json_content" > "front-end/changelog/current/$filename"
 
 echo -e "${GREEN}Change log saved to $filename${NC}"
