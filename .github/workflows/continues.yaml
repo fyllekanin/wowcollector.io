@@ -1,16 +1,9 @@
-name: Release Version
+name: Continues
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_type:
-        description: 'The type of release: major, minor, patch'
-        required: true
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
+  push:
+    branches:
+      - develop
 
 jobs:
   release:
@@ -23,26 +16,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Install jq
-      run: sudo apt-get install -y jq
-
-    - name: Read current version
-      id: read_version
-      run: echo "current_version=$(cat version.txt)" >> $GITHUB_ENV
-
-    - name: Run update version script
-      shell: bash {0}
-      run: |
-        bash scripts/update-version.sh "${{ env.current_version }}" "${{ github.event.inputs.release_type }}"
-        echo "new_version=$(cat version.txt)" >> $GITHUB_ENV
-
 
     - name: Create release folder
       id: create_release_folder
       run: |
-        new_version="${{ env.new_version }}"
         timestamp=$(date +%s)
-        release_folder="front-end/changelog/releases/${new_version}-${timestamp}"
+        release_folder="front-end/changelog/releases/latest-${timestamp}"
         mkdir -p "$release_folder"
         echo "release_folder=$release_folder" >> $GITHUB_ENV
 
@@ -68,7 +47,7 @@ jobs:
         context: ./back-end/
         file: ./back-end/DockerfileRest
         push: true
-        tags: tovven/wowcollector:server-${{ env.new_version }}
+        tags: tovven/wowcollector:server-latest
 
     - name: Build and push - scanner
       uses: docker/build-push-action@v5
@@ -76,7 +55,7 @@ jobs:
         context: ./back-end/
         file: ./back-end/DockerfileScanner
         push: true
-        tags: tovven/wowcollector:scanner-${{ env.new_version }}
+        tags: tovven/wowcollector:scanner-latest
 
     - name: Build and push - web
       uses: docker/build-push-action@v5
@@ -84,21 +63,7 @@ jobs:
         context: ./front-end/
         file: ./front-end/DockerfileNuxt
         push: true
-        tags: tovven/wowcollector:web-${{ env.new_version }}
+        tags: tovven/wowcollector:web-latest
         build-args: |
           "NUXT_UI_PRO_LICENSE=${{ secrets.NUXT_OVERPAID }}"
-
-    - name: Commit and push changes
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-        git add .
-        git commit -m "Release ${{ env.new_version }}"
-        git push origin main
-
-    - name: Create a new tag
-      run: |
-        git tag "release-${{ env.new_version }}"
-        git push origin "release-${{ env.new_version }}"
 
