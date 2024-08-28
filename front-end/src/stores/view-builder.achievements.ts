@@ -81,6 +81,14 @@ export const useAchievementViewBuilderStore = defineStore(
       isValid(state) {
         return state._achievementCategories.length;
       },
+      highlightMountDropzones(state) {
+        return (
+          state._dragState.state && state._dragState.type === 'achievement'
+        );
+      },
+      highlightCategoryDropzones(state) {
+        return state._dragState.state && state._dragState.type === 'category';
+      },
     },
     actions: {
       setAchievements(newAchievements: AchievementInformation[]) {
