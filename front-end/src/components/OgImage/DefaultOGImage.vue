@@ -4,13 +4,10 @@
       <div class="flex flex-col justify-between w-full h-full">
         <div class="flex flex-col">
           <h1 class="text-[80px] px-20 pt-20 pb-5 font-black text-left">
-            <img
-              src="../../assets/img/logo.png"
-              style="width: 512px; height: auto"
-            />
+            <img src="../../assets/img/logo.png" width="512" />
           </h1>
           <p class="text-2xl pb-20 px-20 font-bold mb-0 text-gray-300">
-            The only World of Warcraft collections tracker you will ever need.
+            The only World of Warcraft collection tracker you will ever need.
           </p>
         </div>
 
