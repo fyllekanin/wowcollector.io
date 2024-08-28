@@ -9,7 +9,9 @@ export default defineNuxtConfig({
     },
   },
   $production: {
-    runtimeConfig: {},
+    runtimeConfig: {
+      baseURL: process.env.NUXT_BASE_URL,
+    },
   },
   ogImage: {
     enabled: false,
@@ -18,7 +20,7 @@ export default defineNuxtConfig({
     url: 'https://wowcollector.io',
     name: 'WoW Collector',
     description:
-      'The only World of Warcraft collections tracker you will ever need.',
+      'The only World of Warcraft collection tracker you will ever need.',
     defaultLocale: 'en', // not needed if you have @nuxtjs/i18n installed
     indexable: true,
   },

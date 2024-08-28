@@ -19,7 +19,7 @@ useHead({
     {
       name: 'description',
       content:
-        'The only World of Warcraft collections tracker you will ever need.',
+        'The only World of Warcraft collection tracker you will ever need.',
     },
   ],
 });
