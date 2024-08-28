@@ -35,6 +35,8 @@ const {
   _searchFilter,
   _settings,
   successfulCreation,
+  highlightCategoryDropzones,
+  highlightMountDropzones,
 } = storeToRefs(mountViewBuilderStore);
 
 const createdViewId = ref('');
@@ -88,7 +90,17 @@ function onLeave() {
           <draggable
             :list="_cloneableCategory"
             :group="{ name: 'category', pull: 'clone', put: false }"
-            @start="mountViewBuilderStore.setNewIdForCloneableCategory"
+            @start="
+              () => {
+                mountViewBuilderStore.setNewIdForCloneableCategory();
+                mountViewBuilderStore.setDragState(true, 'category');
+              }
+            "
+            @end="
+              () => {
+                mountViewBuilderStore.clearDragState();
+              }
+            "
           >
             <template #item="{ element: category }">
               <UCard
@@ -125,11 +137,24 @@ function onLeave() {
             icon="heroicons-outline:search"
           />
           <draggable
-            class="flex grow flex-wrap gap-4 justify-center"
+            :class="[
+              'flex grow flex-wrap gap-4 justify-center',
+              highlightMountDropzones ? 'bg-green-900 bg-opacity-45' : '',
+            ]"
             :list="_mounts"
             :group="{ name: 'mount' }"
-            @start="_settings.showMountTooltips = false"
-            @end="_settings.showMountTooltips = true"
+            @start="
+              () => {
+                _settings.showMountTooltips = false;
+                mountViewBuilderStore.setDragState(true, 'mount');
+              }
+            "
+            @end="
+              () => {
+                _settings.showMountTooltips = true;
+                mountViewBuilderStore.clearDragState();
+              }
+            "
           >
             <template #item="{ element: mount }">
               <MountIcon
