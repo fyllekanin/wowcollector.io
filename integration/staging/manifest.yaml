@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wowcollector-scanner-staging-deployment
+  name: wowcollector-staging-scanner-deployment
   namespace: wowcollector
 spec:
   replicas: 1
