@@ -25,7 +25,9 @@ import (
 
 // @host localhost:8888
 func main() {
-	logger, _ := zap.NewProduction()
+	config := zap.NewProductionConfig()
+	config.OutputPaths = []string{"stdout"}
+	logger, _ := config.Build()
 	zap.ReplaceGlobals(logger)
 	client := repository.GetDatabaseClient()
 	defer func() {
