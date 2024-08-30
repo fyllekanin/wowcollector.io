@@ -10,7 +10,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: mongo-staging
-  strategy: { }
+  strategy: {}
   template:
     metadata:
       labels:
