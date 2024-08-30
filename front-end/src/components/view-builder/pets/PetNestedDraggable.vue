@@ -3,7 +3,12 @@ import draggable from 'vuedraggable';
 import type { PetCategory, PetInformation } from '~/types';
 
 const petViewBuilderStore = usePetViewBuilderStore();
-const { _petCategories, _settings } = storeToRefs(petViewBuilderStore);
+const {
+  _petCategories,
+  _settings,
+  highlightCategoryDropzones,
+  highlightPetDropzones,
+} = storeToRefs(petViewBuilderStore);
 
 const dragging = ref(false);
 const dragItem = ref<PetCategory | PetInformation>();
@@ -67,7 +72,10 @@ function unFocus(event: Event) {
 
 <template>
   <draggable
-    class="flex flex-col w-full h-full p-10 gap-2 overflow-y-auto"
+    :class="[
+      'flex flex-col w-full h-full p-10 gap-2 overflow-y-auto',
+      highlightCategoryDropzones ? 'bg-green-900 bg-opacity-45' : '',
+    ]"
     :list="_petCategories"
     :group="{
       name: !categoryCanBeDroppedInCategory && dragging ? 'deny' : 'category',
@@ -116,11 +124,24 @@ function unFocus(event: Event) {
             </UTooltip>
           </div>
           <draggable
-            class="flex flex-wrap gap-2 min-h-10 p-4"
+            :class="[
+              'flex flex-wrap gap-2 min-h-10 p-4',
+              highlightPetDropzones ? 'bg-green-900 bg-opacity-45' : '',
+            ]"
             :list="category.pets"
             :group="{ name: 'pet' }"
-            @start="_settings.showPetTooltips = false"
-            @end="_settings.showPetTooltips = true"
+            @start="
+              () => {
+                _settings.showPetTooltips = false;
+                petViewBuilderStore.setDragState(true, 'pet');
+              }
+            "
+            @end="
+              () => {
+                _settings.showPetTooltips = true;
+                petViewBuilderStore.clearDragState();
+              }
+            "
           >
             <template #item="{ element: pet }">
               <PetIcon
@@ -135,7 +156,10 @@ function unFocus(event: Event) {
           </draggable>
           <draggable
             v-if="category.categories"
-            class="flex grow flex-wrap justify-start gap-2 min-h-10"
+            :class="[
+              'flex grow flex-wrap justify-start gap-2 min-h-10 p-4',
+              highlightCategoryDropzones ? 'bg-green-900 bg-opacity-45' : '',
+            ]"
             :list="category.categories"
             :group="{ name: 'category' }"
             @start="petViewBuilderStore.setDragState(true, 'category')"
@@ -179,11 +203,24 @@ function unFocus(event: Event) {
                     </UTooltip>
                   </div>
                   <draggable
-                    class="flex flex-wrap gap-2 py-5"
+                    :class="[
+                      'flex flex-wrap gap-2 py-5 px-2',
+                      highlightPetDropzones ? 'bg-green-900 bg-opacity-45' : '',
+                    ]"
                     :list="subCategory.pets"
                     :group="{ name: 'pet' }"
-                    @start="_settings.showPetTooltips = false"
-                    @end="_settings.showPetTooltips = true"
+                    @start="
+                      () => {
+                        _settings.showPetTooltips = false;
+                        petViewBuilderStore.setDragState(true, 'pet');
+                      }
+                    "
+                    @end="
+                      () => {
+                        _settings.showPetTooltips = true;
+                        petViewBuilderStore.clearDragState();
+                      }
+                    "
                   >
                     <template #item="{ element: pet }">
                       <PetIcon

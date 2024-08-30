@@ -35,6 +35,8 @@ const {
   _searchFilter,
   _settings,
   successfulCreation,
+  highlightCategoryDropzones,
+  highlightToyDropzones,
 } = storeToRefs(toyViewBuilderStore);
 
 const createdViewId = ref('');
@@ -125,7 +127,10 @@ function onLeave() {
             icon="heroicons-outline:search"
           />
           <draggable
-            class="flex grow flex-wrap gap-4 justify-center"
+            :class="[
+              'flex grow flex-wrap gap-4 justify-center',
+              highlightToyDropzones ? 'bg-green-900 bg-opacity-45' : '',
+            ]"
             :list="_toys"
             :group="{ name: 'toy' }"
             @start="_settings.showToyTooltips = false"

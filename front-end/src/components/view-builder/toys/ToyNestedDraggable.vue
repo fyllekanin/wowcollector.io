@@ -3,7 +3,12 @@ import draggable from 'vuedraggable';
 import type { ToyCategory, ToyInformation } from '~/types';
 
 const toyViewBuilderStore = useToyViewBuilderStore();
-const { _toyCategories, _settings } = storeToRefs(toyViewBuilderStore);
+const {
+  _toyCategories,
+  _settings,
+  highlightCategoryDropzones,
+  highlightToyDropzones,
+} = storeToRefs(toyViewBuilderStore);
 
 const dragging = ref(false);
 const dragItem = ref<ToyCategory | ToyInformation>();
@@ -67,7 +72,10 @@ function unFocus(event: Event) {
 
 <template>
   <draggable
-    class="flex flex-col w-full h-full p-10 gap-2 overflow-y-auto"
+    :class="[
+      'flex flex-col w-full h-full p-10 gap-2 overflow-y-auto',
+      highlightCategoryDropzones ? 'bg-green-900 bg-opacity-45' : '',
+    ]"
     :list="_toyCategories"
     :group="{
       name: !categoryCanBeDroppedInCategory && dragging ? 'deny' : 'category',
@@ -116,11 +124,24 @@ function unFocus(event: Event) {
             </UTooltip>
           </div>
           <draggable
-            class="flex flex-wrap gap-2 min-h-10 p-4"
+            :class="[
+              'flex flex-wrap gap-2 min-h-10 p-4',
+              highlightToyDropzones ? 'bg-green-900 bg-opacity-45' : '',
+            ]"
             :list="category.toys"
             :group="{ name: 'toy' }"
-            @start="_settings.showToyTooltips = false"
-            @end="_settings.showToyTooltips = true"
+            @start="
+              () => {
+                _settings.showToyTooltips = false;
+                toyViewBuilderStore.setDragState(true, 'toy');
+              }
+            "
+            @end="
+              () => {
+                _settings.showToyTooltips = true;
+                toyViewBuilderStore.clearDragState();
+              }
+            "
           >
             <template #item="{ element: toy }">
               <ToyIcon
@@ -135,7 +156,10 @@ function unFocus(event: Event) {
           </draggable>
           <draggable
             v-if="category.categories"
-            class="flex grow flex-wrap justify-start gap-2 min-h-10"
+            :class="[
+              'flex grow flex-wrap justify-start gap-2 min-h-10 p-4',
+              highlightCategoryDropzones ? 'bg-green-900 bg-opacity-45' : '',
+            ]"
             :list="category.categories"
             :group="{ name: 'category' }"
             @start="toyViewBuilderStore.setDragState(true, 'category')"
@@ -179,11 +203,24 @@ function unFocus(event: Event) {
                     </UTooltip>
                   </div>
                   <draggable
-                    class="flex flex-wrap gap-2 py-5"
+                    :class="[
+                      'flex flex-wrap gap-2 py-5 px-2',
+                      highlightToyDropzones ? 'bg-green-900 bg-opacity-45' : '',
+                    ]"
                     :list="subCategory.toys"
                     :group="{ name: 'toy' }"
-                    @start="_settings.showToyTooltips = false"
-                    @end="_settings.showToyTooltips = true"
+                    @start="
+                      () => {
+                        _settings.showToyTooltips = false;
+                        toyViewBuilderStore.setDragState(true, 'toy');
+                      }
+                    "
+                    @end="
+                      () => {
+                        _settings.showToyTooltips = true;
+                        toyViewBuilderStore.clearDragState();
+                      }
+                    "
                   >
                     <template #item="{ element: toy }">
                       <ToyIcon

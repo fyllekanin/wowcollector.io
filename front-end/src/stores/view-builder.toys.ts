@@ -80,7 +80,7 @@ export const useToyViewBuilderStore = defineStore('toy-view-builder', {
     isValid(state) {
       return state._toyCategories.length;
     },
-    highlightMountDropzones(state) {
+    highlightToyDropzones(state) {
       return state._dragState.state && state._dragState.type === 'toy';
     },
     highlightCategoryDropzones(state) {

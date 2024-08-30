@@ -80,7 +80,7 @@ export const usePetViewBuilderStore = defineStore('pet-view-builder', {
     isValid(state) {
       return state._petCategories.length;
     },
-    highlightMountDropzones(state) {
+    highlightPetDropzones(state) {
       return state._dragState.state && state._dragState.type === 'pet';
     },
     highlightCategoryDropzones(state) {
