@@ -6,7 +6,7 @@ on:
       - develop
 
 jobs:
-  release:
+  continues:
     runs-on: ubuntu-latest
     permissions:
       contents: write
