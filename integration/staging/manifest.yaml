@@ -18,6 +18,7 @@ spec:
         - name: wowcollector-staging-scanner
           image: tovven/wowcollector:scanner-latest
           imagePullPolicy: Always
+          readinessProbe: null
           env:
             - name: DATABASE_CONNECTION
               valueFrom:
