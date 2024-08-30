@@ -124,7 +124,7 @@ spec:
   tls:
     - hosts:
         - staging.wowcollector.io
-      secretName: k8s-consolejs-net
+      secretName: wowcollector-certificate
   rules:
     - host: "staging.wowcollector.io"
       http:
