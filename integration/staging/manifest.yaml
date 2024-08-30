@@ -97,7 +97,6 @@ spec:
         - name: wowcollector-staging-web
           image: tovven/wowcollector:web-latest
           imagePullPolicy: Always
-          initialDelaySeconds: 10
           readinessProbe: null
           env:
             - name: NUXT_SITE_ENV
