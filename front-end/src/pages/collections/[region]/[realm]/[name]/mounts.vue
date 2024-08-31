@@ -15,7 +15,6 @@ definePageMeta({
   middleware: 'collection-mounts',
 });
 useHead({
-  title: 'WoW Collector - Mounts',
   meta: [
     {
       name: 'description',
