@@ -67,14 +67,7 @@ function openNamePromptModal() {
           >
             <template #left>
               <div class="flex grow flex-wrap items-center justify-center">
-                <div class="flex cursor-pointer" @click="openModal">
-                  <Logo class="mb-1" width="48px" height="48px" />
-                  <h2
-                    class="flex self-center flex-shrink-0 font-bold text-xl text-gray-900 dark:text-white items-end gap-1.5"
-                  >
-                    WoW Collector
-                  </h2>
-                </div>
+                <LogoFull class="flex cursor-pointer" @click="openModal" />
               </div>
             </template>
           </UDashboardNavbar>
