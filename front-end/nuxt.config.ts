@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   },
   $production: {
     runtimeConfig: {
-      baseURL: process.env.NUXT_BASE_URL,
+      baseURL: '',
     },
   },
   ogImage: {
