@@ -35,7 +35,7 @@ spec:
                 secretKeyRef:
                   name: wowcollector-staging-credentials
                   key: scannerSecret
-            - name: WOW_MONGODB_DATABASE
+            - name: DATABASE_NAME
               value: wow
 ---
 apiVersion: apps/v1
@@ -75,7 +75,7 @@ spec:
                 secretKeyRef:
                   name: wowcollector-staging-credentials
                   key: secret
-            - name: WOW_MONGODB_DATABASE
+            - name: DATABASE_NAME
               value: wow
 ---
 apiVersion: apps/v1
