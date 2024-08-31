@@ -80,7 +80,7 @@ function openNamePromptModal() {
     </UDashboardPanel>
 
     <div class="flex flex-col w-full h-full">
-      <UDashboardNavbar class="" :ui="{ wrapper: 'pb-' }">
+      <UDashboardNavbar class="" :ui="{ wrapper: 'pb-0' }">
         <template #title>
           <div class="flex gap-2 items-center">
             <UIcon class="scale-125" name="mdi:tools" />
