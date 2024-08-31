@@ -43,15 +43,15 @@ const loading = ref(false);
 
 const total = computed(() => {
   if (!pets.value) return 0;
-  return flatMapPets(pets.value).length;
+  return flatMapPets(pets.value).length || 0;
 });
 const collected = computed(() => {
   if (!pets.value) return 0;
-  return flatMapPets(pets.value).filter((pet) => pet.isCollected).length;
+  return flatMapPets(pets.value).filter((pet) => pet.isCollected).length || 0;
 });
 const percentagePetsCollected = computed(() => {
   if (!pets.value) return 0;
-  return Math.round((collected.value / total.value) * 100);
+  return Math.round((collected.value / total.value) * 100) || 0;
 });
 
 async function loadView() {

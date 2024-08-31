@@ -117,6 +117,7 @@ export const useMountsStore = defineStore('mounts', {
         result = result.map(subCategoryFilter);
 
       // Misc Filters
+
       return result;
     },
     allMounts(state) {
