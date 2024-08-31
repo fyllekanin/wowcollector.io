@@ -657,7 +657,7 @@
         }
     },
     "definitions": {
-        "blizzarddata.BattleNetRegion": {
+        "string": {
             "type": "string",
             "enum": [
                 "eu",
@@ -1113,7 +1113,7 @@
                     "type": "string"
                 },
                 "region": {
-                    "$ref": "#/definitions/blizzarddata.BattleNetRegion"
+                    "$ref": "#/definitions/string"
                 },
                 "slug": {
                     "type": "string"
@@ -1144,7 +1144,7 @@
                     "type": "string"
                 },
                 "value": {
-                    "$ref": "#/definitions/blizzarddata.BattleNetRegion"
+                    "$ref": "#/definitions/string"
                 }
             }
         },

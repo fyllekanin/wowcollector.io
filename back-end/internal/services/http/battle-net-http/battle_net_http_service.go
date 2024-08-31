@@ -15,7 +15,6 @@ import (
 
 	"go.uber.org/ratelimit"
 	"go.uber.org/zap"
-	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	httpresponses "wowcollector.io/internal/entities/http-responses"
 )
 
@@ -27,7 +26,7 @@ type BattleNetToken struct {
 	issuedAt    int64
 }
 
-func (s *BattleNetToken) IsExpired() bool {
+func (s *BattleNetToken) isExpired() bool {
 	if s.ExpiresIn == 0 {
 		return true
 	}
@@ -58,7 +57,7 @@ func (s *BattleNetHttpService) Ping() {
 	}
 }
 
-func (s *BattleNetHttpService) GetCharacter(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetCharacter {
+func (s *BattleNetHttpService) GetCharacter(region string, realm string, character string) *httpresponses.BattleNetCharacter {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting character:" + err.Error())
@@ -74,7 +73,7 @@ func (s *BattleNetHttpService) GetCharacter(region blizzarddata.BattleNetRegion,
 	return &result
 }
 
-func (s *BattleNetHttpService) GetCharacterMedia(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetMedia {
+func (s *BattleNetHttpService) GetCharacterMedia(region string, realm string, character string) *httpresponses.BattleNetMedia {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/character-media?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting character media:" + err.Error())
@@ -90,7 +89,7 @@ func (s *BattleNetHttpService) GetCharacterMedia(region blizzarddata.BattleNetRe
 	return &result
 }
 
-func (s *BattleNetHttpService) GetAchievementCategoryIndex(region blizzarddata.BattleNetRegion) *httpresponses.BattleNetAchievementCategoryIndex {
+func (s *BattleNetHttpService) GetAchievementCategoryIndex(region string) *httpresponses.BattleNetAchievementCategoryIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/achievement-category/index?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting achievement category index:" + err.Error())
@@ -106,7 +105,7 @@ func (s *BattleNetHttpService) GetAchievementCategoryIndex(region blizzarddata.B
 	return &result
 }
 
-func (s *BattleNetHttpService) GetAchievementCategory(region blizzarddata.BattleNetRegion, categoryId int) *httpresponses.BattleNetAchievementIndex {
+func (s *BattleNetHttpService) GetAchievementCategory(region string, categoryId int) *httpresponses.BattleNetAchievementIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/achievement-category/"+strconv.Itoa(categoryId)+"?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting achievement category:" + err.Error())
@@ -122,7 +121,7 @@ func (s *BattleNetHttpService) GetAchievementCategory(region blizzarddata.Battle
 	return &result
 }
 
-func (s *BattleNetHttpService) GetAchievement(region blizzarddata.BattleNetRegion, id int) *httpresponses.BattleNetAchievement {
+func (s *BattleNetHttpService) GetAchievement(region string, id int) *httpresponses.BattleNetAchievement {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/achievement/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting achievement:" + err.Error())
@@ -138,7 +137,7 @@ func (s *BattleNetHttpService) GetAchievement(region blizzarddata.BattleNetRegio
 	return &result
 }
 
-func (s *BattleNetHttpService) GetMedia(region blizzarddata.BattleNetRegion, kind string, id int) *httpresponses.BattleNetMedia {
+func (s *BattleNetHttpService) GetMedia(region string, kind string, id int) *httpresponses.BattleNetMedia {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/media/"+kind+"/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting media:" + err.Error())
@@ -154,7 +153,7 @@ func (s *BattleNetHttpService) GetMedia(region blizzarddata.BattleNetRegion, kin
 	return &result
 }
 
-func (s *BattleNetHttpService) GetCharacterAchievementCollection(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetCharacterAchievements {
+func (s *BattleNetHttpService) GetCharacterAchievementCollection(region string, realm string, character string) *httpresponses.BattleNetCharacterAchievements {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/achievements?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting character achievement collection:" + err.Error())
@@ -170,7 +169,7 @@ func (s *BattleNetHttpService) GetCharacterAchievementCollection(region blizzard
 	return &result
 }
 
-func (s *BattleNetHttpService) GetCharacterMountCollection(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetCharacterMountCollection {
+func (s *BattleNetHttpService) GetCharacterMountCollection(region string, realm string, character string) *httpresponses.BattleNetCharacterMountCollection {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/collections/mounts?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting character mount collection:" + err.Error())
@@ -186,7 +185,7 @@ func (s *BattleNetHttpService) GetCharacterMountCollection(region blizzarddata.B
 	return &result
 }
 
-func (s *BattleNetHttpService) GetCharacterToyCollection(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetCharacterToyCollection {
+func (s *BattleNetHttpService) GetCharacterToyCollection(region string, realm string, character string) *httpresponses.BattleNetCharacterToyCollection {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/collections/toys?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting character toy collection:" + err.Error())
@@ -202,7 +201,7 @@ func (s *BattleNetHttpService) GetCharacterToyCollection(region blizzarddata.Bat
 	return &result
 }
 
-func (s *BattleNetHttpService) GetCharacterPetCollection(region blizzarddata.BattleNetRegion, realm string, character string) *httpresponses.BattleNetCharacterPetCollection {
+func (s *BattleNetHttpService) GetCharacterPetCollection(region string, realm string, character string) *httpresponses.BattleNetCharacterPetCollection {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/profile/wow/character/"+realm+"/"+character+"/collections/pets?namespace=profile-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting character pet collection:" + err.Error())
@@ -218,7 +217,7 @@ func (s *BattleNetHttpService) GetCharacterPetCollection(region blizzarddata.Bat
 	return &result
 }
 
-func (s *BattleNetHttpService) GetMountsIndex(region blizzarddata.BattleNetRegion) *httpresponses.BattleNetMountsIndex {
+func (s *BattleNetHttpService) GetMountsIndex(region string) *httpresponses.BattleNetMountsIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/mount/index?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting mounts index;" + err.Error())
@@ -234,7 +233,7 @@ func (s *BattleNetHttpService) GetMountsIndex(region blizzarddata.BattleNetRegio
 	return &result
 }
 
-func (s *BattleNetHttpService) GetPetsIndex(region blizzarddata.BattleNetRegion) *httpresponses.BattleNetPetsIndex {
+func (s *BattleNetHttpService) GetPetsIndex(region string) *httpresponses.BattleNetPetsIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/pet/index?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting pets index;" + err.Error())
@@ -250,7 +249,7 @@ func (s *BattleNetHttpService) GetPetsIndex(region blizzarddata.BattleNetRegion)
 	return &result
 }
 
-func (s *BattleNetHttpService) GetPet(region blizzarddata.BattleNetRegion, id int) *httpresponses.BattleNetPet {
+func (s *BattleNetHttpService) GetPet(region string, id int) *httpresponses.BattleNetPet {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/pet/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting pet" + err.Error())
@@ -266,7 +265,7 @@ func (s *BattleNetHttpService) GetPet(region blizzarddata.BattleNetRegion, id in
 	return &result
 }
 
-func (s *BattleNetHttpService) GetMount(region blizzarddata.BattleNetRegion, id int) *httpresponses.BattleNetMount {
+func (s *BattleNetHttpService) GetMount(region string, id int) *httpresponses.BattleNetMount {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/mount/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting mount" + err.Error())
@@ -282,7 +281,7 @@ func (s *BattleNetHttpService) GetMount(region blizzarddata.BattleNetRegion, id 
 	return &result
 }
 
-func (s *BattleNetHttpService) GetToysIndex(region blizzarddata.BattleNetRegion) *httpresponses.BattleNetToysIndex {
+func (s *BattleNetHttpService) GetToysIndex(region string) *httpresponses.BattleNetToysIndex {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/toy/index?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting toys index;" + err.Error())
@@ -298,7 +297,7 @@ func (s *BattleNetHttpService) GetToysIndex(region blizzarddata.BattleNetRegion)
 	return &result
 }
 
-func (s *BattleNetHttpService) GetToy(region blizzarddata.BattleNetRegion, id int) *httpresponses.BattleNetToy {
+func (s *BattleNetHttpService) GetToy(region string, id int) *httpresponses.BattleNetToy {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/toy/"+strconv.Itoa(id)+"?namespace=static-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting toy;" + err.Error())
@@ -314,7 +313,7 @@ func (s *BattleNetHttpService) GetToy(region blizzarddata.BattleNetRegion, id in
 	return &result
 }
 
-func (s *BattleNetHttpService) GetRealms(region blizzarddata.BattleNetRegion) *httpresponses.BattleNetRealms {
+func (s *BattleNetHttpService) GetRealms(region string) *httpresponses.BattleNetRealms {
 	response, err := s.doRequest("https://"+string(region)+".api.blizzard.com/data/wow/realm/index?namespace=dynamic-"+string(region)+"&locale=en_US", true)
 	if err != nil {
 		zap.L().Info("Error getting realms:" + err.Error())
@@ -360,7 +359,7 @@ func (s *BattleNetHttpService) doRequest(url string, retry bool) ([]byte, error)
 }
 
 func (s *BattleNetHttpService) getAccessToken() string {
-	if s.token == nil || s.token.IsExpired() {
+	if s.token == nil || s.token.isExpired() {
 		s.token = resolveToken()
 		s.token.issuedAt = time.Now().UnixMilli()
 	}

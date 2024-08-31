@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/zap"
-	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	errorcodes "wowcollector.io/internal/common/error-codes"
 	"wowcollector.io/internal/entities/documents"
 	"wowcollector.io/internal/entities/response"
@@ -191,8 +190,10 @@ func getRealmsAndRegions(w http.ResponseWriter, r *http.Request) {
 
 func getRegions() []*response.RegionResponse {
 	return []*response.RegionResponse{
-		{Name: "EU", Value: blizzarddata.REGION_EU},
-		{Name: "US", Value: blizzarddata.REGION_US},
+		{Name: "EU", Value: "eu"},
+		{Name: "US", Value: "us"},
+		{Name: "KR", Value: "kr"},
+		{Name: "TW", Value: "tw"},
 	}
 }
 

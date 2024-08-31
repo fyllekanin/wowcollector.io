@@ -12,7 +12,6 @@ import (
 	mountaggregator "wowcollector.io/api/v1/rest-character/aggregators/mount-aggregator"
 	petaggregator "wowcollector.io/api/v1/rest-character/aggregators/pet-aggregator"
 	toyaggregator "wowcollector.io/api/v1/rest-character/aggregators/toy-aggregator"
-	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	errorcodes "wowcollector.io/internal/common/error-codes"
 	"wowcollector.io/internal/entities/documents"
 	httpresponses "wowcollector.io/internal/entities/http-responses"
@@ -52,7 +51,7 @@ func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
 	character := chi.URLParam(r, "character")
 	zap.L().Info(fmt.Sprintf("Fetching character profile for %s on realm %s in region %s", character, realm, region))
 
-	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
+	item := battlenethttp.GetInstance().GetCharacter(region, realm, character)
 	if item == nil {
 		zap.L().Error("Could not find the character at blizzard")
 		w.WriteHeader(http.StatusNotFound)
@@ -60,7 +59,7 @@ func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	media := battlenethttp.GetInstance().GetCharacterMedia(blizzarddata.FromString(region), realm, character)
+	media := battlenethttp.GetInstance().GetCharacterMedia(region, realm, character)
 	body, err := json.Marshal(&response.CharacterProfileResponse{
 		Name:    item.Name,
 		Level:   item.Level,
@@ -111,14 +110,14 @@ func getCharacterMountCollection(w http.ResponseWriter, r *http.Request) {
 	viewId := r.URL.Query().Get("viewId")
 	zap.L().Info(fmt.Sprintf("Fetching mount collection for %s on realm %s in region %s", character, realm, region))
 
-	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
+	item := battlenethttp.GetInstance().GetCharacter(region, realm, character)
 	if item == nil {
 		zap.L().Error("Error finding character")
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, fmt.Sprintf("Character %s on realm %s in region %s not found", character, realm, region)))
 		return
 	}
-	collection := battlenethttp.GetInstance().GetCharacterMountCollection(blizzarddata.FromString(region), realm, character)
+	collection := battlenethttp.GetInstance().GetCharacterMountCollection(region, realm, character)
 	if collection == nil {
 		zap.L().Error("Error getting characters mount collection")
 		w.WriteHeader(http.StatusNotFound)
@@ -184,14 +183,14 @@ func getCharacterToyCollection(w http.ResponseWriter, r *http.Request) {
 	viewId := r.URL.Query().Get("viewId")
 	zap.L().Info(fmt.Sprintf("Fetching toy collection for %s on realm %s in region %s", character, realm, region))
 
-	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
+	item := battlenethttp.GetInstance().GetCharacter(region, realm, character)
 	if item == nil {
 		zap.L().Error("Error finding character")
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, fmt.Sprintf("Character %s on realm %s in region %s not found", character, realm, region)))
 		return
 	}
-	collection := battlenethttp.GetInstance().GetCharacterToyCollection(blizzarddata.FromString(region), realm, character)
+	collection := battlenethttp.GetInstance().GetCharacterToyCollection(region, realm, character)
 	if collection == nil {
 		zap.L().Error("Error getting characters toy collection")
 		w.WriteHeader(http.StatusNotFound)
@@ -255,14 +254,14 @@ func getCharacterPetCollection(w http.ResponseWriter, r *http.Request) {
 	viewId := r.URL.Query().Get("viewId")
 	zap.L().Info(fmt.Sprintf("Fetching pet collection for %s on realm %s in region %s", character, realm, region))
 
-	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
+	item := battlenethttp.GetInstance().GetCharacter(region, realm, character)
 	if item == nil {
 		zap.L().Error("Error finding character")
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, fmt.Sprintf("Character %s on realm %s in region %s not found", character, realm, region)))
 		return
 	}
-	collection := battlenethttp.GetInstance().GetCharacterPetCollection(blizzarddata.FromString(region), realm, character)
+	collection := battlenethttp.GetInstance().GetCharacterPetCollection(region, realm, character)
 	if collection == nil {
 		zap.L().Error("Error getting characters pet collection")
 		w.WriteHeader(http.StatusNotFound)
@@ -324,14 +323,14 @@ func getCharacterAchievementCollection(w http.ResponseWriter, r *http.Request) {
 	character := chi.URLParam(r, "character")
 	zap.L().Info(fmt.Sprintf("Fetching achievement collection for %s on realm %s in region %s", character, realm, region))
 
-	item := battlenethttp.GetInstance().GetCharacter(blizzarddata.FromString(region), realm, character)
+	item := battlenethttp.GetInstance().GetCharacter(region, realm, character)
 	if item == nil {
 		zap.L().Error("Error finding character")
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(errorresponse.GenerateErrorBody(errorcodes.LOADING_BATTLE_NET_DATA, fmt.Sprintf("Character %s on realm %s in region %s not found", character, realm, region)))
 		return
 	}
-	collection := battlenethttp.GetInstance().GetCharacterAchievementCollection(blizzarddata.FromString(region), realm, character)
+	collection := battlenethttp.GetInstance().GetCharacterAchievementCollection(region, realm, character)
 	if collection == nil {
 		zap.L().Error("Error getting characters achievement collection")
 		w.WriteHeader(http.StatusNotFound)
@@ -357,7 +356,7 @@ func getCharacterAchievementCollection(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateMountLeaderBoard(character string, realm string, region string, count int) {
-	existing, _ := mountleaderboardrepository.GetRepository().GetLeaderBoardEntry(character, realm, blizzarddata.FromString(region))
+	existing, _ := mountleaderboardrepository.GetRepository().GetLeaderBoardEntry(character, realm, region)
 
 	document := &documents.LeaderboardDocument{
 		Character: character,
