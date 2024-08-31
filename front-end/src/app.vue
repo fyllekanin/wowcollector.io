@@ -19,5 +19,6 @@ useHead({
 
     <UNotifications />
     <UModals />
+    <CookieBar />
   </div>
 </template>

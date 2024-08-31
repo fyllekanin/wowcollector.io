@@ -14,6 +14,10 @@ const links = [
     label: 'Feedback',
     to: '/feedback',
   },
+  // {
+  //   label: 'Cookies',
+  //   click: () => {},
+  // },
 ] as FooterLink[];
 </script>
 
