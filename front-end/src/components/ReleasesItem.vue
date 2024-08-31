@@ -1,12 +1,27 @@
 <script setup lang="ts">
 import { useIntersectionObserver } from '@vueuse/core';
 
-import type { Changelog } from '~/types';
+import { ChangelogType, type Changelog } from '~/types';
 
-defineProps<{ date: Changelog }>();
+const props = defineProps({
+  date: {
+    type: Object as PropType<Changelog>,
+    required: true,
+  },
+});
 
 const target = ref(null);
 const targetIsVisible = ref(false);
+
+const majorChanges = computed(() =>
+  props.date.changes?.filter((change) => change.type === ChangelogType.BREAKING)
+);
+const minorChanges = computed(() =>
+  props.date.changes?.filter((change) => change.type === ChangelogType.FEATURE)
+);
+const patchChanges = computed(() =>
+  props.date.changes?.filter((change) => change.type === ChangelogType.BUG)
+);
 
 useIntersectionObserver(
   target,
@@ -44,17 +59,51 @@ useIntersectionObserver(
     >
       {{ date.version }}
     </p>
-    <ul
-      v-if="date.changes?.length"
-      class="mt-2 space-y-1 text-gray-600 dark:text-gray-300 list-disc list-inside"
-    >
-      <li
-        v-for="(change, i) in date.changes"
-        :key="i"
-        class="text-sm/6 break-all"
+    <div v-if="majorChanges.length" class="mt-2">
+      <h3 class="text-gray-900 dark:text-white font-bold text-xl">
+        Breaking Changes
+      </h3>
+      <ul
+        class="mt-2 space-y-1 text-gray-600 dark:text-gray-300 list-disc list-inside"
       >
-        {{ change.content }}
-      </li>
-    </ul>
+        <li
+          v-for="(change, i) in majorChanges"
+          :key="i"
+          class="text-sm/6 break-all"
+        >
+          {{ change.content }}
+        </li>
+      </ul>
+    </div>
+
+    <div v-if="minorChanges.length" class="mt-2">
+      <h3 class="text-gray-900 dark:text-white font-bold text-lg">Features</h3>
+      <ul
+        class="mt-2 space-y-1 text-gray-600 dark:text-gray-300 list-disc list-inside"
+      >
+        <li
+          v-for="(change, i) in minorChanges"
+          :key="i"
+          class="text-sm/6 break-all"
+        >
+          {{ change.content }}
+        </li>
+      </ul>
+    </div>
+
+    <div v-if="patchChanges.length" class="mt-2">
+      <h3 class="text-gray-900 dark:text-white font-bold text-xl">Bug Fixes</h3>
+      <ul
+        class="mt-2 space y-1 text-gray-600 dark:text-gray-300 list-disc list-inside"
+      >
+        <li
+          v-for="(change, i) in patchChanges"
+          :key="i"
+          class="text-sm/6 break-all"
+        >
+          {{ change.content }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
