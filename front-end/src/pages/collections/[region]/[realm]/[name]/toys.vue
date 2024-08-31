@@ -43,15 +43,15 @@ const loading = ref(false);
 
 const total = computed(() => {
   if (!toys.value) return 0;
-  return flatMapToys(toys.value).length;
+  return flatMapToys(toys.value).length || 0;
 });
 const collected = computed(() => {
   if (!toys.value) return 0;
-  return flatMapToys(toys.value).filter((toy) => toy.isCollected).length;
+  return flatMapToys(toys.value).filter((toy) => toy.isCollected).length || 0;
 });
 const percentageToysCollected = computed(() => {
   if (!toys.value) return 0;
-  return Math.round((collected.value / total.value) * 100);
+  return Math.round((collected.value / total.value) * 100) || 0;
 });
 
 async function loadView() {

@@ -4,7 +4,7 @@ const mountsStore = useMountsStore();
 const { mounts } = storeToRefs(mountsStore);
 
 onUnmounted(() => {
-  [...document.getElementsByClassName('wowhead-tooltip')].forEach(item => {
+  [...document.getElementsByClassName('wowhead-tooltip')].forEach((item) => {
     item.remove();
   });
 });
@@ -12,6 +12,14 @@ onUnmounted(() => {
 
 <template>
   <UContainer
+    v-if="!mounts.length"
+    class="flex flex-col w-full justify-center md:justify-start px-0 lg:px-0 sm:px-0 mx-0 gap-2"
+  >
+    <h2 class="text-lg">No mounts found</h2>
+  </UContainer>
+
+  <UContainer
+    v-else
     v-for="(category, i) in mounts"
     :key="i"
     class="flex flex-col w-full justify-center md:justify-start px-0 lg:px-0 sm:px-0 mx-0 gap-2"

@@ -36,17 +36,19 @@ const { achievements } = storeToRefs(achievementsStore);
 
 const total = computed(() => {
   if (!achievements.value) return 0;
-  return flatMapAchievements(achievements.value).length;
+  return flatMapAchievements(achievements.value).length || 0;
 });
 const completed = computed(() => {
   if (!achievements.value) return 0;
-  return flatMapAchievements(achievements.value).filter(
-    (achievement) => achievement.isCompleted
-  ).length;
+  return (
+    flatMapAchievements(achievements.value).filter(
+      (achievement) => achievement.isCompleted
+    ).length || 0
+  );
 });
 const percentageAchievementsCompleted = computed(() => {
   if (!achievements.value) return 0;
-  return Math.round((completed.value / total.value) * 100);
+  return Math.round((completed.value / total.value) * 100) || 0;
 });
 </script>
 

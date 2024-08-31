@@ -18,7 +18,7 @@ export const useMountsStore = defineStore('mounts', {
       let result = state._mounts || [];
 
       const filterBySearch = (mounts: MountInformation[] | null) => {
-        if (!mounts) return null;
+        if (!mounts) return [];
         return mounts?.filter(
           (mount) =>
             mount.name
@@ -117,6 +117,7 @@ export const useMountsStore = defineStore('mounts', {
         result = result.map(subCategoryFilter);
 
       // Misc Filters
+
       return result;
     },
     allMounts(state) {
