@@ -14,4 +14,14 @@ jobs:
           fetch-depth: 2
 
       - name: Get changes
-        run: git diff --name-only -r HEAD^1 HEAD
+        run: |
+          changed_files=$(git diff --name-only HEAD^1 HEAD)
+          files_in_changelog=$(echo "$changed_files" | grep '^front-end/changelog/current/')
+
+          if [ -z "$files_in_changelog" ]; then
+            echo "No files were added or modified in the 'front-end/changelog/current' directory."
+            exit 1
+          else
+            echo "Files changed in 'front-end/changelog/current':"
+            echo "$files_in_changelog"
+          fi
