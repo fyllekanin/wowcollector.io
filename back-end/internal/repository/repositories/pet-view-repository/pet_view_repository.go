@@ -8,9 +8,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"wowcollector.io/internal/entities/documents"
+	commonrepository "wowcollector.io/internal/repository/repositories/common-repository"
 )
 
 type PetViewRepository struct {
+	commonrepository.CommonRepository
 	collection *mongo.Collection
 }
 
@@ -21,31 +23,31 @@ func GetRepository() *PetViewRepository {
 }
 
 func Init(database *mongo.Database) {
-	instance = &PetViewRepository{collection: database.Collection("pet-views")}
-	instance.createNameIndex()
-	instance.createIsDefaultIndex()
+	collection := database.Collection("pet-views")
+	instance = &PetViewRepository{
+		CommonRepository: commonrepository.CommonRepository{
+			Collection: collection,
+		},
+		collection: collection,
+	}
+	instance.CreateIndex("isDefault")
 }
 
 func (r *PetViewRepository) GetPetViews() ([]*documents.PetViewDocument, error) {
-	result, err := r.collection.Find(context.TODO(), bson.D{})
+	result, err := r.GetAll()
 	if err != nil {
-		zap.L().Info("Error fetching pet view" + err.Error())
+		zap.L().Info("Error fetching pet views" + err.Error())
 		return nil, err
 	}
-	defer result.Close(context.TODO())
-	var pets []*documents.PetViewDocument
-	for result.Next(context.TODO()) {
-		var pet *documents.PetViewDocument
-		err := result.Decode(&pet)
-		if err != nil {
-			zap.L().Info("Error decoding pet view" + err.Error())
-		}
-		pets = append(pets, pet)
+
+	items := make([]*documents.PetViewDocument, len(result))
+	for i, record := range result {
+		var doc *documents.PetViewDocument
+		bsonBytes, _ := bson.Marshal(record)
+		bson.Unmarshal(bsonBytes, &doc)
+		items[i] = doc
 	}
-	if err := result.Err(); err != nil {
-		zap.L().Info("Error fetching pets" + err.Error())
-	}
-	return pets, nil
+	return items, nil
 }
 
 func (r *PetViewRepository) CreatePetView(document *documents.PetViewDocument) error {
@@ -107,30 +109,4 @@ func (r *PetViewRepository) UpdatePetView(document *documents.PetViewDocument) e
 		return err
 	}
 	return nil
-}
-
-func (r *PetViewRepository) createNameIndex() {
-	nameIndexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "name", Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), nameIndexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
-}
-
-func (r *PetViewRepository) createIsDefaultIndex() {
-	isDefaultIndexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "isDefault", Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), isDefaultIndexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
 }

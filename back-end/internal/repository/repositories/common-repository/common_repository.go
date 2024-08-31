@@ -5,6 +5,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
 )
 
 type Repository interface {
@@ -28,4 +29,33 @@ func (r *CommonRepository) GetAll() ([]bson.D, error) {
 	}
 
 	return records, nil
+}
+
+func (r *CommonRepository) CreateIndex(key string) {
+	indexModel := mongo.IndexModel{
+		Keys: bson.D{
+			{Key: key, Value: 1},
+		},
+	}
+
+	_, err := r.Collection.Indexes().CreateOne(context.TODO(), indexModel)
+	if err != nil {
+		zap.L().Error(err.Error())
+	}
+}
+
+func (r *CommonRepository) CreateCombinedIndex(keys []string) {
+	indexKeys := bson.D{}
+	for _, key := range keys {
+		indexKeys = append(indexKeys, bson.E{Key: key, Value: 1})
+	}
+
+	indexModel := mongo.IndexModel{
+		Keys: indexKeys,
+	}
+
+	_, err := r.Collection.Indexes().CreateOne(context.TODO(), indexModel)
+	if err != nil {
+		zap.L().Error(err.Error())
+	}
 }

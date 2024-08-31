@@ -8,9 +8,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"wowcollector.io/internal/entities/documents"
+	commonrepository "wowcollector.io/internal/repository/repositories/common-repository"
 )
 
 type ToyViewRepository struct {
+	commonrepository.CommonRepository
 	collection *mongo.Collection
 }
 
@@ -21,31 +23,31 @@ func GetRepository() *ToyViewRepository {
 }
 
 func Init(database *mongo.Database) {
-	instance = &ToyViewRepository{collection: database.Collection("toy-views")}
-	instance.createNameIndex()
-	instance.createIsDefaultIndex()
+	collection := database.Collection("toy-views")
+	instance = &ToyViewRepository{
+		CommonRepository: commonrepository.CommonRepository{
+			Collection: collection,
+		},
+		collection: collection,
+	}
+	instance.CreateIndex("isDefault")
 }
 
 func (r *ToyViewRepository) GetToyViews() ([]*documents.ToyViewDocument, error) {
-	result, err := r.collection.Find(context.TODO(), bson.D{})
+	result, err := r.GetAll()
 	if err != nil {
-		zap.L().Info("Error fetching toy view" + err.Error())
+		zap.L().Info("Error fetching toy views" + err.Error())
 		return nil, err
 	}
-	defer result.Close(context.TODO())
-	var toys []*documents.ToyViewDocument
-	for result.Next(context.TODO()) {
-		var toy *documents.ToyViewDocument
-		err := result.Decode(&toy)
-		if err != nil {
-			zap.L().Info("Error decoding toy view" + err.Error())
-		}
-		toys = append(toys, toy)
+
+	items := make([]*documents.ToyViewDocument, len(result))
+	for i, record := range result {
+		var doc *documents.ToyViewDocument
+		bsonBytes, _ := bson.Marshal(record)
+		bson.Unmarshal(bsonBytes, &doc)
+		items[i] = doc
 	}
-	if err := result.Err(); err != nil {
-		zap.L().Info("Error fetching toys" + err.Error())
-	}
-	return toys, nil
+	return items, nil
 }
 
 func (r *ToyViewRepository) CreateToyView(document *documents.ToyViewDocument) error {
@@ -107,30 +109,4 @@ func (r *ToyViewRepository) UpdateToyView(document *documents.ToyViewDocument) e
 		return err
 	}
 	return nil
-}
-
-func (r *ToyViewRepository) createNameIndex() {
-	nameIndexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "name", Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), nameIndexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
-}
-
-func (r *ToyViewRepository) createIsDefaultIndex() {
-	isDefaultIndexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "isDefault", Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), isDefaultIndexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
 }

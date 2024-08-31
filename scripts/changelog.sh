@@ -11,7 +11,7 @@ if [ ! -d ".git" ]; then
 fi
 
 while true; do
-    echo -e "${YELLOW}What type of change is this? (1 = breaking change, 2 = feature, 3 = bug fix):${NC}"
+    echo -e "${YELLOW}What type of change is this? (1 = breaking change, 2 = feature, 3 = bug fix, 4 = improvement):${NC}"
     read change_type
 
     case $change_type in
@@ -27,8 +27,12 @@ while true; do
             type="3"
             break
             ;;
+        4)
+            type="4"
+            break
+            ;;
         *)
-            echo -e "${RED}Invalid input. Please enter 1, 2, or 3.${NC}"
+            echo -e "${RED}Invalid input. Please enter 1, 2, 3 or 4.${NC}"
             ;;
     esac
 done
