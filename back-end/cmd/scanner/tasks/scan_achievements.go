@@ -7,7 +7,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
-	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	"wowcollector.io/internal/entities/documents"
 	httpresponses "wowcollector.io/internal/entities/http-responses"
 	achievementcategoryrepository "wowcollector.io/internal/repository/repositories/achievement-category-repository"
@@ -15,7 +14,7 @@ import (
 	battlenethttp "wowcollector.io/internal/services/http/battle-net-http"
 )
 
-func ScanAchievements(region blizzarddata.BattleNetRegion) {
+func ScanAchievements(region string) {
 	zap.L().Info(fmt.Sprintf("Starting scan of achievements for region %s", region))
 	index := battlenethttp.GetInstance().GetAchievementCategoryIndex(region)
 	var allCategories []*httpresponses.BattleNetAchievementCategory
@@ -57,7 +56,7 @@ func ScanAchievements(region blizzarddata.BattleNetRegion) {
 	zap.L().Info(fmt.Sprintf("Finished scan of achievements for region %s", region))
 }
 
-func runCategory(region blizzarddata.BattleNetRegion, category *httpresponses.BattleNetAchievementCategory,
+func runCategory(region string, category *httpresponses.BattleNetAchievementCategory,
 	existingCategories []*documents.AchievementCategoryDocument, existingAchievements []*documents.AchievementDocument) {
 
 	zap.L().Info(fmt.Sprintf("Scanning achievement category %d", category.Id))
@@ -102,7 +101,7 @@ func runCategory(region blizzarddata.BattleNetRegion, category *httpresponses.Ba
 	wg.Wait()
 }
 
-func runAchievement(region blizzarddata.BattleNetRegion, category *httpresponses.BattleNetAchievementCategory,
+func runAchievement(region string, category *httpresponses.BattleNetAchievementCategory,
 	achievementIndex *httpresponses.BattleNetAchievementIndexItem, existingAchievements []*documents.AchievementDocument) {
 
 	zap.L().Info(fmt.Sprintf("Scanning achievement %d", achievementIndex.Id))

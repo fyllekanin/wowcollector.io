@@ -8,7 +8,6 @@ import (
 	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
 	"wowcollector.io/cmd/scanner/tasks"
-	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	"wowcollector.io/internal/repository"
 )
 
@@ -28,37 +27,37 @@ func main() {
 	c := cron.New()
 
 	time.AfterFunc(1*time.Hour, func() {
-		tasks.ScanRealms(blizzarddata.REGION_EU)
+		tasks.ScanRealms("eu")
 		c.AddFunc("@every 24h", func() {
-			tasks.ScanRealms(blizzarddata.REGION_EU)
+			tasks.ScanRealms("eu")
 		})
 	})
 
 	time.AfterFunc(2*time.Hour, func() {
-		tasks.ScanMounts(blizzarddata.REGION_EU)
+		tasks.ScanMounts("eu")
 		c.AddFunc("@every 12h", func() {
-			tasks.ScanMounts(blizzarddata.REGION_EU)
+			tasks.ScanMounts("eu")
 		})
 	})
 
 	time.AfterFunc(4*time.Hour, func() {
-		tasks.ScanAchievements(blizzarddata.REGION_EU)
+		tasks.ScanAchievements("eu")
 		c.AddFunc("@every 24h", func() {
-			tasks.ScanAchievements(blizzarddata.REGION_EU)
+			tasks.ScanAchievements("eu")
 		})
 	})
 
 	time.AfterFunc(6*time.Hour, func() {
-		tasks.ScanToys(blizzarddata.REGION_EU)
+		tasks.ScanToys("eu")
 		c.AddFunc("@every 24h", func() {
-			tasks.ScanToys(blizzarddata.REGION_EU)
+			tasks.ScanToys("eu")
 		})
 	})
 
 	time.AfterFunc(8*time.Hour, func() {
-		tasks.ScanPets(blizzarddata.REGION_EU)
+		tasks.ScanPets("eu")
 		c.AddFunc("@every 24h", func() {
-			tasks.ScanPets(blizzarddata.REGION_EU)
+			tasks.ScanPets("eu")
 		})
 	})
 

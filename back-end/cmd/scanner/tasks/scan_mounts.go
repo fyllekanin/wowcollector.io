@@ -8,7 +8,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
-	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	"wowcollector.io/internal/entities/documents"
 	httpresponses "wowcollector.io/internal/entities/http-responses"
 	mountrepository "wowcollector.io/internal/repository/repositories/mount-repository"
@@ -19,7 +18,7 @@ import (
 var largeIconUrl = "https://wow.zamimg.com/images/wow/icons/large/{name}.jpg"
 var smallIconUrl = "https://wow.zamimg.com/images/wow/icons/small/{name}.jpg"
 
-func ScanMounts(region blizzarddata.BattleNetRegion) {
+func ScanMounts(region string) {
 	zap.L().Info(fmt.Sprintf("Starting scan of mounts for region %s", region))
 	repository := mountrepository.GetRepository()
 
@@ -48,7 +47,7 @@ func ScanMounts(region blizzarddata.BattleNetRegion) {
 	zap.L().Info(fmt.Sprintf("Finished scan of mounts for region %s", region))
 }
 
-func runMount(region blizzarddata.BattleNetRegion, mountId int, existingMounts []*documents.MountDocument, repository mountrepository.MountRepository) {
+func runMount(region string, mountId int, existingMounts []*documents.MountDocument, repository mountrepository.MountRepository) {
 	zap.L().Info(fmt.Sprintf("Scanning mount id %d", mountId))
 	battleNetMount := battlenethttp.GetInstance().GetMount(region, mountId)
 	if battleNetMount == nil {

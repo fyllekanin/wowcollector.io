@@ -6,14 +6,13 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
-	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	"wowcollector.io/internal/entities/documents"
 	httpresponses "wowcollector.io/internal/entities/http-responses"
 	toyrepository "wowcollector.io/internal/repository/repositories/toy-repository"
 	battlenethttp "wowcollector.io/internal/services/http/battle-net-http"
 )
 
-func ScanToys(region blizzarddata.BattleNetRegion) {
+func ScanToys(region string) {
 	zap.L().Info(fmt.Sprintf("Starting scan of toys for region %s", region))
 	repository := toyrepository.GetRepository()
 
@@ -42,7 +41,7 @@ func ScanToys(region blizzarddata.BattleNetRegion) {
 	zap.L().Info(fmt.Sprintf("Finished scan of toys for region %s", region))
 }
 
-func runToy(region blizzarddata.BattleNetRegion, toyId int, existingToys []*documents.ToyDocument, repository toyrepository.ToyRepository) {
+func runToy(region string, toyId int, existingToys []*documents.ToyDocument, repository toyrepository.ToyRepository) {
 	zap.L().Info(fmt.Sprintf("Scanning toy id %d", toyId))
 	battleNetToy := battlenethttp.GetInstance().GetToy(region, toyId)
 	if battleNetToy == nil {

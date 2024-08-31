@@ -664,7 +664,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "blizzarddata.BattleNetRegion": {
+        "string": {
             "type": "string",
             "enum": [
                 "eu",
@@ -1120,7 +1120,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "region": {
-                    "$ref": "#/definitions/blizzarddata.BattleNetRegion"
+                    "$ref": "#/definitions/string"
                 },
                 "slug": {
                     "type": "string"
@@ -1151,7 +1151,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "value": {
-                    "$ref": "#/definitions/blizzarddata.BattleNetRegion"
+                    "$ref": "#/definitions/string"
                 }
             }
         },

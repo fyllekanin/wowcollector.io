@@ -6,14 +6,13 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
-	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	"wowcollector.io/internal/entities/documents"
 	httpresponses "wowcollector.io/internal/entities/http-responses"
 	petrepository "wowcollector.io/internal/repository/repositories/pet-repository"
 	battlenethttp "wowcollector.io/internal/services/http/battle-net-http"
 )
 
-func ScanPets(region blizzarddata.BattleNetRegion) {
+func ScanPets(region string) {
 	zap.L().Info(fmt.Sprintf("Starting scan of pets for region %s", region))
 	repository := petrepository.GetRepository()
 
@@ -42,7 +41,7 @@ func ScanPets(region blizzarddata.BattleNetRegion) {
 	zap.L().Info(fmt.Sprintf("Finished scan of pets for region %s", region))
 }
 
-func runPet(region blizzarddata.BattleNetRegion, petId int, existingPets []*documents.PetDocument, repository petrepository.PetRepository) {
+func runPet(region string, petId int, existingPets []*documents.PetDocument, repository petrepository.PetRepository) {
 	zap.L().Info(fmt.Sprintf("Scanning pet id %d", petId))
 	battleNetPet := battlenethttp.GetInstance().GetPet(region, petId)
 	if battleNetPet == nil {

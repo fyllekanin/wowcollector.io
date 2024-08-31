@@ -100,8 +100,6 @@ spec:
           imagePullPolicy: Always
           readinessProbe: null
           env:
-            - name: NUXT_SITE_ENV
-              value: preview
             - name: NUXT_BASE_URL
               value: http://wowcollector-server-svc
 ---

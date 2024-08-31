@@ -5,14 +5,13 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
-	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	"wowcollector.io/internal/entities/documents"
 	httpresponses "wowcollector.io/internal/entities/http-responses"
 	realmrepository "wowcollector.io/internal/repository/repositories/realm-repository"
 	battlenethttp "wowcollector.io/internal/services/http/battle-net-http"
 )
 
-func ScanRealms(region blizzarddata.BattleNetRegion) {
+func ScanRealms(region string) {
 	zap.L().Info(fmt.Sprintf("Starting scan of realms for region %s", region))
 	repository := realmrepository.GetRepository()
 
@@ -53,7 +52,7 @@ func ScanRealms(region blizzarddata.BattleNetRegion) {
 	zap.L().Info(fmt.Sprintf("Finished scan of realms for region %s", region))
 }
 
-func getExistingRealm(realms []*documents.RealmDocument, realm httpresponses.BattleNetRealm, region blizzarddata.BattleNetRegion) *documents.RealmDocument {
+func getExistingRealm(realms []*documents.RealmDocument, realm httpresponses.BattleNetRealm, region string) *documents.RealmDocument {
 	for _, element := range realms {
 		if element.Slug == realm.Slug && element.Region == region {
 			return element

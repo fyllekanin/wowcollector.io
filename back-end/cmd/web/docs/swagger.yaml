@@ -1,5 +1,5 @@
 definitions:
-  blizzarddata.BattleNetRegion:
+  string:
     enum:
     - eu
     - us
@@ -301,7 +301,7 @@ definitions:
       name:
         type: string
       region:
-        $ref: '#/definitions/blizzarddata.BattleNetRegion'
+        $ref: '#/definitions/string'
       slug:
         type: string
     type: object
@@ -321,7 +321,7 @@ definitions:
       name:
         type: string
       value:
-        $ref: '#/definitions/blizzarddata.BattleNetRegion'
+        $ref: '#/definitions/string'
     type: object
   response.ToyAssets:
     properties:

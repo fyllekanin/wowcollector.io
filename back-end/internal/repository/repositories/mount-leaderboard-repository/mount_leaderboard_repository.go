@@ -7,7 +7,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
-	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	"wowcollector.io/internal/entities/documents"
 	commonrepository "wowcollector.io/internal/repository/repositories/common-repository"
 )
@@ -73,7 +72,7 @@ func (r *MountLeaderboardRepository) UpdateLeaderboardEntry(document *documents.
 	return nil
 }
 
-func (r *MountLeaderboardRepository) GetLeaderBoardEntry(character string, realm string, region blizzarddata.BattleNetRegion) (*documents.LeaderboardDocument, error) {
+func (r *MountLeaderboardRepository) GetLeaderBoardEntry(character string, realm string, region string) (*documents.LeaderboardDocument, error) {
 	filter := bson.D{
 		{"character", character},
 		{"realm", realm},
