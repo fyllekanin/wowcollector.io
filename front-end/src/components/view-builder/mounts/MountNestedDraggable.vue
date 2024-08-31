@@ -3,7 +3,12 @@ import draggable from 'vuedraggable';
 import type { MountCategory, MountInformation } from '~/types';
 
 const mountViewBuilderStore = useMountViewBuilderStore();
-const { _mountCategories, _settings } = storeToRefs(mountViewBuilderStore);
+const {
+  _mountCategories,
+  _settings,
+  highlightCategoryDropzones,
+  highlightMountDropzones,
+} = storeToRefs(mountViewBuilderStore);
 
 const dragging = ref(false);
 const dragItem = ref<MountCategory | MountInformation>();
@@ -72,7 +77,10 @@ function unFocus(event: Event) {
 
 <template>
   <draggable
-    class="flex flex-col w-full h-full p-10 gap-2 overflow-y-auto"
+    :class="[
+      'flex flex-col w-full h-full p-10 gap-2 overflow-y-auto',
+      highlightCategoryDropzones ? 'bg-green-900 bg-opacity-45' : '',
+    ]"
     :list="_mountCategories"
     :group="{
       name: !categoryCanBeDroppedInCategory && dragging ? 'deny' : 'category',
@@ -121,11 +129,24 @@ function unFocus(event: Event) {
             </UTooltip>
           </div>
           <draggable
-            class="flex flex-wrap gap-2 min-h-10 p-4"
+            :class="[
+              'flex flex-wrap gap-2 min-h-10 p-4',
+              highlightMountDropzones ? 'bg-green-900 bg-opacity-45' : '',
+            ]"
             :list="category.mounts"
             :group="{ name: 'mount' }"
-            @start="_settings.showMountTooltips = false"
-            @end="_settings.showMountTooltips = true"
+            @start="
+              () => {
+                _settings.showMountTooltips = false;
+                mountViewBuilderStore.setDragState(true, 'mount');
+              }
+            "
+            @end="
+              () => {
+                _settings.showMountTooltips = true;
+                mountViewBuilderStore.clearDragState();
+              }
+            "
           >
             <template #item="{ element: mount }">
               <MountIcon
@@ -140,14 +161,17 @@ function unFocus(event: Event) {
           </draggable>
           <draggable
             v-if="category.categories"
-            class="flex grow flex-wrap justify-start gap-2 min-h-10"
+            :class="[
+              'flex grow flex-wrap justify-start gap-2 min-h-10 p-4',
+              highlightCategoryDropzones ? 'bg-green-900 bg-opacity-45' : '',
+            ]"
             :list="category.categories"
             :group="{ name: 'category' }"
             @start="mountViewBuilderStore.setDragState(true, 'category')"
             @end="mountViewBuilderStore.clearDragState"
           >
             <template #item="{ element: subCategory }">
-              <div class="flex flex-col gap-5 p-4">
+              <div class="flex flex-col gap-5">
                 <UCard
                   :ui="{
                     ring: _settings.showBorders
@@ -155,7 +179,7 @@ function unFocus(event: Event) {
                       : 'ring-0',
                     rounded: 'rounded-none',
                     body: {
-                      padding: 'p-3 sm:p-3',
+                      padding: 'p-0 sm:p-0',
                     },
                     shadow: _settings.showBorders ? '' : 'shadow-none',
                   }"
@@ -184,11 +208,26 @@ function unFocus(event: Event) {
                     </UTooltip>
                   </div>
                   <draggable
-                    class="flex flex-wrap gap-2 py-5"
+                    :class="[
+                      'flex flex-wrap gap-2 py-5 px-2',
+                      highlightMountDropzones
+                        ? 'bg-green-900 bg-opacity-45'
+                        : '',
+                    ]"
                     :list="subCategory.mounts"
                     :group="{ name: 'mount' }"
-                    @start="_settings.showMountTooltips = false"
-                    @end="_settings.showMountTooltips = true"
+                    @start="
+                      () => {
+                        _settings.showMountTooltips = false;
+                        mountViewBuilderStore.setDragState(true, 'mount');
+                      }
+                    "
+                    @end="
+                      () => {
+                        _settings.showMountTooltips = true;
+                        mountViewBuilderStore.clearDragState();
+                      }
+                    "
                   >
                     <template #item="{ element: mount }">
                       <MountIcon

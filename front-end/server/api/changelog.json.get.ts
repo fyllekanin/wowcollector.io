@@ -19,6 +19,36 @@ interface Change {
 const data: Changelog[] =
 [
   {
+    "version": "0.3.0",
+    "timestamp": "1725091554",
+    "changes": [
+      {
+        "type": "3",
+        "content": "fixed wowhead collection icons redirect url"
+      },
+      {
+        "type": "2",
+        "content": "Added API for fetching all the scanned mounts"
+      },
+      {
+        "type": "2",
+        "content": "Add API to fetch all scanned toys"
+      },
+      {
+        "type": "2",
+        "content": "Add API to fetch all scanned pets"
+      },
+      {
+        "type": "2",
+        "content": "Add item view creation APIs"
+      },
+      {
+        "type": "2",
+        "content": "Add pet and toy view fetch support in collection"
+      }
+    ]
+  },
+  {
     "version": "0.2.0",
     "timestamp": "1723486955",
     "changes": [

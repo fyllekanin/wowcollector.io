@@ -48,26 +48,29 @@ if (props.useIntersectionObserver) {
 </script>
 
 <template>
-  <a
-    :class="[buildMode ? 'cursor-move' : '']"
-    :href="clickable ? `https://www.wowhead.com/battle-pet/${pet.id}` : '#'"
-    target="_blank"
-    :data-wowhead="showTooltip ? `battle-pet=${pet.id}` : ''"
-    @click="!clickable && $event.preventDefault()"
-  >
-    <img
-      v-if="targetIsVisible"
-      :src="pet.assets.largeIcon"
-      :class="[
-        !pet.isCollected && !buildMode
-          ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
-          : 'hover:ring-1 hover:ring-primary transition ease-in-out',
-      ]"
-      width="38"
-      @error="
-        pet.assets.largeIcon =
-          'https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg'
-      "
-    />
-  </a>
+  <div ref="target">
+    <a
+      :class="[buildMode ? 'cursor-move' : '']"
+      :href="clickable ? `https://www.wowhead.com/battle-pet/${pet.id}` : '#'"
+      target="_blank"
+      :data-wowhead="showTooltip ? `battle-pet=${pet.id}` : ''"
+      @click="!clickable && $event.preventDefault()"
+    >
+      <img
+        v-if="targetIsVisible"
+        :src="pet.assets.largeIcon"
+        :class="[
+          !pet.isCollected && !buildMode
+            ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
+            : 'hover:ring-1 hover:ring-primary transition ease-in-out',
+        ]"
+        width="38"
+        @error="
+          pet.assets.largeIcon =
+            'https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg'
+        "
+      />
+      <div v-else class="w-10 h-10 rounded-lg" />
+    </a>
+  </div>
 </template>

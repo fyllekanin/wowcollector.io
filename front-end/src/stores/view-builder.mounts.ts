@@ -80,6 +80,12 @@ export const useMountViewBuilderStore = defineStore('mount-view-builder', {
     isValid(state) {
       return state._mountCategories.length;
     },
+    highlightMountDropzones(state) {
+      return state._dragState.state && state._dragState.type === 'mount';
+    },
+    highlightCategoryDropzones(state) {
+      return state._dragState.state && state._dragState.type === 'category';
+    },
   },
   actions: {
     setMounts(newMounts: MountInformation[]) {

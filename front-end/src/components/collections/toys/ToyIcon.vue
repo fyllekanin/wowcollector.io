@@ -48,26 +48,29 @@ if (props.useIntersectionObserver) {
 </script>
 
 <template>
-  <a
-    :class="[buildMode ? 'cursor-move' : '']"
-    :href="clickable ? `https://www.wowhead.com/item/${toy.itemId}` : '#'"
-    target="_blank"
-    :data-wowhead="showTooltip ? `item=${toy.itemId}` : ''"
-    @click="!clickable && $event.preventDefault()"
-  >
-    <img
-      v-if="targetIsVisible"
-      :src="toy.assets.largeIcon"
-      :class="[
-        !toy.isCollected && !buildMode
-          ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
-          : 'hover:ring-1 hover:ring-primary transition ease-in-out',
-      ]"
-      width="38"
-      @error="
-        toy.assets.largeIcon =
-          'https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg'
-      "
-    />
-  </a>
+  <div ref="target">
+    <a
+      :class="[buildMode ? 'cursor-move' : '']"
+      :href="clickable ? `https://www.wowhead.com/item/${toy.itemId}` : '#'"
+      target="_blank"
+      :data-wowhead="showTooltip ? `item=${toy.itemId}` : ''"
+      @click="!clickable && $event.preventDefault()"
+    >
+      <img
+        v-if="targetIsVisible"
+        :src="toy.assets.largeIcon"
+        :class="[
+          !toy.isCollected && !buildMode
+            ? 'brightness-50 grayscale blur-[1px] transition ease-in-out hover:grayscale-0 hover:blur-[0px] hover:brightness-100 hover:ring-1 hover:ring-primary'
+            : 'hover:ring-1 hover:ring-primary transition ease-in-out',
+        ]"
+        width="38"
+        @error="
+          toy.assets.largeIcon =
+            'https://wow.zamimg.com/images/wow/icons/large/inv_misc_questionmark.jpg'
+        "
+      />
+      <div v-else class="w-10 h-10 rounded-lg" />
+    </a>
+  </div>
 </template>

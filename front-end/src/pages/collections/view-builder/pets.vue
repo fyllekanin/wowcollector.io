@@ -35,6 +35,8 @@ const {
   _searchFilter,
   _settings,
   successfulCreation,
+  highlightCategoryDropzones,
+  highlightPetDropzones,
 } = storeToRefs(petViewBuilderStore);
 
 const createdViewId = ref('');
@@ -125,7 +127,10 @@ function onLeave() {
             icon="heroicons-outline:search"
           />
           <draggable
-            class="flex grow flex-wrap gap-4 justify-center"
+            :class="[
+              'flex grow flex-wrap gap-4 justify-center',
+              highlightPetDropzones ? 'bg-green-900 bg-opacity-45' : '',
+            ]"
             :list="_pets"
             :group="{ name: 'pet' }"
             @start="_settings.showPetTooltips = false"
