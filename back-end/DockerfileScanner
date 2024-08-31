@@ -21,4 +21,4 @@ COPY ./resources/seeds /resources/seeds
 
 EXPOSE 8888
 
-CMD ["./migration-seeder && ./app"]
+CMD ./migration-seeder && ./app

@@ -95,7 +95,7 @@ jobs:
 
         git add .
         git commit -m "Release ${{ env.new_version }}"
-        git push origin main
+        git push origin develop
 
     - name: Create a new tag
       run: |

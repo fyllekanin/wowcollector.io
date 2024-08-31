@@ -13,8 +13,8 @@ function getSortedFolders() {
         .sort((a, b) => {
             const versionA = a.split('-')[0];
             const versionB = b.split('-')[0];
-            if (versionA === 'latest') return 1;
-            if (versionB === 'latest') return 1;
+            if (versionA === 'latest') return -1;
+            if (versionB === 'latest') return -1;
             
             return semver.rcompare(versionA, versionB)
         });
@@ -69,7 +69,8 @@ function writeTextToFile(text) {
 const changelogContent = `export enum ChangelogType {
   BREAKING = '1',
   FEATURE = '2',
-  BUG = '3'
+  BUG = '3',
+  IMPROVEMENT = '4'
 }
   
 interface Changelog {

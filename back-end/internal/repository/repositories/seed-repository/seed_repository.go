@@ -8,9 +8,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"wowcollector.io/internal/entities/documents"
+	commonrepository "wowcollector.io/internal/repository/repositories/common-repository"
 )
 
 type SeedRepository struct {
+	commonrepository.CommonRepository
 	collection *mongo.Collection
 }
 
@@ -21,8 +23,14 @@ func GetRepository() *SeedRepository {
 }
 
 func Init(database *mongo.Database) {
-	instance = &SeedRepository{collection: database.Collection("seeds")}
-	instance.createIndexes()
+	collection := database.Collection("seeds")
+	instance = &SeedRepository{
+		CommonRepository: commonrepository.CommonRepository{
+			Collection: collection,
+		},
+		collection: collection,
+	}
+	instance.CreateIndex("name")
 }
 
 func (r *SeedRepository) CreateSeed(name string) error {
@@ -50,17 +58,4 @@ func (r *SeedRepository) IsExisting(name string) (bool, error) {
 		return false, err
 	}
 	return true, nil
-}
-
-func (r *SeedRepository) createIndexes() {
-	indexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "name", Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), indexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
 }

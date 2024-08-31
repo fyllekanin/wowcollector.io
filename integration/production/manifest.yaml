@@ -1,39 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wowcollector-staging-scanner-deployment
+  name: wowcollector-scanner-deployment
   namespace: wowcollector
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wowcollector-staging-scanner
+      app: wowcollector-scanner
   template:
     metadata:
       labels:
-        app: wowcollector-staging-scanner
+        app: wowcollector-scanner
         app/hash: {{hash}}
     spec:
       containers:
-        - name: wowcollector-staging-scanner
-          image: tovven/wowcollector:scanner-latest
+        - name: wowcollector-scanner
+          image: tovven/wowcollector:scanner-{{version}}
           imagePullPolicy: Always
           readinessProbe: null
           env:
             - name: DATABASE_CONNECTION
               valueFrom:
                 secretKeyRef:
-                  name: mongo-staging-creds
+                  name: mongo-creds
                   key: connection
             - name: BATTLE_NET_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: wowcollector-staging-credentials
+                  name: wowcollector-credentials
                   key: scannerClientId
             - name: BATTLE_NET_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: wowcollector-staging-credentials
+                  name: wowcollector-credentials
                   key: scannerSecret
             - name: DATABASE_NAME
               value: wow
@@ -41,39 +41,39 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wowcollector-staging-server-deployment
+  name: wowcollector-server-deployment
   namespace: wowcollector
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wowcollector-staging-server
+      app: wowcollector-server
   template:
     metadata:
       labels:
-        app: wowcollector-staging-server
+        app: wowcollector-server
         app/hash: {{hash}}
     spec:
       containers:
-        - name: wowcollector-staging-server
-          image: tovven/wowcollector:server-latest
+        - name: wowcollector-server
+          image: tovven/wowcollector:server-{{version}}
           imagePullPolicy: Always
           readinessProbe: null
           env:
             - name: DATABASE_CONNECTION
               valueFrom:
                 secretKeyRef:
-                  name: mongo-staging-creds
+                  name: mongo-creds
                   key: connection
             - name: BATTLE_NET_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: wowcollector-staging-credentials
+                  name: wowcollector-credentials
                   key: clientId
             - name: BATTLE_NET_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: wowcollector-staging-credentials
+                  name: wowcollector-credentials
                   key: secret
             - name: DATABASE_NAME
               value: wow
@@ -81,34 +81,34 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wowcollector-staging-web-deployment
+  name: wowcollector-web-deployment
   namespace: wowcollector
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wowcollector-staging-web
+      app: wowcollector-web
   template:
     metadata:
       labels:
-        app: wowcollector-staging-web
+        app: wowcollector-web
         app/hash: {{hash}}
     spec:
       containers:
-        - name: wowcollector-staging-web
-          image: tovven/wowcollector:web-latest
+        - name: wowcollector-web
+          image: tovven/wowcollector:web-{{version}}
           imagePullPolicy: Always
           readinessProbe: null
           env:
             - name: NUXT_SITE_ENV
               value: preview
             - name: NUXT_BASE_URL
-              value: http://wowcollector-staging-server-svc
+              value: http://wowcollector-server-svc
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: wowcollector-staging-ingress
+  name: wowcollector-ingress
   namespace: wowcollector
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
@@ -117,28 +117,28 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - staging.wowcollector.io
-      secretName: staging-wowcollector-tls
+        - wowcollector.io
+      secretName: wowcollector-tls
   rules:
-    - host: "staging.wowcollector.io"
+    - host: "wowcollector.io"
       http:
         paths:
           - pathType: Prefix
             path: "/"
             backend:
               service:
-                name: wowcollector-staging-web-svc
+                name: wowcollector-web-svc
                 port:
                   number: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: wowcollector-staging-web-svc
+  name: wowcollector-web-svc
   namespace: wowcollector
 spec:
   selector:
-    app: wowcollector-staging-web
+    app: wowcollector-web
   ports:
     - protocol: TCP
       port: 80
@@ -147,13 +147,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: wowcollector-staging-server-svc
+  name: wowcollector-server-svc
   namespace: wowcollector
 spec:
   selector:
-    app: wowcollector-staging-server
+    app: wowcollector-server
   ports:
-    - name: wowcollector-staging-server
+    - name: wowcollector-server
       protocol: TCP
       port: 80
       targetPort: 8888

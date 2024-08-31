@@ -13,7 +13,9 @@ import (
 )
 
 func main() {
-	logger, _ := zap.NewProduction()
+	config := zap.NewProductionConfig()
+	config.OutputPaths = []string{"stdout"}
+	logger, _ := config.Build()
 	zap.ReplaceGlobals(logger)
 	client := repository.GetDatabaseClient()
 	defer func() {
@@ -53,7 +55,7 @@ func main() {
 		})
 	})
 
-	time.AfterFunc(8*time.Second, func() {
+	time.AfterFunc(8*time.Hour, func() {
 		tasks.ScanPets(blizzarddata.REGION_EU)
 		c.AddFunc("@every 24h", func() {
 			tasks.ScanPets(blizzarddata.REGION_EU)

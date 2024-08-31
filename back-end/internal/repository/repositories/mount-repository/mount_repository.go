@@ -29,7 +29,7 @@ func Init(database *mongo.Database) {
 		},
 		collection: collection,
 	}
-	instance.createIndexes()
+	instance.CreateIndex("id")
 }
 
 func (r *MountRepository) GetMounts() ([]*documents.MountDocument, error) {
@@ -39,14 +39,14 @@ func (r *MountRepository) GetMounts() ([]*documents.MountDocument, error) {
 		return nil, err
 	}
 
-	mounts := make([]*documents.MountDocument, len(result))
+	items := make([]*documents.MountDocument, len(result))
 	for i, record := range result {
 		var doc *documents.MountDocument
 		bsonBytes, _ := bson.Marshal(record)
 		bson.Unmarshal(bsonBytes, &doc)
-		mounts[i] = doc
+		items[i] = doc
 	}
-	return mounts, nil
+	return items, nil
 }
 
 func (r *MountRepository) CreateMount(document *documents.MountDocument) error {
@@ -69,17 +69,4 @@ func (r *MountRepository) UpdateMount(document *documents.MountDocument) error {
 		return err
 	}
 	return nil
-}
-
-func (r *MountRepository) createIndexes() {
-	indexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "id", Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), indexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
 }

@@ -1,7 +1,8 @@
 export enum ChangelogType {
   BREAKING = '1',
   FEATURE = '2',
-  BUG = '3'
+  BUG = '3',
+  IMPROVEMENT = '4'
 }
   
 interface Changelog {

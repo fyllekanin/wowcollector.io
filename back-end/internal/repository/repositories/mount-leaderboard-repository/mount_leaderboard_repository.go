@@ -9,9 +9,11 @@ import (
 	"go.uber.org/zap"
 	blizzarddata "wowcollector.io/internal/common/data/blizzard-data"
 	"wowcollector.io/internal/entities/documents"
+	commonrepository "wowcollector.io/internal/repository/repositories/common-repository"
 )
 
 type MountLeaderboardRepository struct {
+	commonrepository.CommonRepository
 	collection *mongo.Collection
 }
 
@@ -22,30 +24,31 @@ func GetRepository() *MountLeaderboardRepository {
 }
 
 func Init(database *mongo.Database) {
-	instance = &MountLeaderboardRepository{collection: database.Collection("mounts-leaderboard")}
-	instance.createIndexes()
+	collection := database.Collection("mounts-leaderboard")
+	instance = &MountLeaderboardRepository{
+		CommonRepository: commonrepository.CommonRepository{
+			Collection: collection,
+		},
+		collection: collection,
+	}
+	instance.CreateCombinedIndex([]string{"character", "realm", "region"})
 }
 
 func (r *MountLeaderboardRepository) GetLeaderboardEntries() ([]*documents.LeaderboardDocument, error) {
-	result, err := r.collection.Find(context.TODO(), bson.D{})
+	result, err := r.GetAll()
 	if err != nil {
-		zap.L().Info("Error fetching mount leaderboard" + err.Error())
+		zap.L().Info("Error fetching mount leaderboard entries" + err.Error())
 		return nil, err
 	}
-	defer result.Close(context.TODO())
-	var mounts []*documents.LeaderboardDocument
-	for result.Next(context.TODO()) {
-		var mount *documents.LeaderboardDocument
-		err := result.Decode(&mount)
-		if err != nil {
-			zap.L().Info("Error decoding mount leaderboard entry" + err.Error())
-		}
-		mounts = append(mounts, mount)
+
+	items := make([]*documents.LeaderboardDocument, len(result))
+	for i, record := range result {
+		var doc *documents.LeaderboardDocument
+		bsonBytes, _ := bson.Marshal(record)
+		bson.Unmarshal(bsonBytes, &doc)
+		items[i] = doc
 	}
-	if err := result.Err(); err != nil {
-		zap.L().Info("Error fetching mount leaderboard" + err.Error())
-	}
-	return mounts, nil
+	return items, nil
 }
 
 func (r *MountLeaderboardRepository) CreateLeaderboardEntry(document *documents.LeaderboardDocument) error {
@@ -89,19 +92,4 @@ func (r *MountLeaderboardRepository) GetLeaderBoardEntry(character string, realm
 	}
 
 	return &leaderboardDocument, nil
-}
-
-func (r *MountLeaderboardRepository) createIndexes() {
-	indexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "character", Value: 1},
-			{Key: "realm", Value: 1},
-			{Key: "region", Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), indexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
 }

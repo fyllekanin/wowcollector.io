@@ -1,0 +1,59 @@
+name: Production deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The release version to deploy"
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
+
+    - name: Check if Docker image exists
+      id: check-image
+      run: |
+        VERSION=${{ github.event.inputs.version }}
+        IMAGE="tovven/wowcollector:server-${VERSION}"
+        echo "Checking if Docker image ${IMAGE} exists on Docker Hub..."
+        if docker pull $IMAGE > /dev/null 2>&1; then
+          echo "Docker image ${IMAGE} exists."
+        else
+          echo "Docker image ${IMAGE} does not exist."
+          exit 1
+        fi
+
+    - name: Update credentials and manifest
+      if: success()
+      run: |
+        sed -i "s|{{clientId}}|${{ secrets.BATTLE_NET_CLIENT_ID }}|g" integration/production/credentials.yaml
+        sed -i "s|{{secret}}|${{ secrets.BATTLE_NET_SECRET }}|g" integration/production/credentials.yaml
+        sed -i "s|{{scannerClientId}}|${{ secrets.BATTLE_NET_SCANNER_CLIENT_ID }}|g" integration/production/credentials.yaml
+        sed -i "s|{{scannerSecret}}|${{ secrets.BATTLE_NET_SCANNER_SECRET }}|g" integration/production/credentials.yaml
+
+        sed -i "s|{{hash}}|$GITHUB_SHA|g" integration/production/manifest.yaml
+        sed -i "s|{{version}}|${{ github.event.inputs.version }}|g" integration/production/manifest.yaml
+    
+    - name: Apply credentials
+      if: success()
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      with:
+        args: apply -f integration/production/credentials.yaml
+
+    - name: Apply manifest
+      uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      with:
+        args: apply -f integration/production/manifest.yaml

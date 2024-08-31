@@ -8,9 +8,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"wowcollector.io/internal/entities/documents"
+	commonrepository "wowcollector.io/internal/repository/repositories/common-repository"
 )
 
 type AchievementCategoryRepository struct {
+	commonrepository.CommonRepository
 	collection *mongo.Collection
 }
 
@@ -21,10 +23,16 @@ func GetRepository() *AchievementCategoryRepository {
 }
 
 func Init(database *mongo.Database) {
-	instance = &AchievementCategoryRepository{collection: database.Collection("achievement-categories")}
-	instance.createIndexes("id")
-	instance.createIndexes("isRootCategory")
-	instance.createIndexes("rootCategoryId")
+	collection := database.Collection("achievement-categories")
+	instance = &AchievementCategoryRepository{
+		CommonRepository: commonrepository.CommonRepository{
+			Collection: collection,
+		},
+		collection: collection,
+	}
+	instance.CreateIndex("id")
+	instance.CreateIndex("isRootCategory")
+	instance.CreateIndex("rootCategoryId")
 }
 
 func (r *AchievementCategoryRepository) GetAchievementRootCategories() ([]*documents.AchievementCategoryDocument, error) {
@@ -66,25 +74,20 @@ func (r *AchievementCategoryRepository) GetAchievementCategoryWithId(id int) (*d
 }
 
 func (r *AchievementCategoryRepository) GetAchievementCategories() ([]*documents.AchievementCategoryDocument, error) {
-	result, err := r.collection.Find(context.TODO(), bson.D{})
+	result, err := r.GetAll()
 	if err != nil {
 		zap.L().Info("Error fetching achievement categories" + err.Error())
 		return nil, err
 	}
-	defer result.Close(context.TODO())
-	var achievementCategories []*documents.AchievementCategoryDocument
-	for result.Next(context.TODO()) {
-		var achievementCategory *documents.AchievementCategoryDocument
-		err := result.Decode(&achievementCategory)
-		if err != nil {
-			zap.L().Info("Error decoding achievement category" + err.Error())
-		}
-		achievementCategories = append(achievementCategories, achievementCategory)
+
+	items := make([]*documents.AchievementCategoryDocument, len(result))
+	for i, record := range result {
+		var doc *documents.AchievementCategoryDocument
+		bsonBytes, _ := bson.Marshal(record)
+		bson.Unmarshal(bsonBytes, &doc)
+		items[i] = doc
 	}
-	if err := result.Err(); err != nil {
-		zap.L().Info("Error fetching achievement categories" + err.Error())
-	}
-	return achievementCategories, nil
+	return items, nil
 }
 
 func (r *AchievementCategoryRepository) GetAchievementCategoriesForRootCategory(rootCategoryId int) ([]*documents.AchievementCategoryDocument, error) {
@@ -130,17 +133,4 @@ func (r *AchievementCategoryRepository) UpdateAchievementCategory(document *docu
 		return err
 	}
 	return nil
-}
-
-func (r *AchievementCategoryRepository) createIndexes(key string) {
-	indexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: key, Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), indexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
 }

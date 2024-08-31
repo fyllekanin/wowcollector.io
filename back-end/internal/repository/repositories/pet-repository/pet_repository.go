@@ -7,9 +7,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"wowcollector.io/internal/entities/documents"
+	commonrepository "wowcollector.io/internal/repository/repositories/common-repository"
 )
 
 type PetRepository struct {
+	commonrepository.CommonRepository
 	collection *mongo.Collection
 }
 
@@ -20,30 +22,31 @@ func GetRepository() *PetRepository {
 }
 
 func Init(database *mongo.Database) {
-	instance = &PetRepository{collection: database.Collection("pets")}
-	instance.createIndexes()
+	collection := database.Collection("pets")
+	instance = &PetRepository{
+		CommonRepository: commonrepository.CommonRepository{
+			Collection: collection,
+		},
+		collection: collection,
+	}
+	instance.CreateIndex("id")
 }
 
 func (r *PetRepository) GetPets() ([]*documents.PetDocument, error) {
-	result, err := r.collection.Find(context.TODO(), bson.D{})
+	result, err := r.GetAll()
 	if err != nil {
 		zap.L().Info("Error fetching pets" + err.Error())
 		return nil, err
 	}
-	defer result.Close(context.TODO())
-	var pets []*documents.PetDocument
-	for result.Next(context.TODO()) {
-		var pet *documents.PetDocument
-		err := result.Decode(&pet)
-		if err != nil {
-			zap.L().Info("Error decoding pet" + err.Error())
-		}
-		pets = append(pets, pet)
+
+	items := make([]*documents.PetDocument, len(result))
+	for i, record := range result {
+		var doc *documents.PetDocument
+		bsonBytes, _ := bson.Marshal(record)
+		bson.Unmarshal(bsonBytes, &doc)
+		items[i] = doc
 	}
-	if err := result.Err(); err != nil {
-		zap.L().Info("Error fetching pets" + err.Error())
-	}
-	return pets, nil
+	return items, nil
 }
 
 func (r *PetRepository) CreatePet(document *documents.PetDocument) error {
@@ -66,17 +69,4 @@ func (r *PetRepository) UpdatePet(document *documents.PetDocument) error {
 		return err
 	}
 	return nil
-}
-
-func (r *PetRepository) createIndexes() {
-	indexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "id", Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), indexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
 }

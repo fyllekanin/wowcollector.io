@@ -8,9 +8,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 	"wowcollector.io/internal/entities/documents"
+	commonrepository "wowcollector.io/internal/repository/repositories/common-repository"
 )
 
 type MountViewRepository struct {
+	commonrepository.CommonRepository
 	collection *mongo.Collection
 }
 
@@ -21,31 +23,31 @@ func GetRepository() *MountViewRepository {
 }
 
 func Init(database *mongo.Database) {
-	instance = &MountViewRepository{collection: database.Collection("mount-views")}
-	instance.createNameIndex()
-	instance.createIsDefaultIndex()
+	collection := database.Collection("mount-views")
+	instance = &MountViewRepository{
+		CommonRepository: commonrepository.CommonRepository{
+			Collection: collection,
+		},
+		collection: collection,
+	}
+	instance.CreateIndex("isDefault")
 }
 
 func (r *MountViewRepository) GetMountViews() ([]*documents.MountViewDocument, error) {
-	result, err := r.collection.Find(context.TODO(), bson.D{})
+	result, err := r.GetAll()
 	if err != nil {
-		zap.L().Info("Error fetching mount view" + err.Error())
+		zap.L().Info("Error fetching mount views" + err.Error())
 		return nil, err
 	}
-	defer result.Close(context.TODO())
-	var mounts []*documents.MountViewDocument
-	for result.Next(context.TODO()) {
-		var mount *documents.MountViewDocument
-		err := result.Decode(&mount)
-		if err != nil {
-			zap.L().Info("Error decoding mount view" + err.Error())
-		}
-		mounts = append(mounts, mount)
+
+	items := make([]*documents.MountViewDocument, len(result))
+	for i, record := range result {
+		var doc *documents.MountViewDocument
+		bsonBytes, _ := bson.Marshal(record)
+		bson.Unmarshal(bsonBytes, &doc)
+		items[i] = doc
 	}
-	if err := result.Err(); err != nil {
-		zap.L().Info("Error fetching mounts" + err.Error())
-	}
-	return mounts, nil
+	return items, nil
 }
 
 func (r *MountViewRepository) CreateMountView(document *documents.MountViewDocument) error {
@@ -107,30 +109,4 @@ func (r *MountViewRepository) UpdateMountView(document *documents.MountViewDocum
 		return err
 	}
 	return nil
-}
-
-func (r *MountViewRepository) createNameIndex() {
-	nameIndexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "name", Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), nameIndexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
-}
-
-func (r *MountViewRepository) createIsDefaultIndex() {
-	isDefaultIndexModel := mongo.IndexModel{
-		Keys: bson.D{
-			{Key: "isDefault", Value: 1},
-		},
-	}
-
-	_, err := r.collection.Indexes().CreateOne(context.TODO(), isDefaultIndexModel)
-	if err != nil {
-		zap.L().Error(err.Error())
-	}
 }

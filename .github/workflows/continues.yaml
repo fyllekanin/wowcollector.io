@@ -6,7 +6,7 @@ on:
       - develop
 
 jobs:
-  release:
+  continues:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,6 +16,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Cancel if commit was made by github-actions[bot]
+      id: check-committer
+      run: |
+        COMMITTER=$(git log -1 --pretty=format:'%cn')
+        echo "Commit made by: $COMMITTER"
+        if [ "$COMMITTER" = "github-actions[bot]" ]; then
+          echo "This commit was made by github-actions[bot]. Cancelling the workflow."
+          exit 1
+        fi
 
     - name: Create release folder
       id: create_release_folder
