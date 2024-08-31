@@ -1,0 +1,174 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wowcollector-scanner-deployment
+  namespace: wowcollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wowcollector-scanner
+  template:
+    metadata:
+      labels:
+        app: wowcollector-scanner
+        app/hash: {{hash}}
+    spec:
+      containers:
+        - name: wowcollector-scanner
+          image: tovven/wowcollector:scanner-{{version}}
+          imagePullPolicy: Always
+          readinessProbe: null
+          env:
+            - name: DATABASE_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-creds
+                  key: connection
+            - name: BATTLE_NET_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-credentials
+                  key: scannerClientId
+            - name: BATTLE_NET_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-credentials
+                  key: scannerSecret
+            - name: DATABASE_NAME
+              value: wow
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wowcollector-server-deployment
+  namespace: wowcollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wowcollector-server
+  template:
+    metadata:
+      labels:
+        app: wowcollector-server
+        app/hash: {{hash}}
+    spec:
+      containers:
+        - name: wowcollector-server
+          image: tovven/wowcollector:server-{{version}}
+          imagePullPolicy: Always
+          readinessProbe: null
+          env:
+            - name: DATABASE_CONNECTION
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-creds
+                  key: connection
+            - name: BATTLE_NET_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-credentials
+                  key: clientId
+            - name: BATTLE_NET_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-credentials
+                  key: secret
+            - name: DATABASE_NAME
+              value: wow
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wowcollector-web-deployment
+  namespace: wowcollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wowcollector-web
+  template:
+    metadata:
+      labels:
+        app: wowcollector-web
+        app/hash: {{hash}}
+    spec:
+      containers:
+        - name: wowcollector-web
+          image: tovven/wowcollector:web-{{version}}
+          imagePullPolicy: Always
+          readinessProbe: null
+          env:
+            - name: NUXT_SITE_ENV
+              value: preview
+            - name: NUXT_BASE_URL
+              value: http://wowcollector-server-svc
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wowcollector-ingress
+  namespace: wowcollector
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - wowcollector.io
+      secretName: wowcollector-tls
+  rules:
+    - host: "wowcollector.io"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: wowcollector-web-svc
+                port:
+                  number: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wowcollector-web-svc
+  namespace: wowcollector
+spec:
+  selector:
+    app: wowcollector-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wowcollector-server-svc
+  namespace: wowcollector
+spec:
+  selector:
+    app: wowcollector-server
+  ports:
+    - name: wowcollector-server
+      protocol: TCP
+      port: 80
+      targetPort: 8888
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@wowcollector.io
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx

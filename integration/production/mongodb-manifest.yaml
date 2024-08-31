@@ -1,0 +1,70 @@
+# Only for refence, manually deployed
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: mongo
+  name: mongo
+  namespace: wowcollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mongo
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mongo
+    spec:
+      volumes:
+        - name: "mongo-data-dir"
+          persistentVolumeClaim:
+            claimName: "mongo-data"
+      containers:
+        - image: mongo
+          name: mongo
+          args: [ "--dbpath","/data/db" ]
+          livenessProbe: null
+          readinessProbe: null
+          volumeMounts:
+            - name: "mongo-data-dir"
+              mountPath: "/data/db"
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-creds
+                  key: username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-creds
+                  key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: mongo
+  name: mongo
+  namespace: wowcollector
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+  selector:
+    app.kubernetes.io/name: mongo
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-data
+  namespace: wowcollector
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: "longhorn"
