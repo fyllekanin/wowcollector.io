@@ -100,6 +100,6 @@ onBeforeRouteLeave(() => {
         </UButton>
       </div>
     </div>
-    <ConfettiExplosion />
+    <ConfettiExplosion v-if="visible" :stageHeight="1300" />
   </div>
 </template>
