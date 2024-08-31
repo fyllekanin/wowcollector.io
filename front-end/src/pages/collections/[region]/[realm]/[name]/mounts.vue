@@ -43,16 +43,17 @@ const loading = ref(false);
 
 const total = computed(() => {
   if (!mounts.value) return 0;
-  return flatMapMounts(mounts.value).length;
+  return flatMapMounts(mounts.value).length || 0;
 });
 const collected = computed(() => {
   if (!mounts.value) return 0;
-  return flatMapMounts(mounts.value).filter((mount) => mount.isCollected)
-    .length;
+  return (
+    flatMapMounts(mounts.value).filter((mount) => mount.isCollected).length || 0
+  );
 });
 const percentageMountsCollected = computed(() => {
   if (!mounts.value) return 0;
-  return Math.round((collected.value / total.value) * 100);
+  return Math.round((collected.value / total.value) * 100) || 0;
 });
 
 async function loadView() {
