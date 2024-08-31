@@ -1,0 +1,27 @@
+name: Check Changelog Files
+
+on:
+  pull_request:
+
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check that changelog is updated
+        id: check-changelog
+        run: |
+          # Find added files in the 'front-end/changelog/current' directory
+          new_files=$(git diff --name-status origin/main...HEAD | grep '^A' | awk '{print $2}' | grep '^front-end/changelog/current/')
+          
+          # Check if any files were found
+          if [ -z "$new_files" ]; then
+            echo "No new files found in front-end/changelog/current."
+            exit 1
+          else
+            echo "New files found in front-end/changelog/current:"
+            echo "$new_files"
+          fi
