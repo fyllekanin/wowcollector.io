@@ -10,14 +10,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Git
+        run: |
+          git fetch origin +refs/heads/develop:refs/remotes/origin/develop
 
       - name: Check that changelog is updated
         id: check-changelog
         run: |
-          # Find added files in the 'front-end/changelog/current' directory
+          git fetch origin develop
+
           new_files=$(git diff --name-status origin/develop...HEAD | grep '^A' | awk '{print $2}' | grep '^front-end/changelog/current/')
-          
-          # Check if any files were found
+
           if [ -z "$new_files" ]; then
             echo "No new files found in front-end/changelog/current."
             exit 1
