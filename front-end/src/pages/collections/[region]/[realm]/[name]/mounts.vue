@@ -67,6 +67,8 @@ async function loadView() {
     const failed = await navigateTo(
       `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/mounts?viewId=${viewId.value}`
     );
+    // @ts-expect-error - NavigationFailure is not defined in the type definitions
+    if (failed?.message?.includes('redundant navigation')) return;
     if (failed) toast.add({ title: 'View not found', color: 'red' });
   } catch (error) {
     console.error(error);
