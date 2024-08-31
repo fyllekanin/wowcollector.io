@@ -45,6 +45,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-gtag',
     '@nuxtjs/seo',
+    '@vueuse/motion/nuxt',
   ],
   icon: {
     provider: 'server',
