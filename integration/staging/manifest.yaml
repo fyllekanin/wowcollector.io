@@ -103,7 +103,7 @@ spec:
             - name: NUXT_SITE_ENV
               value: preview
             - name: NUXT_BASE_URL
-              value: http://wowcollector-staging-server:80
+              value: http://wowcollector-staging-server-svc
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -157,3 +157,18 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 8888
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@wowcollector.io
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx
