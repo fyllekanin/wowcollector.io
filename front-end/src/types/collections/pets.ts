@@ -6,6 +6,7 @@ export interface PetInformation {
     largeIcon: string;
   };
   order: number;
+  faction?: 'ALLIANCE' | 'HORDE';
 }
 
 export interface PetCategory {

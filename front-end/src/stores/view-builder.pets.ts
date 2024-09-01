@@ -32,10 +32,40 @@ export const usePetViewBuilderStore = defineStore('pet-view-builder', {
     _settings: {
       showBorders: true,
       showPetTooltips: true,
+      showFaction: {
+        label: 'Both',
+        value: 'both',
+        avatar: {
+          src: 'https://cdn.discordapp.com/attachments/1161263238554599464/1279760555237838899/12d4f5a73e9c1b830c95229ac396a449.png?ex=66d59d65&is=66d44be5&hm=84d99f37f7c08df863528175f78e6853a19b5c6a48f31b1e7e0684708856139a&',
+        },
+      } as {
+        label: string;
+        value: string;
+        avatar: {
+          src: string;
+        };
+      },
     },
     successfulCreation: false,
   }),
   getters: {
+    pets(state): PetInformation[] {
+      let pets = state._pets || [];
+
+      if (state._settings.showFaction.value === 'both') {
+        return pets;
+      }
+
+      if (state._settings.showFaction.value === 'horde') {
+        pets = pets.filter((pet) => pet.faction === 'HORDE');
+      }
+
+      if (state._settings.showFaction.value === 'alliance') {
+        pets = pets.filter((pet) => pet.faction === 'ALLIANCE');
+      }
+      console.log(pets.map((pet) => pet.faction));
+      return pets;
+    },
     flatPets(state): PetInformation[] {
       return state._pets || [];
     },

@@ -32,10 +32,40 @@ export const useToyViewBuilderStore = defineStore('toy-view-builder', {
     _settings: {
       showBorders: true,
       showToyTooltips: true,
+      showFaction: {
+        label: 'Both',
+        value: 'both',
+        avatar: {
+          src: 'https://cdn.discordapp.com/attachments/1161263238554599464/1279760555237838899/12d4f5a73e9c1b830c95229ac396a449.png?ex=66d59d65&is=66d44be5&hm=84d99f37f7c08df863528175f78e6853a19b5c6a48f31b1e7e0684708856139a&',
+        },
+      } as {
+        label: string;
+        value: string;
+        avatar: {
+          src: string;
+        };
+      },
     },
     successfulCreation: false,
   }),
   getters: {
+    toys(state): ToyInformation[] {
+      let toys = state._toys || [];
+
+      if (state._settings.showFaction.value === 'both') {
+        return toys;
+      }
+
+      if (state._settings.showFaction.value === 'horde') {
+        toys = toys.filter((toy) => toy.faction === 'HORDE');
+      }
+
+      if (state._settings.showFaction.value === 'alliance') {
+        toys = toys.filter((toy) => toy.faction === 'ALLIANCE');
+      }
+      console.log(toys.map((toy) => toy.faction));
+      return toys;
+    },
     flatToys(state): ToyInformation[] {
       return state._toys || [];
     },

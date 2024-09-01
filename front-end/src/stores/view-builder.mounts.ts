@@ -56,6 +56,14 @@ export const useMountViewBuilderStore = defineStore('mount-view-builder', {
         return mounts;
       }
 
+      if (state._settings.showFaction.value === 'horde') {
+        mounts = mounts.filter((mount) => mount.faction === 'HORDE');
+      }
+
+      if (state._settings.showFaction.value === 'alliance') {
+        mounts = mounts.filter((mount) => mount.faction === 'ALLIANCE');
+      }
+      console.log(mounts.map((mount) => mount.faction));
       return mounts;
     },
     flatMounts(state): MountInformation[] {

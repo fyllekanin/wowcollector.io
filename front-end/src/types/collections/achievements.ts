@@ -6,6 +6,7 @@ export interface AchievementInformation {
   icon: string;
   points: number;
   displayOrder: number;
+  faction?: 'ALLIANCE' | 'HORDE';
 }
 
 export interface AchievementCategory {

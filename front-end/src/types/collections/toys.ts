@@ -7,6 +7,7 @@ export interface ToyInformation {
   assets: {
     largeIcon: string;
   };
+  faction?: 'ALLIANCE' | 'HORDE';
 }
 
 export interface ToyCategory {
