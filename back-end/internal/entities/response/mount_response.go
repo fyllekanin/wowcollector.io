@@ -34,4 +34,5 @@ type MountResponse struct {
 	Id             int          `json:"id"`
 	Assets         *MountAssets `json:"assets"`
 	IsUnobtainable bool         `json:"isUnobtainable"`
+	Faction        string       `json:"faction"`
 }
