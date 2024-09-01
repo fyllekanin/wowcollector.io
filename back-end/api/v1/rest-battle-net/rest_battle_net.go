@@ -49,6 +49,7 @@ func getMounts(w http.ResponseWriter, r *http.Request) {
 			Description:    element.Description,
 			Id:             element.Id,
 			IsUnobtainable: element.IsUnobtainable,
+			Faction:        element.Faction,
 			Assets: &response.MountAssets{
 				Display:   element.Assets.Display,
 				SmallIcon: element.Assets.SmallIcon,
