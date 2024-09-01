@@ -48,7 +48,7 @@ const items = [
   {
     label: 'How do I load a saved view?',
     content: `
-      To load a saved view, use the link that was generated when you saved the view. Paste the link in your browser and the view will be loaded.
+      To load a saved view, use the ID that was generated when you saved the view; paste the ID into the ID field on the ${kindWithoutS} collection page and your view will be loaded.
     `,
   },
   {
