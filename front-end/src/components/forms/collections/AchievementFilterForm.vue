@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { SORT_TYPES } from '~/constants';
+import { ACHIEVEMENT_SORT_TYPES } from '~/constants';
 
 const { debounce } = useDebounce();
 const achievementsStore = useAchievementsStore();
@@ -126,7 +126,7 @@ watch(
       <span class="text-sm">Sort</span>
       <USelect
         v-model="filters.sort"
-        :options="SORT_TYPES"
+        :options="ACHIEVEMENT_SORT_TYPES"
         icon="material-symbols:sort"
         placeholder="Sort by"
       />

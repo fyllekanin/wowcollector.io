@@ -1,4 +1,4 @@
-import type { Sort } from '~/types';
+import type { MountSort, PetSort, ToySort, AchievementSort } from '~/types';
 
 export const RENDER_TYPES = [
   {
@@ -18,10 +18,18 @@ export const RENDER_TYPES = [
   },
 ];
 
+type Sort = MountSort | PetSort | ToySort;
 export const SORT_TYPES: Sort[] = [
   'Default',
   'Collected',
   'Not Collected',
+  'Name Ascending',
+  'Name Descending',
+];
+export const ACHIEVEMENT_SORT_TYPES: AchievementSort[] = [
+  'Default',
+  'Completed',
+  'Not Completed',
   'Name Ascending',
   'Name Descending',
 ];
