@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="816"
+   height="1056"
+   viewBox="0 0 816 1056"
+   sodipodi:docname="world-of-warcraft-horde-pvp-seeklogo.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath16">
+      <path
+         d="M 0,792 H 612 V 0 H 0 Z"
+         id="path14" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <g
+     id="g8"
+     inkscape:groupmode="layer"
+     inkscape:label="world-of-warcraft-horde-pvp-seeklogo"
+     transform="matrix(1.3333333,0,0,-1.3333333,0,1056)">
+    <g
+       id="g10">
+      <g
+         id="g12"
+         clip-path="url(#clipPath16)">
+        <path
+           d="M 285.708,701.417 C 222.708,679.083 253.53,618.62 267,607.5 c 7.124,-5.881 13,-53.792 14.25,-57.75 0.5,-5.292 -6.202,-32.466 -9.583,-36.083 -11.178,8.447 -28.834,44.833 -28.656,55.885 16.489,-15.052 26.76,-4.804 15.666,22.167 -11.427,27.781 -22.927,16.031 -27.332,6.833 -11.845,5.198 -24.501,32.5 -25.668,44.666 7.667,-5.166 14.667,-15.666 31,-14 -0.167,30.5 -28.666,31.334 -28.666,33.667 0,6.865 24.25,35.75 24.25,35.75 0.072,52.698 2.406,15.698 21.75,18.583 6.5,8.042 31.739,27.282 31.739,27.282 0,0 27.75,-19.125 34.25,-27.167 17.5,0.667 21.834,27.5 21.75,-18.583 0,0 24.25,-29.75 24.25,-33.75 0,-2.333 -27.499,-7.5 -27.666,-38 16.333,-1.667 26.333,12.167 34,17.333 -1.167,-12.166 -20,-47.666 -25.834,-52.333 -7.999,17.333 -18.5,29.833 -32.833,-9.667 -16.916,-46.617 5.165,-50.167 12.333,-49.833 -24.5,-24.75 -19.167,-62.667 -27.833,-71.167 -3.167,14.75 -3.5,135 8.833,146.667 12.689,12.003 41.709,71.083 -21.292,93.417"
+           style="fill:#82141c;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           id="path18" />
+        <path
+           d="m 286.277,613.5 c 0,0 -1.777,11.333 -9.777,24.667 -6.258,10.43 -10.598,11.821 -8.727,14.583 7.286,10.75 8.611,8.651 17.359,20.667 l 2.29,1.083 c 0,0 15.263,-14.083 18.01,-21.583 1.169,-3.189 -4.274,-10.167 -8.242,-17.334 -4.418,-7.979 -5.9,-15.729 -9.325,-20.505 z"
+           style="fill:#82141c;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           id="path20" />
+      </g>
+    </g>
+  </g>
+</svg>
