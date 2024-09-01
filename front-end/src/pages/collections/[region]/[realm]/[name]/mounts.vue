@@ -31,13 +31,14 @@ useSeoMeta({
 });
 
 const toast = useToast();
+const route = useRoute();
 
 const characterStore = useCharacterStore();
 const { character } = storeToRefs(characterStore);
 const mountsStore = useMountsStore();
 const { mounts } = storeToRefs(mountsStore);
 
-const viewId = ref('');
+const viewId = ref((route.query.viewId as string) || '');
 const loading = ref(false);
 
 const total = computed(() => {
