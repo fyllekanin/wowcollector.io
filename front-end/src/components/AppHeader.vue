@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Icons } from '~/constants';
 import CharacterSearchModal from './modals/CharacterSearchModal.vue';
 
 import type { HeaderLink } from '@nuxt/ui-pro/types';
@@ -32,6 +33,8 @@ const links = computed(() => [
     children: [
       {
         label: 'Mounts',
+        description: 'View your mount collection.',
+        icon: Icons.MOUNTS,
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/mounts`,
         disabled: !characterExists.value,
         click: () => {
@@ -42,6 +45,8 @@ const links = computed(() => [
       },
       {
         label: 'Achievements',
+        description: 'View your achievement collection.',
+        icon: Icons.ACHIEVEMENTS,
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/achievements`,
         disabled: !characterExists.value,
         click: () => {
@@ -52,6 +57,8 @@ const links = computed(() => [
       },
       {
         label: 'Pets',
+        description: 'View your pet collection.',
+        icon: Icons.PETS,
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/pets`,
         disabled: !characterExists.value,
         click: () => {
@@ -62,6 +69,8 @@ const links = computed(() => [
       },
       {
         label: 'Toys',
+        description: 'View your toy collection.',
+        icon: Icons.TOYS,
         to: `/collections/${character.value?.region}/${character.value?.realm}/${character.value?.name}/toys`,
         disabled: !characterExists.value,
         click: () => {
@@ -80,20 +89,28 @@ const links = computed(() => [
     label: 'View Builder',
     children: [
       {
-        label: 'Mounts',
-        to: '/collections/view-builder/mounts',
+        label: 'Discovery',
+        description: 'Discover views created by the community.',
+        to: '/collections/view-builder/discovery',
+        icon: Icons.COMPASS,
       },
-      // {
-      //   label: 'Achievements',
-      //   to: '/collections/view-builder/achievements',
-      // },
+      {
+        label: 'Mounts',
+        description: 'Create a custom view and share it with others!',
+        to: '/collections/view-builder/mounts',
+        icon: Icons.MOUNTS,
+      },
       {
         label: 'Pets',
+        description: 'Create a custom view and share it with others!',
         to: '/collections/view-builder/pets',
+        icon: Icons.PETS,
       },
       {
         label: 'Toys',
+        description: 'Create a custom view and share it with others!',
         to: '/collections/view-builder/toys',
+        icon: Icons.TOYS,
       },
     ],
   },
