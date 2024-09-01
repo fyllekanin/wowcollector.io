@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import draggable from 'vuedraggable';
 
+import { FACTION_CHOICES } from '~/constants';
+
 definePageMeta({
   layout: 'empty',
   middleware: 'view-builder-pets',
@@ -31,7 +33,7 @@ const { debounce } = useDebounce();
 const petViewBuilderStore = usePetViewBuilderStore();
 const {
   _cloneableCategory,
-  _pets,
+  pets,
   _searchFilter,
   _settings,
   successfulCreation,
@@ -90,7 +92,13 @@ function onLeave() {
           <draggable
             :list="_cloneableCategory"
             :group="{ name: 'category', pull: 'clone', put: false }"
-            @start="petViewBuilderStore.setNewIdForCloneableCategory"
+            @start="
+              () => {
+                petViewBuilderStore.setNewIdForCloneableCategory();
+                petViewBuilderStore.setDragState(true, 'category');
+              }
+            "
+            @end="petViewBuilderStore.clearDragState"
           >
             <template #item="{ element: category }">
               <UCard
@@ -119,6 +127,18 @@ function onLeave() {
               <span class="text-sm">Show pet tooltips</span>
               <UToggle v-model="_settings.showPetTooltips" />
             </div>
+            <div class="flex gap-2 items-center justify-between">
+              <span class="text-sm">Show faction</span>
+              <USelectMenu
+                class="w-1/2"
+                v-model="_settings.showFaction"
+                :options="FACTION_CHOICES"
+              >
+                <template #leading>
+                  <UAvatar v-bind="_settings.showFaction.avatar" size="2xs" />
+                </template>
+              </USelectMenu>
+            </div>
             <UDivider />
           </div>
           <UInput
@@ -131,10 +151,20 @@ function onLeave() {
               'flex grow flex-wrap gap-4 justify-center',
               highlightPetDropzones ? 'bg-green-900 bg-opacity-45' : '',
             ]"
-            :list="_pets"
+            :list="pets"
             :group="{ name: 'pet' }"
-            @start="_settings.showPetTooltips = false"
-            @end="_settings.showPetTooltips = true"
+            @start="
+              () => {
+                _settings.showPetTooltips = false;
+                petViewBuilderStore.setDragState(true, 'pet');
+              }
+            "
+            @end="
+              () => {
+                _settings.showPetTooltips = true;
+                petViewBuilderStore.clearDragState();
+              }
+            "
           >
             <template #item="{ element: pet }">
               <PetIcon

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import draggable from 'vuedraggable';
 
+import { FACTION_CHOICES } from '~/constants';
+
 definePageMeta({
   layout: 'empty',
   middleware: 'view-builder-toys',
@@ -31,7 +33,7 @@ const { debounce } = useDebounce();
 const toyViewBuilderStore = useToyViewBuilderStore();
 const {
   _cloneableCategory,
-  _toys,
+  toys,
   _searchFilter,
   _settings,
   successfulCreation,
@@ -90,7 +92,13 @@ function onLeave() {
           <draggable
             :list="_cloneableCategory"
             :group="{ name: 'category', pull: 'clone', put: false }"
-            @start="toyViewBuilderStore.setNewIdForCloneableCategory"
+            @start="
+              () => {
+                toyViewBuilderStore.setNewIdForCloneableCategory();
+                toyViewBuilderStore.setDragState(true, 'category');
+              }
+            "
+            @end="toyViewBuilderStore.clearDragState"
           >
             <template #item="{ element: category }">
               <UCard
@@ -119,6 +127,18 @@ function onLeave() {
               <span class="text-sm">Show toy tooltips</span>
               <UToggle v-model="_settings.showToyTooltips" />
             </div>
+            <div class="flex gap-2 items-center justify-between">
+              <span class="text-sm">Show faction</span>
+              <USelectMenu
+                class="w-1/2"
+                v-model="_settings.showFaction"
+                :options="FACTION_CHOICES"
+              >
+                <template #leading>
+                  <UAvatar v-bind="_settings.showFaction.avatar" size="2xs" />
+                </template>
+              </USelectMenu>
+            </div>
             <UDivider />
           </div>
           <UInput
@@ -131,10 +151,20 @@ function onLeave() {
               'flex grow flex-wrap gap-4 justify-center',
               highlightToyDropzones ? 'bg-green-900 bg-opacity-45' : '',
             ]"
-            :list="_toys"
+            :list="toys"
             :group="{ name: 'toy' }"
-            @start="_settings.showToyTooltips = false"
-            @end="_settings.showToyTooltips = true"
+            @start="
+              () => {
+                _settings.showToyTooltips = false;
+                toyViewBuilderStore.setDragState(true, 'toy');
+              }
+            "
+            @end="
+              () => {
+                _settings.showToyTooltips = true;
+                toyViewBuilderStore.clearDragState();
+              }
+            "
           >
             <template #item="{ element: toy }">
               <ToyIcon
