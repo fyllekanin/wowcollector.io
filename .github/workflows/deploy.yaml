@@ -42,6 +42,7 @@ jobs:
 
         sed -i "s|{{hash}}|$GITHUB_SHA|g" integration/production/manifest.yaml
         sed -i "s|{{version}}|${{ github.event.inputs.version }}|g" integration/production/manifest.yaml
+        sed -i "s|{{googleTagId}}|${{ secrets.GOOGLE_TAG_ID_STAGING }}|g" integration/production/manifest.yaml
     
     - name: Apply credentials
       if: success()
