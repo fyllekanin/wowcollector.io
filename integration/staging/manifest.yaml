@@ -104,6 +104,8 @@ spec:
               value: preview
             - name: NUXT_BASE_URL
               value: http://wowcollector-staging-server-svc
+            - name: GOOGLE_TAG_ID
+              value: {{googleTagId}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
