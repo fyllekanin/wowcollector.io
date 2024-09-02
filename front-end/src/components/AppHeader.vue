@@ -134,7 +134,10 @@ const links = computed(() => [
       <div class="flex flex-col gap-8">
         <UNavigationTree :links="links" default-open />
         <UDivider />
-        <div class="flex grow flex-wrap items-center justify-between gap-2">
+        <div
+          v-if="character"
+          class="flex grow flex-wrap items-center justify-between gap-2"
+        >
           <div class="flex items-center gap-3">
             <UAvatar :src="character?.assets?.avatar" />
             <div class="flex gap-1">
