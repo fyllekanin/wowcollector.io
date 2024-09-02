@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import draggable from 'vuedraggable';
 
+import { FACTION_CHOICES } from '~/constants';
+
 definePageMeta({
   layout: 'empty',
   middleware: 'view-builder-mounts',
@@ -31,7 +33,7 @@ const { debounce } = useDebounce();
 const mountViewBuilderStore = useMountViewBuilderStore();
 const {
   _cloneableCategory,
-  _mounts,
+  mounts,
   _searchFilter,
   _settings,
   successfulCreation,
@@ -96,11 +98,7 @@ function onLeave() {
                 mountViewBuilderStore.setDragState(true, 'category');
               }
             "
-            @end="
-              () => {
-                mountViewBuilderStore.clearDragState();
-              }
-            "
+            @end="mountViewBuilderStore.clearDragState"
           >
             <template #item="{ element: category }">
               <UCard
@@ -129,6 +127,18 @@ function onLeave() {
               <span class="text-sm">Show mount tooltips</span>
               <UToggle v-model="_settings.showMountTooltips" />
             </div>
+            <div class="flex gap-2 items-center justify-between">
+              <span class="text-sm">Show faction</span>
+              <USelectMenu
+                class="w-1/2"
+                v-model="_settings.showFaction"
+                :options="FACTION_CHOICES"
+              >
+                <template #leading>
+                  <UAvatar v-bind="_settings.showFaction.avatar" size="2xs" />
+                </template>
+              </USelectMenu>
+            </div>
             <UDivider />
           </div>
           <UInput
@@ -141,7 +151,7 @@ function onLeave() {
               'flex grow flex-wrap gap-4 justify-center',
               highlightMountDropzones ? 'bg-green-900 bg-opacity-45' : '',
             ]"
-            :list="_mounts"
+            :list="mounts"
             :group="{ name: 'mount' }"
             @start="
               () => {

@@ -1,5 +1,7 @@
 import equal from 'fast-deep-equal';
 
+import { Images } from '~/constants';
+
 import type { ToyCategory, ToyInformation } from '~/types';
 
 export const useToyViewBuilderStore = defineStore('toy-view-builder', {
@@ -32,10 +34,40 @@ export const useToyViewBuilderStore = defineStore('toy-view-builder', {
     _settings: {
       showBorders: true,
       showToyTooltips: true,
+      showFaction: {
+        label: 'Both',
+        value: 'both',
+        avatar: {
+          src: Images.BOTH,
+        },
+      } as {
+        label: string;
+        value: string;
+        avatar: {
+          src: string;
+        };
+      },
     },
     successfulCreation: false,
   }),
   getters: {
+    toys(state): ToyInformation[] {
+      let toys = state._toys || [];
+
+      if (state._settings.showFaction.value === 'both') {
+        return toys;
+      }
+
+      if (state._settings.showFaction.value === 'horde') {
+        toys = toys.filter((toy) => toy.faction === 'HORDE');
+      }
+
+      if (state._settings.showFaction.value === 'alliance') {
+        toys = toys.filter((toy) => toy.faction === 'ALLIANCE');
+      }
+      console.log(toys.map((toy) => toy.faction));
+      return toys;
+    },
     flatToys(state): ToyInformation[] {
       return state._toys || [];
     },

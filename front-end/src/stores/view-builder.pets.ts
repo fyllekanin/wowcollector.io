@@ -1,5 +1,7 @@
 import equal from 'fast-deep-equal';
 
+import { Images } from '~/constants';
+
 import type { PetCategory, PetInformation } from '~/types';
 
 export const usePetViewBuilderStore = defineStore('pet-view-builder', {
@@ -32,10 +34,40 @@ export const usePetViewBuilderStore = defineStore('pet-view-builder', {
     _settings: {
       showBorders: true,
       showPetTooltips: true,
+      showFaction: {
+        label: 'Both',
+        value: 'both',
+        avatar: {
+          src: Images.BOTH,
+        },
+      } as {
+        label: string;
+        value: string;
+        avatar: {
+          src: string;
+        };
+      },
     },
     successfulCreation: false,
   }),
   getters: {
+    pets(state): PetInformation[] {
+      let pets = state._pets || [];
+
+      if (state._settings.showFaction.value === 'both') {
+        return pets;
+      }
+
+      if (state._settings.showFaction.value === 'horde') {
+        pets = pets.filter((pet) => pet.faction === 'HORDE');
+      }
+
+      if (state._settings.showFaction.value === 'alliance') {
+        pets = pets.filter((pet) => pet.faction === 'ALLIANCE');
+      }
+      console.log(pets.map((pet) => pet.faction));
+      return pets;
+    },
     flatPets(state): PetInformation[] {
       return state._pets || [];
     },

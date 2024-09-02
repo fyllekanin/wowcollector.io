@@ -1,5 +1,7 @@
 import equal from 'fast-deep-equal';
 
+import { Images } from '~/constants';
+
 import type { MountCategory, MountInformation } from '~/types';
 
 export const useMountViewBuilderStore = defineStore('mount-view-builder', {
@@ -32,10 +34,40 @@ export const useMountViewBuilderStore = defineStore('mount-view-builder', {
     _settings: {
       showBorders: true,
       showMountTooltips: true,
+      showFaction: {
+        label: 'Both',
+        value: 'both',
+        avatar: {
+          src: Images.BOTH,
+        },
+      } as {
+        label: string;
+        value: string;
+        avatar: {
+          src: string;
+        };
+      },
     },
     successfulCreation: false,
   }),
   getters: {
+    mounts(state): MountInformation[] {
+      let mounts = state._mounts || [];
+
+      if (state._settings.showFaction.value === 'both') {
+        return mounts;
+      }
+
+      if (state._settings.showFaction.value === 'horde') {
+        mounts = mounts.filter((mount) => mount.faction === 'HORDE');
+      }
+
+      if (state._settings.showFaction.value === 'alliance') {
+        mounts = mounts.filter((mount) => mount.faction === 'ALLIANCE');
+      }
+      console.log(mounts.map((mount) => mount.faction));
+      return mounts;
+    },
     flatMounts(state): MountInformation[] {
       return state._mounts || [];
     },

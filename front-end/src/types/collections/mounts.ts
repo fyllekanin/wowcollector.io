@@ -10,6 +10,7 @@ export interface MountInformation {
     largeIcon: string;
   };
   order?: number;
+  faction?: 'ALLIANCE' | 'HORDE';
 }
 
 export interface MountCategory {

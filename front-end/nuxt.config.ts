@@ -49,6 +49,12 @@ export default defineNuxtConfig({
   ],
   icon: {
     provider: 'server',
+    customCollections: [
+      {
+        prefix: 'custom',
+        dir: './src/assets/custom',
+      },
+    ],
   },
   components: [
     {
@@ -65,6 +71,6 @@ export default defineNuxtConfig({
   },
   plugins: ['~/plugins/draggable.ts'],
   gtag: {
-    id: 'G-XXXXXXXXXX',
+    id: process.env.GOOGLE_TAG_ID,
   },
 });

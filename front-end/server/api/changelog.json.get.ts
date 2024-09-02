@@ -19,6 +19,36 @@ interface Change {
 const data: Changelog[] =
 [
   {
+    "version": "0.4.0",
+    "timestamp": "1725135716",
+    "changes": [
+      {
+        "type": "4",
+        "content": "Updated all database repositories to composite the common one"
+      },
+      {
+        "type": "4",
+        "content": "Make common code for creating database indexes"
+      },
+      {
+        "type": "4",
+        "content": "Add changelog check for pull requests"
+      },
+      {
+        "type": "3",
+        "content": "Fixed bug where toys and pets were not rendering"
+      },
+      {
+        "type": "2",
+        "content": "Add KR and TW support"
+      },
+      {
+        "type": "4",
+        "content": "Minor UI improvements for view builder"
+      }
+    ]
+  },
+  {
     "version": "0.3.0",
     "timestamp": "1725091554",
     "changes": [
