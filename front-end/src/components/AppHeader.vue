@@ -89,12 +89,13 @@ const links = computed(() => [
   {
     label: 'View Builder',
     children: [
-      {
-        label: 'Discovery',
-        description: 'Discover views created by the community.',
-        to: '/collections/view-builder/discovery',
-        icon: Icons.COMPASS,
-      },
+      // Upcoming 1.1 feature
+      // {
+      //   label: 'Discovery',
+      //   description: 'Discover views created by the community.',
+      //   to: '/collections/view-builder/discovery',
+      //   icon: Icons.COMPASS,
+      // },
       {
         label: 'Mounts',
         description: 'Create a custom view and share it with others!',
