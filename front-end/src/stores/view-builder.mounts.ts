@@ -1,5 +1,7 @@
 import equal from 'fast-deep-equal';
 
+import { Images } from '~/constants';
+
 import type { MountCategory, MountInformation } from '~/types';
 
 export const useMountViewBuilderStore = defineStore('mount-view-builder', {
@@ -36,7 +38,7 @@ export const useMountViewBuilderStore = defineStore('mount-view-builder', {
         label: 'Both',
         value: 'both',
         avatar: {
-          src: 'https://cdn.discordapp.com/attachments/1161263238554599464/1279760555237838899/12d4f5a73e9c1b830c95229ac396a449.png?ex=66d59d65&is=66d44be5&hm=84d99f37f7c08df863528175f78e6853a19b5c6a48f31b1e7e0684708856139a&',
+          src: Images.BOTH,
         },
       } as {
         label: string;
