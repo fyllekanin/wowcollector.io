@@ -4,4 +4,6 @@ export enum Icons {
   PETS = 'mdi:paw',
   TOYS = 'game-icons:locked-chest',
   COMPASS = 'mdi:compass',
+  BATTLENET = 'simple-icons:battledotnet',
+  ACCOUNT = 'mdi:account',
 }

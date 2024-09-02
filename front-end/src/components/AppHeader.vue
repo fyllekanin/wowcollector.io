@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { Icons } from '~/constants';
 import CharacterSearchModal from './modals/CharacterSearchModal.vue';
+
+import { Icons } from '~/constants';
 
 import type { HeaderLink } from '@nuxt/ui-pro/types';
 
