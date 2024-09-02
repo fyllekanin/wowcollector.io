@@ -86,7 +86,7 @@ jobs:
         sed -i "s|{{password}}|${{ secrets.STAGING_MONGODB_PASSWORD }}|g" integration/staging/mongodb-credentials.yaml
 
         sed -i "s|{{hash}}|$GITHUB_SHA|g" integration/staging/manifest.yaml
-        sed -i "s|{{goggleTagId}}|${{ secrets.GOOGLE_TAG_ID_STAGING }}|g" integration/staging/manifest.yaml
+        sed -i "s|{{googleTagId}}|${{ secrets.GOOGLE_TAG_ID_STAGING }}|g" integration/staging/manifest.yaml
 
     - name: Apply mongodb credentials
       uses: actions-hub/kubectl@master
