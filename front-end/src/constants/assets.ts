@@ -1,11 +1,23 @@
 export enum Icons {
+  // General
   MOUNTS = 'mdi:horse-variant',
   ACHIEVEMENTS = 'mdi:trophy',
   PETS = 'mdi:paw',
   TOYS = 'game-icons:locked-chest',
   COMPASS = 'mdi:compass',
+
+  // Social
   BATTLENET = 'simple-icons:battledotnet',
+  DISCORD = 'simple-icons:discord',
+  DISCORD_COLOR = 'logos:discord-icon',
+
+  // Sign in
   ACCOUNT = 'mdi:account',
+  ANONYMOUS = 'hugeicons:anonymous',
+
+  // Actions
+  BACK = 'material-symbols:arrow-back',
+  CLOSE = 'material-symbols:close-rounded',
 }
 
 export enum Images {
