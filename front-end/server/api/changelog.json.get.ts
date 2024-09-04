@@ -19,6 +19,36 @@ interface Change {
 const data: Changelog[] =
 [
   {
+    "version": "1.0.0",
+    "timestamp": "1725276477",
+    "changes": [
+      {
+        "type": "3",
+        "content": "Add faction property for mount response"
+      },
+      {
+        "type": "4",
+        "content": "Fixed phrasing of sort type depending on the collection type"
+      },
+      {
+        "type": "3",
+        "content": "Fixed an issue with view-builder dropzone highlighting"
+      },
+      {
+        "type": "4",
+        "content": "Disabled auto zoom when focusing inputs"
+      },
+      {
+        "type": "4",
+        "content": "Dynamic logo based on theme preference"
+      },
+      {
+        "type": "2",
+        "content": "Added faction filters to view-builder"
+      }
+    ]
+  },
+  {
     "version": "0.4.0",
     "timestamp": "1725135716",
     "changes": [

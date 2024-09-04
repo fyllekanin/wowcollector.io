@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import ConsentModal from '~/components/cookie/CookieModal.vue';
+
 import type { FooterLink } from '@nuxt/ui-pro/types';
+
+const modal = useModal();
 
 const links = [
   // {
@@ -14,10 +18,24 @@ const links = [
     label: 'Feedback',
     to: '/feedback',
   },
-  // {
-  //   label: 'Cookies',
-  //   click: () => {},
-  // },
+  {
+    label: 'Terms of Service',
+    to: '/terms',
+  },
+  {
+    label: 'Privacy Policy',
+    to: '/privacy',
+  },
+  {
+    label: 'Cookies',
+    click: () => {
+      modal.open(ConsentModal, {
+        onClose: () => {
+          modal.close();
+        },
+      });
+    },
+  },
 ] as FooterLink[];
 </script>
 
