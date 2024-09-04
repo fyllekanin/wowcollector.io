@@ -33,6 +33,8 @@
   "devDependencies": {
     "@iconify-json/game-icons": "^1.1.9",
     "@iconify-json/heroicons-outline": "^1.1.11",
+    "@iconify-json/hugeicons": "^1.2.0",
+    "@iconify-json/logos": "^1.2.0",
     "@iconify-json/material-symbols": "^1.1.85",
     "@iconify-json/mdi": "^1.1.67",
     "@iconify-json/simple-icons": "^1.1.111",
