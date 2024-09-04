@@ -127,35 +127,43 @@ const links = computed(() => [
 
     <template #right>
       <UColorModeButton class="hidden lg:flex" />
+      <UButton class="hidden lg:flex" to="/sign-in" variant="ghost" color="gray"
+        >Sign In</UButton
+      >
       <ActiveCharacterDropdown v-if="character" class="hidden lg:flex" />
     </template>
 
     <template #panel>
-      <div class="flex flex-col gap-8">
+      <div class="flex flex-col gap-6">
         <UNavigationTree :links="links" default-open />
         <UDivider />
-        <div
-          v-if="character"
-          class="flex grow flex-wrap items-center justify-between gap-2"
-        >
-          <div class="flex items-center gap-3">
-            <UAvatar :src="character?.assets?.avatar" />
-            <div class="flex gap-1">
-              <span class="text-sm"
-                >{{ character?.name }} - {{ character?.realm }}</span
-              >
-            </div>
-          </div>
-          <UButton
-            icon="material-symbols:logout"
-            to="/search"
-            variant="ghost"
-            color="red"
-            @click="characterStore.clearCharacter"
-            >Change character</UButton
+        <div class="flex flex-col gap-4">
+          <div
+            v-if="character"
+            class="flex grow flex-wrap items-center justify-between gap-2"
           >
+            <div class="flex items-center gap-3">
+              <UAvatar :src="character?.assets?.avatar" />
+              <div class="flex gap-1">
+                <span class="text-sm"
+                  >{{ character?.name }} - {{ character?.realm }}</span
+                >
+              </div>
+            </div>
+            <UButton
+              icon="material-symbols:logout"
+              to="/search"
+              variant="ghost"
+              color="red"
+              @click="characterStore.clearCharacter"
+              >Change character</UButton
+            >
+          </div>
+
+          <UButton to="/sign-in" variant="ghost" color="gray">Sign In</UButton>
+
+          <UColorModeSelect class="lg:hidden" />
         </div>
-        <UColorModeSelect class="lg:hidden" />
       </div>
     </template>
   </UHeader>
