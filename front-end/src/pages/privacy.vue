@@ -4,11 +4,21 @@ import { Icons } from '~/constants';
 definePageMeta({
   layout: 'empty',
 });
+
+const router = useRouter();
 </script>
 
 <template>
   <div class="max-w-4xl mx-auto px-4 py-8">
-    <UButton variant="ghost" :icon="Icons.BACK" to="/">Go back</UButton>
+    <UButton
+      class="mb-4"
+      variant="ghost"
+      :icon="Icons.BACK"
+      @click="router.back()"
+    >
+      Go back</UButton
+    >
+
     <h1 class="text-3xl font-bold mb-6">Privacy Policy</h1>
     <p class="text-sm text-gray-500 mb-8">Last updated: September 02, 2024</p>
 
@@ -174,19 +184,10 @@ definePageMeta({
       this Privacy Policy.
     </p>
 
-    <h2 class="text-2xl font-semibold mb-4">Contact Us</h2>
-    <p class="mb-8">
-      If you have any questions about this Privacy Policy, You can contact us:
-    </p>
-    <ul class="list-disc pl-6 mb-8 space-y-2">
-      <li>
-        By visiting this page on our website:
-        <a
-          href="https://www.mysite.com/feedback"
-          class="text-blue-500 hover:underline"
-          >https://wowcollector.io/feedback</a
-        >
-      </li>
-    </ul>
+    <div class="w-full">
+      <UButton variant="ghost" :icon="Icons.BACK" @click="router.back()">
+        Go back
+      </UButton>
+    </div>
   </div>
 </template>
