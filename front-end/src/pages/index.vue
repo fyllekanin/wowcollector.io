@@ -49,7 +49,9 @@ function onSearch(to: string) {
 </script>
 
 <template>
-  <UContainer class="flex flex-col gap-6 max-w-[1200px] max-4 lg:mx-auto py-12">
+  <UContainer
+    class="flex flex-col gap-6 max-w-[1200px] max-4 lg:mx-auto lg:pt-12"
+  >
     <ULandingGrid>
       <ULandingCard
         v-for="(card, index) in page?.collections"
