@@ -6,11 +6,23 @@ export default defineNuxtConfig({
   $development: {
     runtimeConfig: {
       baseURL: 'http://127.0.0.1:8888',
+      public: {
+        BNET_CLIENT_ID: process.env.BNET_CLIENT_ID,
+        BNET_REDIRECT_URI: process.env.BNET_REDIRECT_URI,
+        DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
+        DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
+      },
     },
   },
   $production: {
     runtimeConfig: {
       baseURL: '',
+      public: {
+        BNET_CLIENT_ID: process.env.BNET_CLIENT_ID,
+        BNET_REDIRECT_URI: process.env.BNET_REDIRECT_URI,
+        DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
+        DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
+      },
     },
   },
   ogImage: {
