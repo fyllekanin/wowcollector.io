@@ -50,7 +50,7 @@ function onSearch(to: string) {
 
 <template>
   <UContainer
-    class="flex flex-col gap-6 max-w-[1200px] max-4 lg:mx-auto lg:pt-12"
+    class="flex flex-col gap-6 max-w-[1200px] max-4 lg:mx-auto pb-20 lg:pb-0 lg:pt-12"
   >
     <ULandingGrid>
       <ULandingCard
