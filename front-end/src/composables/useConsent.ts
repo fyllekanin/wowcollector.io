@@ -3,7 +3,6 @@ import type { ConsentSettings } from '~/types';
 const defaultConsent: ConsentSettings = {
   essential: true,
   analytics: false,
-  marketing: false,
 };
 
 export function useConsent() {
@@ -12,9 +11,7 @@ export function useConsent() {
   }); // Expires in 1 year
   const consent = ref<ConsentSettings>(consentCookie.value || defaultConsent);
 
-  const isConsentGiven = computed(
-    () => consent.value.analytics || consent.value.marketing
-  );
+  const isConsentGiven = computed(() => consentCookie.value);
 
   const setConsent = (newConsent: Partial<ConsentSettings>) => {
     consent.value = { ...consent.value, ...newConsent };

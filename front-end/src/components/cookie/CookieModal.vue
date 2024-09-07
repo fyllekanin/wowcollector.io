@@ -5,21 +5,22 @@ const emit = defineEmits(['close']);
 
 const { consent, setConsent } = useConsent();
 const toast = useToast();
+const { width } = useWindowSize();
 
 const localConsent = ref({ ...consent.value });
 
-const tabs = [
+const tabs = computed(() => [
   {
-    label: 'Essential Cookies',
+    label: `Essential${width.value > 640 ? ' Cookies' : ''}`,
     icon: 'i-heroicons-check-circle',
-    content: '',
+    slot: 'essential',
   },
   {
-    label: 'Analytics Cookies',
+    label: `Analytics${width.value > 640 ? ' Cookies' : ''}`,
     icon: 'i-heroicons-chart-pie',
-    content: '',
+    slot: 'analytics',
   },
-];
+]);
 
 const savePreferences = () => {
   setConsent(localConsent.value);
@@ -55,29 +56,52 @@ const closeModal = () => emit('close');
           </UButton>
         </div>
       </template>
-      <div class="flex grow justify-between gap-10">
-        <UTabs :items="tabs" class="w-1/3" orientation="vertical">
-          <template #default="{ item, selected }">
-            <span
-              class="truncate"
-              :class="[selected && 'text-primary-500 dark:text-primary-400']"
-              >{{ item.label }}</span
-            >
-          </template>
-        </UTabs>
-        <div class="flex flex-col gap-4 justify-start">
-          <div class="flex gap-10 items-center w-full justify-between">
-            <span class="text-lg">Analytics Cookies</span>
-            <UToggle v-model="localConsent.analytics" />
+      <UTabs
+        :items="tabs"
+        :ui="{
+          wrapper: 'flex flex-col sm:flex-row grow justify-between gap-10',
+        }"
+        :orientation="width > 640 ? 'vertical' : 'horizontal'"
+      >
+        <template #default="{ item, selected }">
+          <span
+            class="truncate"
+            :class="[selected && 'text-primary-500 dark:text-primary-400']"
+            >{{ item.label }}</span
+          >
+        </template>
+
+        <template #essential>
+          <div class="flex flex-col gap-4 justify-start">
+            <div class="flex gap-10 items-center w-full justify-between">
+              <span class="text-lg">Essential Cookies</span>
+              <UToggle v-model="localConsent.essential" :disabled="true" />
+            </div>
+            <span class="text-sm">
+              Essential cookies are necessary for the website to function
+              properly. This category only includes cookies that ensures basic
+              functionalities and security features of the website such as user
+              login, account management, and language preference. These cookies
+              do not store any personal information.
+            </span>
           </div>
-          <span class="text-sm">
-            We use cookies to improve your experience on our website. By
-            allowing analytics cookies, you agree to the storing of cookies on
-            your device to enhance site navigation, analyze site usage, and
-            assist in the feuture development of the website.
-          </span>
-        </div>
-      </div>
+        </template>
+
+        <template #analytics>
+          <div class="flex flex-col gap-4 justify-start">
+            <div class="flex gap-10 items-center w-full justify-between">
+              <span class="text-lg">Analytics Cookies</span>
+              <UToggle v-model="localConsent.analytics" />
+            </div>
+            <span class="text-sm">
+              We use cookies to improve your experience on our website. By
+              allowing analytics cookies, you agree to the storing of cookies on
+              your device to enhance site navigation, analyze site usage, and
+              assist in the feuture development of the website.
+            </span>
+          </div>
+        </template>
+      </UTabs>
       <template #footer>
         <div class="flex justify-between">
           <UButton @click="savePreferences">Save Preferences</UButton>

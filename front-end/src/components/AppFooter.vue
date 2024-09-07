@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ConsentModal from '~/components/cookie/CookieModal.vue';
+import CookieModal from '~/components/cookie/CookieModal.vue';
 
 import type { FooterLink } from '@nuxt/ui-pro/types';
 
@@ -29,7 +29,7 @@ const links = [
   {
     label: 'Cookies',
     click: () => {
-      modal.open(ConsentModal, {
+      modal.open(CookieModal, {
         onClose: () => {
           modal.close();
         },
