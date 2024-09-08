@@ -31,6 +31,15 @@ func (r *CommonRepository) GetAll() ([]bson.D, error) {
 	return records, nil
 }
 
+func (r *CommonRepository) Create(document *bson.D) error {
+	_, err := r.Collection.InsertOne(context.TODO(), document)
+	if err != nil {
+		zap.L().Info("Error inserting document:" + err.Error())
+		return err
+	}
+	return nil
+}
+
 func (r *CommonRepository) CreateIndex(key string) {
 	indexModel := mongo.IndexModel{
 		Keys: bson.D{

@@ -329,6 +329,42 @@ func (s *BattleNetHttpService) GetRealms(region string) *httpresponses.BattleNet
 	return &result
 }
 
+func (s *BattleNetHttpService) GetAuth(redirectUri string, scope string, code string) *httpresponses.BattleNetAuth {
+	body := fmt.Sprintf("redirectUri=%s&scope=%s&code=%s&grant_type=authorization_code", redirectUri, scope, code)
+
+	req, err := http.NewRequest("POST", "https://oauth.battle.net/token", bytes.NewBufferString(body))
+	if err != nil {
+		zap.L().Info("Error creating auth request:" + err.Error())
+		return nil
+	}
+
+	req.Header.Set("Authorization", getBasicAuthenticationHeader(os.Getenv("BATTLE_NET_CLIENT_ID"), os.Getenv("BATTLE_NET_CLIENT_SECRET")))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	client := &http.Client{}
+	response, err := client.Do(req)
+	if err != nil {
+		zap.L().Info("Error sending request for auth token:" + err.Error())
+		return nil
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		zap.L().Info(fmt.Sprintf("Request failed with status code: %d", response.StatusCode))
+		return nil
+	}
+
+	var tokenResponse httpresponses.BattleNetAuth
+	decoder := json.NewDecoder(response.Body)
+	err = decoder.Decode(&tokenResponse)
+	if err != nil {
+		zap.L().Info("Error decoding auth token:" + err.Error())
+		return nil
+	}
+
+	return &tokenResponse
+}
+
 func (s *BattleNetHttpService) doRequest(url string, retry bool) ([]byte, error) {
 	s.rateLimiter.Take()
 	response, err := http.Get(url + "&access_token=" + s.getAccessToken())

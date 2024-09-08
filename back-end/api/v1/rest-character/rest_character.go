@@ -80,17 +80,6 @@ func getCharacterProfile(w http.ResponseWriter, r *http.Request) {
 	zap.L().Info("Responded with character profile")
 }
 
-func getCharacterAssets(media *httpresponses.BattleNetMedia) *response.CharacterProfileAssets {
-	if media == nil {
-		return nil
-	}
-	return &response.CharacterProfileAssets{
-		Avatar:  media.GetAssetByKey("avatar"),
-		Inset:   media.GetAssetByKey("inset"),
-		MainRaw: media.GetAssetByKey("main-raw"),
-	}
-}
-
 // @summary Fetch character mount collection
 // @description Get mount collection for character
 // @tags Character
@@ -375,5 +364,16 @@ func updateMountLeaderBoard(character string, realm string, region string, count
 			mountleaderboardrepository.GetRepository().UpdateLeaderboardEntry(document)
 			zap.L().Info("Updated mount leader board entry")
 		}
+	}
+}
+
+func getCharacterAssets(media *httpresponses.BattleNetMedia) *response.CharacterProfileAssets {
+	if media == nil {
+		return nil
+	}
+	return &response.CharacterProfileAssets{
+		Avatar:  media.GetAssetByKey("avatar"),
+		Inset:   media.GetAssetByKey("inset"),
+		MainRaw: media.GetAssetByKey("main-raw"),
 	}
 }
