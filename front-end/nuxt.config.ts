@@ -58,6 +58,7 @@ export default defineNuxtConfig({
     'nuxt-gtag',
     '@nuxtjs/seo',
     '@vueuse/motion/nuxt',
+    '@nuxtjs/ngrok',
   ],
   icon: {
     provider: 'server',
@@ -84,5 +85,8 @@ export default defineNuxtConfig({
   plugins: ['~/plugins/draggable.ts'],
   gtag: {
     id: process.env.GOOGLE_TAG_ID,
+  },
+  ngrok: {
+    authtoken_from_env: true,
   },
 });
