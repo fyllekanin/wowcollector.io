@@ -18,6 +18,7 @@ import (
 	seedrepository "wowcollector.io/internal/repository/repositories/seed-repository"
 	toyrepository "wowcollector.io/internal/repository/repositories/toy-repository"
 	toyviewrepository "wowcollector.io/internal/repository/repositories/toy-view-repository"
+	userrepository "wowcollector.io/internal/repository/repositories/user-repository"
 )
 
 type RepositoryFactory struct {
@@ -36,6 +37,7 @@ func (r *RepositoryFactory) init() {
 	toyviewrepository.Init(r.database)
 	petrepository.Init(r.database)
 	petviewrepository.Init(r.database)
+	userrepository.Init(r.database)
 }
 
 var instance *RepositoryFactory

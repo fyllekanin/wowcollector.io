@@ -37,6 +37,20 @@ spec:
                   key: scannerSecret
             - name: DATABASE_NAME
               value: wow
+            - name: BNET_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-credentials
+                  key: clientId
+            - name: BNET_REDIRECT_URI
+              value: https://wowcollector.io/sign-in
+            - name: DISCORD_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-credentials
+                  key: discordClientId
+            - name: DISCORD_REDIRECT_UI
+              value: https://wowcollector.io/sign-in
 ---
 apiVersion: apps/v1
 kind: Deployment

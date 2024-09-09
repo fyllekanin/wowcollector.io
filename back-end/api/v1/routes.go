@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/go-chi/chi/v5"
+	restauth "wowcollector.io/api/v1/rest-auth"
 	restbattlenet "wowcollector.io/api/v1/rest-battle-net"
 	restcharacter "wowcollector.io/api/v1/rest-character"
 	restfeedback "wowcollector.io/api/v1/rest-feedback"
@@ -16,5 +17,6 @@ func GetRoutes(r chi.Router) {
 		restleaderboard.GetRoutes(r)
 		restfeedback.GetRoutes(r)
 		restitemview.GetRoutes(r)
+		restauth.GetRoutes(r)
 	})
 }
