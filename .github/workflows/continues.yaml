@@ -75,13 +75,14 @@ jobs:
         tags: tovven/wowcollector:web-latest
         build-args: |
           "NUXT_UI_PRO_LICENSE=${{ secrets.NUXT_OVERPAID }}"
-    
+
     - name: Update staging files
       run: |
         sed -i "s|{{clientId}}|${{ secrets.STAGING_BATTLE_NET_CLIENT_ID }}|g" integration/staging/credentials.yaml
         sed -i "s|{{secret}}|${{ secrets.STAGING_BATTLE_NET_SECRET }}|g" integration/staging/credentials.yaml
         sed -i "s|{{scannerClientId}}|${{ secrets.STAGING_BATTLE_NET_SCANNER_CLIENT_ID }}|g" integration/staging/credentials.yaml
         sed -i "s|{{scannerSecret}}|${{ secrets.STAGING_BATTLE_NET_SCANNER_SECRET }}|g" integration/staging/credentials.yaml
+        sed -i "s|{{discordClientId}}|${{ secrets.DISCORD_CLIENT_ID }}|g" integration/staging/credentials.yaml
 
         sed -i "s|{{password}}|${{ secrets.STAGING_MONGODB_PASSWORD }}|g" integration/staging/mongodb-credentials.yaml
 

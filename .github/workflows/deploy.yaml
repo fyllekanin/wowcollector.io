@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      
+
     - name: Set up Docker
       uses: docker/setup-buildx-action@v2
 
@@ -39,11 +39,12 @@ jobs:
         sed -i "s|{{secret}}|${{ secrets.BATTLE_NET_SECRET }}|g" integration/production/credentials.yaml
         sed -i "s|{{scannerClientId}}|${{ secrets.BATTLE_NET_SCANNER_CLIENT_ID }}|g" integration/production/credentials.yaml
         sed -i "s|{{scannerSecret}}|${{ secrets.BATTLE_NET_SCANNER_SECRET }}|g" integration/production/credentials.yaml
+        sed -i "s|{{discordClientId}}|${{ secrets.DISCORD_CLIENT_ID }}|g" integration/production/credentials.yaml
 
         sed -i "s|{{hash}}|$GITHUB_SHA|g" integration/production/manifest.yaml
         sed -i "s|{{version}}|${{ github.event.inputs.version }}|g" integration/production/manifest.yaml
         sed -i "s|{{googleTagId}}|${{ secrets.GOOGLE_TAG_ID }}|g" integration/production/manifest.yaml
-    
+
     - name: Apply credentials
       if: success()
       uses: actions-hub/kubectl@master
