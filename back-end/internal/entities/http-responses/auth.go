@@ -1,7 +1,7 @@
 package httpresponses
 
 type BattleNetAuth struct {
-	AccessCode string `json:"access_code"`
+	AccessToken string `json:"access_token"`
 }
 
 type BattleNetUserInfo struct {
