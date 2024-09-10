@@ -3,13 +3,14 @@ package restauth
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 	errorcodes "wowcollector.io/internal/common/error-codes"
+	"wowcollector.io/internal/entities/authorization"
 	"wowcollector.io/internal/entities/documents"
-	"wowcollector.io/internal/entities/response"
 	errorresponse "wowcollector.io/internal/entities/response/error"
 	userrepository "wowcollector.io/internal/repository/repositories/user-repository"
 	battlenethttp "wowcollector.io/internal/services/http/battle-net-http"
@@ -57,7 +58,7 @@ func getBattleNetAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userInfo := battlenethttp.GetInstance().GetBattleNetUserInfo(auth.AccessCode)
+	userInfo := battlenethttp.GetInstance().GetBattleNetUserInfo(auth.AccessToken)
 	if userInfo == nil {
 		zap.L().Error("Error getting user info from battle net")
 		w.WriteHeader(http.StatusBadRequest)
@@ -65,14 +66,26 @@ func getBattleNetAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userrepository.GetRepository().Create(&documents.UserDocument{
-		ObjectID:  primitive.NewObjectID(),
-		BattleTag: userInfo.BattleTag,
-	})
+	existing, err := userrepository.GetRepository().GetByBattleTag(userInfo.BattleTag)
+	if err != nil {
+		existing = &documents.UserDocument{
+			ObjectID:    primitive.NewObjectID(),
+			DisplayName: userInfo.BattleTag,
+			Connections: &documents.UserConnections{
+				BattleTag: userInfo.BattleTag,
+			},
+		}
+		userrepository.GetRepository().Create(existing)
+	}
 
-	body, err := json.Marshal(&response.LoginResponse{
-		AccessToken:  "",
-		RefreshToken: "",
+	body, err := json.Marshal(&authorization.Authorization{
+		Id:          existing.ObjectID.Hex(),
+		DisplayName: existing.DisplayName,
+		Connections: existing.Connections,
+		Tokens: &authorization.AuthorizationTokens{
+			AccessToken:  authorization.GetJwt(existing.ObjectID.Hex(), time.Hour*8),
+			RefreshToken: authorization.GetJwt(existing.ObjectID.Hex(), time.Hour*48),
+		},
 	})
 	if err != nil {
 		zap.L().Error("Failed to stringify response body")

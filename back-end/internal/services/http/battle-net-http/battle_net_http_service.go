@@ -330,7 +330,7 @@ func (s *BattleNetHttpService) GetRealms(region string) *httpresponses.BattleNet
 }
 
 func (s *BattleNetHttpService) GetBattleNetUserInfo(accessToken string) *httpresponses.BattleNetUserInfo {
-	response, err := s.doRequest("https://oauth.battle.net/oauth/userinfo", true, accessToken)
+	response, err := s.doRequest("https://oauth.battle.net/oauth/userinfo?", true, accessToken)
 	if err != nil {
 		zap.L().Info("Error getting battle net user info:" + err.Error())
 		return nil
@@ -346,7 +346,7 @@ func (s *BattleNetHttpService) GetBattleNetUserInfo(accessToken string) *httpres
 }
 
 func (s *BattleNetHttpService) GetAuth(redirectUri string, scope string, code string) *httpresponses.BattleNetAuth {
-	body := fmt.Sprintf("redirectUri=%s&scope=%s&code=%s&grant_type=authorization_code", redirectUri, scope, code)
+	body := fmt.Sprintf("redirect_uri=%s&scope=%s&code=%s&grant_type=authorization_code", redirectUri, scope, code)
 
 	req, err := http.NewRequest("POST", "https://oauth.battle.net/token", bytes.NewBufferString(body))
 	if err != nil {
