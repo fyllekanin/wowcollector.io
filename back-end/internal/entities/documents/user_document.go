@@ -4,6 +4,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type UserConnections struct {
 	BattleTag string `bson:"battleTag" json:"battleTag"`
+	DiscordId string `bson:"discordId" json:"discordId"`
 }
 
 type UserDocument struct {

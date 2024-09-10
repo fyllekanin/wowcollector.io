@@ -1,12 +1,22 @@
 definitions:
-  string:
-    enum:
-    - eu
-    - us
-    type: string
-    x-enum-varnames:
-    - REGION_EU
-    - REGION_US
+  authorization.Authorization:
+    properties:
+      connections:
+        $ref: '#/definitions/documents.UserConnections'
+      displayName:
+        type: string
+      id:
+        type: string
+      tokens:
+        $ref: '#/definitions/authorization.AuthorizationTokens'
+    type: object
+  authorization.AuthorizationTokens:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
   documents.MountViewCategory:
     properties:
       categories:
@@ -79,6 +89,13 @@ definitions:
       order:
         type: integer
     type: object
+  documents.UserConnections:
+    properties:
+      battleTag:
+        type: string
+      discordId:
+        type: string
+    type: object
   errorcodes.ErrorCode:
     enum:
     - CHARACTER_NOT_FOUND
@@ -89,6 +106,7 @@ definitions:
     - NO_MOUNT_VIEW_WITH_NAME
     - NO_TOY_VIEW_WITH_NAME
     - NO_PET_VIEW_WITH_NAME
+    - REQUEST_DATA
     type: string
     x-enum-varnames:
     - CHARACTER_NOT_FOUND
@@ -99,6 +117,7 @@ definitions:
     - NO_MOUNT_VIEW_WITH_NAME
     - NO_TOY_VIEW_WITH_NAME
     - NO_PET_VIEW_WITH_NAME
+    - REQUEST_DATA
   errorresponse.ErrorResponse:
     properties:
       code:
@@ -249,6 +268,8 @@ definitions:
         $ref: '#/definitions/response.MountAssets'
       description:
         type: string
+      faction:
+        type: string
       id:
         type: integer
       isUnobtainable:
@@ -301,7 +322,7 @@ definitions:
       name:
         type: string
       region:
-        $ref: '#/definitions/string'
+        type: string
       slug:
         type: string
     type: object
@@ -321,7 +342,7 @@ definitions:
       name:
         type: string
       value:
-        $ref: '#/definitions/string'
+        type: string
     type: object
   response.ToyAssets:
     properties:
@@ -380,6 +401,72 @@ info:
   title: wowcollector.io
   version: "1.0"
 paths:
+  /api/v1/auth/battle-net:
+    get:
+      description: Performs login for battle net auth code
+      parameters:
+      - description: Auth code
+        in: query
+        name: code
+        required: true
+        type: string
+      - description: Redirect Uri
+        in: query
+        name: redirectUri
+        required: true
+        type: string
+      - description: Scope
+        in: query
+        name: scope
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authorization.Authorization'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Login with battle net auth code
+      tags:
+      - Auth
+  /api/v1/auth/discord:
+    get:
+      description: Performs login for discord auth code
+      parameters:
+      - description: Auth code
+        in: query
+        name: code
+        required: true
+        type: string
+      - description: Redirect Uri
+        in: query
+        name: redirectUri
+        required: true
+        type: string
+      - description: Scope
+        in: query
+        name: scope
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authorization.Authorization'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorresponse.ErrorResponse'
+      summary: Login with discord auth code
+      tags:
+      - Auth
   /api/v1/battle-net/mounts:
     get:
       description: Get all the mounts
