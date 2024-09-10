@@ -83,6 +83,8 @@ jobs:
         sed -i "s|{{scannerClientId}}|${{ secrets.STAGING_BATTLE_NET_SCANNER_CLIENT_ID }}|g" integration/staging/credentials.yaml
         sed -i "s|{{scannerSecret}}|${{ secrets.STAGING_BATTLE_NET_SCANNER_SECRET }}|g" integration/staging/credentials.yaml
         sed -i "s|{{discordClientId}}|${{ secrets.DISCORD_CLIENT_ID }}|g" integration/staging/credentials.yaml
+        sed -i "s|{{discordSecret}}|${{ secrets.DISCORD_SECRET }}|g" integration/staging/credentials.yaml
+        sed -i "s|{{jwtSecretKey}}|${{ secrets.JWT_SECRET_KEY }}|g" integration/staging/credentials.yaml
 
         sed -i "s|{{password}}|${{ secrets.STAGING_MONGODB_PASSWORD }}|g" integration/staging/mongodb-credentials.yaml
 
