@@ -12,16 +12,26 @@ const loading = ref(false);
 
 const route = useRoute();
 const oauthCode = route.query.code as string | undefined;
+const provider = route.query.state as string | undefined;
+
+const { login } = useAuth();
 
 if (oauthCode) {
   loading.value = true;
 
-  try {
-    const response = await $fetch(
-      `/api/auth/battle-net?code=${oauthCode}&redirect_uri=${runtimeConfig.public.BNET_REDIRECT_URI}&scope=${runtimeConfig.public.BNET_SCOPE}`
-    );
+  const redirect_uri =
+    provider === 'bnet'
+      ? runtimeConfig.public.BNET_REDIRECT_URI
+      : runtimeConfig.public.DISCORD_REDIRECT_URI;
+  const scope =
+    provider === 'bnet'
+      ? runtimeConfig.public.BNET_SCOPE
+      : runtimeConfig.public.DISCORD_SCOPE;
 
-    console.log(response);
+  try {
+    await login(oauthCode, redirect_uri, scope);
+
+    navigateTo('/');
   } catch (error) {
     console.error('OAuth error:', error);
     toast.add({
@@ -32,11 +42,6 @@ if (oauthCode) {
   } finally {
     loading.value = false;
   }
-
-  // console.log('OAuth code:', oauthCode);
-  // setTimeout(() => {
-  //   loading.value = false;
-  // }, 3000);
 }
 </script>
 
@@ -59,7 +64,7 @@ if (oauthCode) {
               base: 'bg-blue-500',
             },
           }"
-          :to="`https://oauth.battle.net/authorize?response_type=code&&state=AbCdEfG&scope=${runtimeConfig.public.BNET_SCOPE}&redirect_uri=${runtimeConfig.public.BNET_REDIRECT_URI}&client_id=${runtimeConfig.public.BNET_CLIENT_ID}`"
+          :to="`https://oauth.battle.net/authorize?response_type=code&state=bnet&scope=${runtimeConfig.public.BNET_SCOPE}&redirect_uri=${runtimeConfig.public.BNET_REDIRECT_URI}&client_id=${runtimeConfig.public.BNET_CLIENT_ID}`"
         >
           Battle.net
         </UButton>
@@ -68,7 +73,7 @@ if (oauthCode) {
           :icon="Icons.DISCORD_COLOR"
           color="gray"
           size="lg"
-          :to="`https://discord.com/oauth2/authorize?client_id=${runtimeConfig.public.DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${runtimeConfig.public.DISCORD_REDIRECT_URI}&scope=${runtimeConfig.public.DISCORD_SCOPE}`"
+          :to="`https://discord.com/oauth2/authorize?client_id=${runtimeConfig.public.DISCORD_CLIENT_ID}&state=discord&response_type=code&redirect_uri=${runtimeConfig.public.DISCORD_REDIRECT_URI}&scope=${runtimeConfig.public.DISCORD_SCOPE}`"
         >
           Discord
         </UButton>
