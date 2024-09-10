@@ -4,6 +4,7 @@ export * from './battle-net';
 export * from './changelog';
 export * from './feedback';
 export * from './cookie';
+export * from './auth';
 
 export * from './collections';
 export * from './view-builder';
