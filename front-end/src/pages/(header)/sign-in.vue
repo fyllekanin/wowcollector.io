@@ -5,6 +5,7 @@ definePageMeta({
   layout: 'signin',
 });
 
+const toast = useToast();
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const loading = ref(false);
@@ -14,10 +15,23 @@ const oauthCode = route.query.code as string | undefined;
 
 if (oauthCode) {
   loading.value = true;
-  console.log('OAuth code:', oauthCode);
-  setTimeout(() => {
+
+  try {
+  } catch (error) {
+    console.error('OAuth error:', error);
+    toast.add({
+      title: 'Error',
+      description: 'An error occurred while signing in. Please try again.',
+      color: 'red',
+    });
+  } finally {
     loading.value = false;
-  }, 3000);
+  }
+
+  // console.log('OAuth code:', oauthCode);
+  // setTimeout(() => {
+  //   loading.value = false;
+  // }, 3000);
 }
 </script>
 
@@ -40,7 +54,7 @@ if (oauthCode) {
               base: 'bg-blue-500',
             },
           }"
-          :to="`https://oauth.battle.net/authorize?response_type=code&scope=openid wow.profile&state=AbCdEfG&redirect_uri=${runtimeConfig.public.BNET_REDIRECT_URI}&client_id=${runtimeConfig.public.BNET_CLIENT_ID}`"
+          :to="`https://oauth.battle.net/authorize?response_type=code&scope=openid wow.profile&redirect_uri=${runtimeConfig.public.BNET_REDIRECT_URI}&client_id=${runtimeConfig.public.BNET_CLIENT_ID}`"
         >
           Battle.net
         </UButton>
