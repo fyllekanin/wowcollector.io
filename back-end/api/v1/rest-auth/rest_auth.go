@@ -80,15 +80,7 @@ func getDiscordAuth(w http.ResponseWriter, r *http.Request) {
 		userrepository.GetRepository().Create(existing)
 	}
 
-	body, err := json.Marshal(&authorization.Authorization{
-		Id:          existing.ObjectID.Hex(),
-		DisplayName: existing.DisplayName,
-		Connections: existing.Connections,
-		Tokens: &authorization.AuthorizationTokens{
-			AccessToken:  authorization.GetJwt(existing.ObjectID.Hex(), time.Hour*8),
-			RefreshToken: authorization.GetJwt(existing.ObjectID.Hex(), time.Hour*48),
-		},
-	})
+	body, err := json.Marshal(getAuthorizationBody(existing))
 	if err != nil {
 		zap.L().Error("Failed to stringify response body")
 		w.WriteHeader(http.StatusBadRequest)
@@ -157,15 +149,7 @@ func getBattleNetAuth(w http.ResponseWriter, r *http.Request) {
 		userrepository.GetRepository().Create(existing)
 	}
 
-	body, err := json.Marshal(&authorization.Authorization{
-		Id:          existing.ObjectID.Hex(),
-		DisplayName: existing.DisplayName,
-		Connections: existing.Connections,
-		Tokens: &authorization.AuthorizationTokens{
-			AccessToken:  authorization.GetJwt(existing.ObjectID.Hex(), time.Hour*8),
-			RefreshToken: authorization.GetJwt(existing.ObjectID.Hex(), time.Hour*48),
-		},
-	})
+	body, err := json.Marshal(getAuthorizationBody(existing))
 	if err != nil {
 		zap.L().Error("Failed to stringify response body")
 		w.WriteHeader(http.StatusBadRequest)
@@ -176,4 +160,16 @@ func getBattleNetAuth(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
 	zap.L().Info("Responded with login response")
+}
+
+func getAuthorizationBody(user *documents.UserDocument) *authorization.Authorization {
+	return &authorization.Authorization{
+		Id:          user.ObjectID.Hex(),
+		DisplayName: user.DisplayName,
+		Connections: user.Connections,
+		Tokens: &authorization.AuthorizationTokens{
+			AccessToken:  authorization.GetJwt(user.ObjectID.Hex(), time.Hour*8),
+			RefreshToken: authorization.GetJwt(user.ObjectID.Hex(), time.Hour*48),
+		},
+	}
 }
