@@ -30,6 +30,7 @@ func Init(database *mongo.Database) {
 		collection: collection,
 	}
 	instance.CreateIndex("connections.battleTag")
+	instance.CreateIndex("connections.discordId")
 }
 
 func (r *UserRepository) Create(document *documents.UserDocument) error {
@@ -48,6 +49,18 @@ func (r *UserRepository) GetByBattleTag(battleTag string) (*documents.UserDocume
 	err := r.Collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		zap.L().Info("Error finding user document by battleTag:" + err.Error())
+		return nil, err
+	}
+	return result, nil
+}
+
+func (r *UserRepository) GetByDiscordId(discordId string) (*documents.UserDocument, error) {
+	filter := bson.D{{"connections.discordId", discordId}}
+	var result *documents.UserDocument
+
+	err := r.Collection.FindOne(context.TODO(), filter).Decode(&result)
+	if err != nil {
+		zap.L().Info("Error finding user document by discordId:" + err.Error())
 		return nil, err
 	}
 	return result, nil
