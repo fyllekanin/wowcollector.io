@@ -1,8 +1,8 @@
 import type { Auth } from '~/types';
 
 export function useAuth() {
-  const atCookie = useCookie('wc_at');
-  const rtCookie = useCookie('wc_rt');
+  const atCookie = useCookie('wc_at', { maxAge: 60 * 60 * 24 * 30 }); // Expires in 30 days
+  const rtCookie = useCookie('wc_rt', { maxAge: 60 * 60 * 24 * 30 }); // Expires in 30 days
 
   const login = async (code: string, redirectUri: string, scope: string) => {
     const response = await $fetch(
@@ -24,7 +24,7 @@ export function useAuth() {
       `/api/auth/refresh?refreshToken=${refreshToken}`
     );
 
-    if (!response?.tokens?.accessToken || !response?.tokens?.refreshToken) {
+    if (!response?.tokens?.accessToken) {
       throw new Error('Failed to refresh');
     }
 
@@ -34,10 +34,16 @@ export function useAuth() {
     return response;
   };
 
+  const logout = () => {
+    atCookie.value = '';
+    rtCookie.value = '';
+  };
+
   return {
     atCookie,
     rtCookie,
     login,
     refresh,
+    logout,
   };
 }

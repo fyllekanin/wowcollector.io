@@ -8,6 +8,9 @@ import type { HeaderLink } from '@nuxt/ui-pro/types';
 const characterStore = useCharacterStore();
 const { character } = storeToRefs(characterStore);
 
+const { logout, atCookie } = useAuth();
+console.log(atCookie);
+
 const characterExists = computed(() => !!character.value);
 
 const modal = useModal();
@@ -127,10 +130,18 @@ const links = computed(() => [
 
     <template #right>
       <UColorModeButton class="hidden lg:flex" />
-      <UButton class="hidden lg:flex" to="/sign-in" variant="ghost" color="gray"
+      <UButton
+        v-if="!atCookie"
+        class="hidden lg:flex"
+        to="/sign-in"
+        variant="ghost"
+        color="gray"
         >Sign In</UButton
       >
-      <ActiveCharacterDropdown v-if="character" class="hidden lg:flex" />
+      <ActiveCharacterDropdown
+        v-if="character || atCookie"
+        class="hidden lg:flex"
+      />
     </template>
 
     <template #panel>
@@ -160,7 +171,9 @@ const links = computed(() => [
             >
           </div>
 
-          <UButton to="/sign-in" variant="ghost" color="gray">Sign In</UButton>
+          <UButton v-if="!atCookie" to="/sign-in" variant="ghost" color="gray"
+            >Sign In</UButton
+          >
 
           <UColorModeSelect class="lg:hidden" />
         </div>

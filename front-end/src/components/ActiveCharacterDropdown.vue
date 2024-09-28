@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { Icons } from '~/constants';
 
+import type { DropdownItem } from '#ui/types';
+
 const characterStore = useCharacterStore();
 const { character } = storeToRefs(characterStore);
 
@@ -14,13 +16,13 @@ const items = computed(() => [
     },
   ],
   [
-    {
+    character.value && {
       label: 'Change character',
       icon: 'material-symbols:logout',
       to: '/search',
     },
   ],
-]);
+]) as ComputedRef<DropdownItem[][]>;
 </script>
 
 <template>
@@ -37,10 +39,19 @@ const items = computed(() => [
       inset
       :ui="{ base: '-mx-2 rounded-none ring-0', background: '' }"
     >
-      <UAvatar :src="character?.assets?.avatar" size="md" alt="Avatar" />
+      <UAvatar
+        :src="character?.assets?.avatar"
+        :icon="
+          !character?.assets?.avatar
+            ? 'material-symbols:account-circle-full'
+            : undefined
+        "
+        size="md"
+        alt="Avatar"
+      />
 
       <!-- When logged in with Bnet -->
-      <!-- <template #content>
+      <template #content>
         <UAvatar
           :icon="Icons.BATTLENET"
           alt="Avatar"
@@ -53,7 +64,7 @@ const items = computed(() => [
           }"
           class="shadow-md"
         />
-      </template> -->
+      </template>
     </UChip>
 
     <template #account="{ item }">

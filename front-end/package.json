@@ -18,7 +18,7 @@
     "@nuxtjs/ngrok": "^3.0.1",
     "@nuxtjs/seo": "^2.0.0-rc.19",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.1",
-    "@pinia/nuxt": "^0.5.1",
+    "@pinia/nuxt": "^0.5.4",
     "@vueuse/motion": "^2.2.3",
     "axios": "^1.7.2",
     "date-fns": "^3.6.0",
