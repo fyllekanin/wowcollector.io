@@ -3,6 +3,7 @@ import { Icons } from '~/constants';
 
 import type { DropdownItem } from '#ui/types';
 
+const { atCookie, logout } = useAuth();
 const characterStore = useCharacterStore();
 const { character } = storeToRefs(characterStore);
 
@@ -16,10 +17,16 @@ const items = computed(() => [
     },
   ],
   [
+    atCookie.value && {
+      label: 'Change account',
+      icon: 'material-symbols:logout',
+      slot: 'logout',
+    },
     character.value && {
       label: 'Change character',
-      icon: 'material-symbols:logout',
+      icon: 'basil:exchange-outline',
       to: '/search',
+      slot: 'change-character',
     },
   ],
 ]) as ComputedRef<DropdownItem[][]>;
@@ -50,7 +57,6 @@ const items = computed(() => [
         alt="Avatar"
       />
 
-      <!-- When logged in with Bnet -->
       <template #content>
         <UAvatar
           :icon="Icons.BATTLENET"
@@ -74,13 +80,24 @@ const items = computed(() => [
       </div>
     </template>
 
-    <template #item="{ item }">
+    <template #logout="{ item }">
+      <UButton
+        :icon="item.icon"
+        :disabled="item.disabled"
+        variant="ghost"
+        color="red"
+        class="w-full"
+        @click="logout"
+        >{{ item.label }}</UButton
+      >
+    </template>
+    <template #change-character="{ item }">
       <UButton
         :icon="item.icon"
         :to="item.to"
         :disabled="item.disabled"
         variant="ghost"
-        color="red"
+        color="white"
         class="w-full"
         @click="characterStore.clearCharacter"
         >{{ item.label }}</UButton

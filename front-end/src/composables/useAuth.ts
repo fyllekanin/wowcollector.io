@@ -35,8 +35,8 @@ export function useAuth() {
   };
 
   const logout = () => {
-    atCookie.value = '';
-    rtCookie.value = '';
+    atCookie.value = null;
+    rtCookie.value = null;
   };
 
   return {

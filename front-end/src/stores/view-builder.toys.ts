@@ -4,7 +4,8 @@ import { Images } from '~/constants';
 
 import type { ToyCategory, ToyInformation } from '~/types';
 
-export const useToyViewBuilderStore = defineStore('toy-view-builder', {
+export const useToyViewBuilderStore = defineStore({
+  id: 'toy-view-builder',
   state: () => ({
     _allToys: [] as ToyInformation[], // Used as a fallback to reset the state
     _toys: [] as ToyInformation[],

@@ -1,6 +1,7 @@
 import type { PetCategory, PetFilters, PetInformation } from '~/types';
 
-export const usePetsStore = defineStore('pets', {
+export const usePetsStore = defineStore({
+  id: 'pets',
   state: () => ({
     _pets: null as PetCategory[] | null,
     filters: {
@@ -155,7 +156,7 @@ export const usePetsStore = defineStore('pets', {
     },
   },
   persist: {
-    paths: ['_pets'],
+    pick: ['_pets'],
     storage: persistedState.sessionStorage,
   },
 });

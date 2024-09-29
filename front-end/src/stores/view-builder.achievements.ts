@@ -2,173 +2,169 @@ import equal from 'fast-deep-equal';
 
 import type { AchievementCategory, AchievementInformation } from '~/types';
 
-export const useAchievementViewBuilderStore = defineStore(
-  'achievement-view-builder',
-  {
-    state: () => ({
-      _allAchievements: [] as AchievementInformation[], // Used as a fallback to reset the state
-      _achievements: [] as AchievementInformation[],
-      _achievementCategories: [
-        {
-          id: newId(10),
-          name: 'New Category',
-          categories: [],
-          achievements: [],
-          displayOrder: 0,
-        },
-      ] as AchievementCategory[],
-      _cloneableCategory: [
-        {
-          id: newId(10),
-          name: 'New Category',
-          categories: [],
-          achievements: [],
-          displayOrder: 0,
-        },
-      ] as AchievementCategory[],
-      _dragState: {
-        state: false,
-        type: '' as 'achievement' | 'category' | '',
+export const useAchievementViewBuilderStore = defineStore({
+  id: 'achievement-view-builder',
+  state: () => ({
+    _allAchievements: [] as AchievementInformation[], // Used as a fallback to reset the state
+    _achievements: [] as AchievementInformation[],
+    _achievementCategories: [
+      {
+        id: newId(10),
+        name: 'New Category',
+        categories: [],
+        achievements: [],
+        displayOrder: 0,
       },
-      _searchFilter: '',
-      _settings: {
-        showBorders: true,
-        showAchievementTooltips: true,
+    ] as AchievementCategory[],
+    _cloneableCategory: [
+      {
+        id: newId(10),
+        name: 'New Category',
+        categories: [],
+        achievements: [],
+        displayOrder: 0,
       },
-    }),
-    getters: {
-      flatAchievements(state): AchievementInformation[] {
-        return state._achievements || [];
-      },
-      getFinalCategories(state): AchievementCategory[] {
-        const setOrder = (category: AchievementCategory, order: number) => {
-          category.displayOrder = order;
-          category.categories.forEach((subCategory, index) => {
-            setOrder(subCategory, index);
-          });
-          if (category.achievements)
-            category.achievements.forEach((achievement, index) => {
-              achievement.displayOrder = index;
-            });
-        };
-
-        const categories = [...state._achievementCategories];
-        return categories.map((category, index) => {
-          setOrder(category, index);
-          return category;
-        });
-      },
-      dragState(state) {
-        return state._dragState;
-      },
-      hasChanges(state) {
-        const cloned = [...state._achievementCategories];
-        if (cloned.length !== 1) return true;
-
-        if (cloned.length === 1) {
-          const [{ id, ...category }] = cloned;
-
-          return !equal(category, {
-            name: 'New Category',
-            categories: [],
-            achievements: [],
-            displayOrder: 0,
-          });
-        }
-
-        return false;
-      },
-      isValid(state) {
-        return state._achievementCategories.length;
-      },
-      highlightMountDropzones(state) {
-        return (
-          state._dragState.state && state._dragState.type === 'achievement'
-        );
-      },
-      highlightCategoryDropzones(state) {
-        return state._dragState.state && state._dragState.type === 'category';
-      },
+    ] as AchievementCategory[],
+    _dragState: {
+      state: false,
+      type: '' as 'achievement' | 'category' | '',
     },
-    actions: {
-      setAchievements(newAchievements: AchievementInformation[]) {
-        this._achievements = newAchievements;
-      },
-      setAchievementCategories(newCategories: AchievementCategory[]) {
-        this._achievementCategories = newCategories;
-      },
-      addAchievements(achievements: AchievementInformation[]) {
-        this._achievements.push(...achievements);
-      },
-      addRootCategory(category: AchievementCategory) {
-        this._achievementCategories.push(category);
-      },
-      setNewIdForCloneableCategory() {
-        this._cloneableCategory = [
-          {
-            id: newId(10),
-            name: 'New Category',
-            categories: [],
-            achievements: [],
-            displayOrder: 0,
-          },
-        ];
-      },
-      addSubCategory(category: AchievementCategory, parentId: string) {
-        const parentCategory = this._achievementCategories.find(
-          (category) => category.id === parentId
-        );
+    _searchFilter: '',
+    _settings: {
+      showBorders: true,
+      showAchievementTooltips: true,
+    },
+  }),
+  getters: {
+    flatAchievements(state): AchievementInformation[] {
+      return state._achievements || [];
+    },
+    getFinalCategories(state): AchievementCategory[] {
+      const setOrder = (category: AchievementCategory, order: number) => {
+        category.displayOrder = order;
+        category.categories.forEach((subCategory, index) => {
+          setOrder(subCategory, index);
+        });
+        if (category.achievements)
+          category.achievements.forEach((achievement, index) => {
+            achievement.displayOrder = index;
+          });
+      };
 
-        if (parentCategory) {
-          parentCategory.categories.push(category);
-        }
-      },
-      removeRootCategory(categoryId: string) {
-        this._achievementCategories = this._achievementCategories.filter(
+      const categories = [...state._achievementCategories];
+      return categories.map((category, index) => {
+        setOrder(category, index);
+        return category;
+      });
+    },
+    dragState(state) {
+      return state._dragState;
+    },
+    hasChanges(state) {
+      const cloned = [...state._achievementCategories];
+      if (cloned.length !== 1) return true;
+
+      if (cloned.length === 1) {
+        const [{ id, ...category }] = cloned;
+
+        return !equal(category, {
+          name: 'New Category',
+          categories: [],
+          achievements: [],
+          displayOrder: 0,
+        });
+      }
+
+      return false;
+    },
+    isValid(state) {
+      return state._achievementCategories.length;
+    },
+    highlightMountDropzones(state) {
+      return state._dragState.state && state._dragState.type === 'achievement';
+    },
+    highlightCategoryDropzones(state) {
+      return state._dragState.state && state._dragState.type === 'category';
+    },
+  },
+  actions: {
+    setAchievements(newAchievements: AchievementInformation[]) {
+      this._achievements = newAchievements;
+    },
+    setAchievementCategories(newCategories: AchievementCategory[]) {
+      this._achievementCategories = newCategories;
+    },
+    addAchievements(achievements: AchievementInformation[]) {
+      this._achievements.push(...achievements);
+    },
+    addRootCategory(category: AchievementCategory) {
+      this._achievementCategories.push(category);
+    },
+    setNewIdForCloneableCategory() {
+      this._cloneableCategory = [
+        {
+          id: newId(10),
+          name: 'New Category',
+          categories: [],
+          achievements: [],
+          displayOrder: 0,
+        },
+      ];
+    },
+    addSubCategory(category: AchievementCategory, parentId: string) {
+      const parentCategory = this._achievementCategories.find(
+        (category) => category.id === parentId
+      );
+
+      if (parentCategory) {
+        parentCategory.categories.push(category);
+      }
+    },
+    removeRootCategory(categoryId: string) {
+      this._achievementCategories = this._achievementCategories.filter(
+        (category) => category.id !== categoryId
+      );
+    },
+    removeSubCategory(categoryId: string, parentId: string) {
+      const parentCategory = this._achievementCategories.find(
+        (category) => category.id === parentId
+      );
+
+      if (parentCategory) {
+        parentCategory.categories = parentCategory.categories.filter(
           (category) => category.id !== categoryId
         );
-      },
-      removeSubCategory(categoryId: string, parentId: string) {
-        const parentCategory = this._achievementCategories.find(
-          (category) => category.id === parentId
-        );
-
-        if (parentCategory) {
-          parentCategory.categories = parentCategory.categories.filter(
-            (category) => category.id !== categoryId
-          );
-        }
-      },
-      resetStore() {
-        this._achievements = this._allAchievements;
-        this._achievementCategories = [
-          {
-            id: newId(10),
-            name: 'New Category',
-            categories: [],
-            achievements: [],
-            displayOrder: 0,
-          },
-        ];
-      },
-      setDragState(state: boolean, type: 'achievement' | 'category') {
-        this._dragState = {
-          state,
-          type,
-        };
-      },
-      clearDragState() {
-        this._dragState = {
-          state: false,
-          type: '',
-        };
-      },
-      setSearchFilter(filter: string) {
-        this._searchFilter = filter;
-      },
-      setSettings(settings: Partial<typeof this._settings>) {
-        Object.assign(this._settings, settings);
-      },
+      }
     },
-  }
-);
+    resetStore() {
+      this._achievements = this._allAchievements;
+      this._achievementCategories = [
+        {
+          id: newId(10),
+          name: 'New Category',
+          categories: [],
+          achievements: [],
+          displayOrder: 0,
+        },
+      ];
+    },
+    setDragState(state: boolean, type: 'achievement' | 'category') {
+      this._dragState = {
+        state,
+        type,
+      };
+    },
+    clearDragState() {
+      this._dragState = {
+        state: false,
+        type: '',
+      };
+    },
+    setSearchFilter(filter: string) {
+      this._searchFilter = filter;
+    },
+    setSettings(settings: Partial<typeof this._settings>) {
+      Object.assign(this._settings, settings);
+    },
+  },
+});

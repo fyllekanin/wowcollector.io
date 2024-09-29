@@ -1,6 +1,7 @@
 import type { ToyCategory, ToyFilters, ToyInformation } from '~/types';
 
-export const useToysStore = defineStore('toys', {
+export const useToysStore = defineStore({
+  id: 'toys',
   state: () => ({
     _toys: null as ToyCategory[] | null,
     filters: {
@@ -155,7 +156,7 @@ export const useToysStore = defineStore('toys', {
     },
   },
   persist: {
-    paths: ['_toys'],
+    pick: ['_toys'],
     storage: persistedState.sessionStorage,
   },
 });

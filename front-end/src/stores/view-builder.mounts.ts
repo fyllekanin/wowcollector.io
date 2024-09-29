@@ -4,7 +4,8 @@ import { Images } from '~/constants';
 
 import type { MountCategory, MountInformation } from '~/types';
 
-export const useMountViewBuilderStore = defineStore('mount-view-builder', {
+export const useMountViewBuilderStore = defineStore({
+  id: 'mount-view-builder',
   state: () => ({
     _allMounts: [] as MountInformation[], // Used as a fallback to reset the state
     _mounts: [] as MountInformation[],

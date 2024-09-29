@@ -4,7 +4,8 @@ import { Images } from '~/constants';
 
 import type { PetCategory, PetInformation } from '~/types';
 
-export const usePetViewBuilderStore = defineStore('pet-view-builder', {
+export const usePetViewBuilderStore = defineStore({
+  id: 'pet-view-builder',
   state: () => ({
     _allPets: [] as PetInformation[], // Used as a fallback to reset the state
     _pets: [] as PetInformation[],
