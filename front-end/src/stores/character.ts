@@ -1,6 +1,7 @@
 import type { Character } from '~/types';
 
-export const useCharacterStore = defineStore('character', {
+export const useCharacterStore = defineStore({
+  id: 'character',
   state: () => ({
     character: null as Partial<Character> | null,
   }),
@@ -13,7 +14,7 @@ export const useCharacterStore = defineStore('character', {
     },
   },
   persist: {
-    paths: ['character'],
+    pick: ['character'],
     storage: persistedState.sessionStorage,
   },
 });

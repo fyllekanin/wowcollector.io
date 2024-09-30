@@ -1,6 +1,7 @@
 import type { MountCategory, MountFilters, MountInformation } from '~/types';
 
-export const useMountsStore = defineStore('mounts', {
+export const useMountsStore = defineStore({
+  id: 'mounts',
   state: () => ({
     _mounts: null as MountCategory[] | null,
     _allMounts: null as MountInformation[] | null,
@@ -165,7 +166,7 @@ export const useMountsStore = defineStore('mounts', {
     },
   },
   persist: {
-    paths: ['_mounts'],
+    pick: ['_mounts'],
     storage: persistedState.sessionStorage,
   },
 });

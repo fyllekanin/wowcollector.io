@@ -1,6 +1,7 @@
 import type { Realm, Region } from '~/types';
 
-export const useRealmsRegionsStore = defineStore('realms-regions', {
+export const useRealmsRegionsStore = defineStore({
+  id: 'realms-regions',
   state: () => ({
     realms: null as Realm[] | null,
     regions: null as Region[] | null,
@@ -14,7 +15,7 @@ export const useRealmsRegionsStore = defineStore('realms-regions', {
     },
   },
   persist: {
-    paths: ['realms', 'regions'],
+    pick: ['realms', 'regions'],
     storage: persistedState.localStorage,
   },
 });

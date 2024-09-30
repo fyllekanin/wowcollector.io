@@ -4,7 +4,8 @@ import type {
   AchievementInformation,
 } from '~/types';
 
-export const useAchievementsStore = defineStore('achievements', {
+export const useAchievementsStore = defineStore({
+  id: 'achievements',
   state: () => ({
     _achievements: null as AchievementCategoryAccordion[] | null,
     filters: {
@@ -205,7 +206,7 @@ export const useAchievementsStore = defineStore('achievements', {
     },
   },
   persist: {
-    paths: ['_achievements'],
+    pick: ['_achievements'],
     storage: persistedState.sessionStorage,
   },
 });

@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-const consent = useCookie<undefined | null | '0' | '1'>('_wc_consent_optin');
-const isMounted = ref(false);
-const showCookieBar = computed(
-  () =>
-    // (consent.value === undefined || consent.value === null) && isMounted.value
-    false
-);
+import CookieModal from '~/components/cookie/CookieModal.vue';
 
-const giveConsent = () => (consent.value = '1');
-const rejectConsent = () => (consent.value = '0');
+const { isConsentGiven, setConsent } = useConsent();
+const modal = useModal();
 
-onMounted(() => {
-  isMounted.value = true;
-});
+const showCookieBar = computed(() => !isConsentGiven.value);
+
+const giveConsent = () => {
+  setConsent({ essential: true, analytics: true });
+};
+
+const rejectConsent = () => {
+  setConsent({ essential: true, analytics: false });
+};
 </script>
 
 <template>
@@ -43,17 +43,36 @@ onMounted(() => {
         duration: 500,
       },
     }"
-    class="min-h-20 w-full px-4 flex grow items-center justify-between border-t-[1px] border-gray-700 dark:border-gray-700 fixed bottom-0 bg-white dark:bg-slate-900"
+    class="min-h-20 w-full px-4 py-2 gap-10 flex flex-col md:flex-row grow items-end md:items-center justify-between border-t-[1px] border-gray-700 dark:border-gray-700 fixed bottom-0 bg-white dark:bg-slate-900"
   >
-    <p class="text-md">
-      We only use cookies for analytics to improve our service for your benefit.
-    </p>
-    <div class="flex gap-2">
-      <UButton variant="outline" size="lg" @click="giveConsent"
-        >Accept All</UButton
-      >
+    <div class="flex gap-1 self-start md:self-center">
+      <p class="text-md">
+        We use cookies to ensure you get the best experience on our website.
+        <UButton
+          variant="link"
+          size="sm"
+          @click="
+            modal.open(CookieModal, {
+              onClose: () => {
+                modal.close();
+              },
+            })
+          "
+          :ui="{
+            padding: {
+              sm: 'px-0',
+            },
+          }"
+          >Show Purposes</UButton
+        >
+      </p>
+    </div>
+    <div class="flex grow gap-2 justify-end">
       <UButton variant="ghost" color="gray" size="lg" @click="rejectConsent"
         >Reject</UButton
+      >
+      <UButton variant="outline" size="lg" @click="giveConsent"
+        >Accept All</UButton
       >
     </div>
   </div>

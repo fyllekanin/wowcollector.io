@@ -20,6 +20,104 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/auth/battle-net": {
+            "get": {
+                "description": "Performs login for battle net auth code",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login with battle net auth code",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Auth code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Redirect Uri",
+                        "name": "redirectUri",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Scope",
+                        "name": "scope",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/authorization.Authorization"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/discord": {
+            "get": {
+                "description": "Performs login for discord auth code",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login with discord auth code",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Auth code",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Redirect Uri",
+                        "name": "redirectUri",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Scope",
+                        "name": "scope",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/authorization.Authorization"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorresponse.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/battle-net/mounts": {
             "get": {
                 "description": "Get all the mounts",
@@ -664,16 +762,33 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "string": {
-            "type": "string",
-            "enum": [
-                "eu",
-                "us"
-            ],
-            "x-enum-varnames": [
-                "REGION_EU",
-                "REGION_US"
-            ]
+        "authorization.Authorization": {
+            "type": "object",
+            "properties": {
+                "connections": {
+                    "$ref": "#/definitions/documents.UserConnections"
+                },
+                "displayName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "tokens": {
+                    "$ref": "#/definitions/authorization.AuthorizationTokens"
+                }
+            }
+        },
+        "authorization.AuthorizationTokens": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "type": "string"
+                },
+                "refreshToken": {
+                    "type": "string"
+                }
+            }
         },
         "documents.MountViewCategory": {
             "type": "object",
@@ -786,6 +901,17 @@ const docTemplate = `{
                 }
             }
         },
+        "documents.UserConnections": {
+            "type": "object",
+            "properties": {
+                "battleTag": {
+                    "type": "string"
+                },
+                "discordId": {
+                    "type": "string"
+                }
+            }
+        },
         "errorcodes.ErrorCode": {
             "type": "string",
             "enum": [
@@ -796,7 +922,8 @@ const docTemplate = `{
                 "NO_DEFAULT_TOY_VIEW",
                 "NO_MOUNT_VIEW_WITH_NAME",
                 "NO_TOY_VIEW_WITH_NAME",
-                "NO_PET_VIEW_WITH_NAME"
+                "NO_PET_VIEW_WITH_NAME",
+                "REQUEST_DATA"
             ],
             "x-enum-varnames": [
                 "CHARACTER_NOT_FOUND",
@@ -806,7 +933,8 @@ const docTemplate = `{
                 "NO_DEFAULT_TOY_VIEW",
                 "NO_MOUNT_VIEW_WITH_NAME",
                 "NO_TOY_VIEW_WITH_NAME",
-                "NO_PET_VIEW_WITH_NAME"
+                "NO_PET_VIEW_WITH_NAME",
+                "REQUEST_DATA"
             ]
         },
         "errorresponse.ErrorResponse": {
@@ -1040,6 +1168,9 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
+                "faction": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -1120,7 +1251,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "region": {
-                    "$ref": "#/definitions/string"
+                    "type": "string"
                 },
                 "slug": {
                     "type": "string"
@@ -1151,7 +1282,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "value": {
-                    "$ref": "#/definitions/string"
+                    "type": "string"
                 }
             }
         },

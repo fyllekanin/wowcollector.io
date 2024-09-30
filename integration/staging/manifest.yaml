@@ -77,6 +77,21 @@ spec:
                   key: secret
             - name: DATABASE_NAME
               value: wow
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-staging-credentials
+                  key: jwtSecretKey
+            - name: DISCORD_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-staging-credentials
+                  key: discordClientId
+            - name: DISCORD_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: wowcollector-staging-credentials
+                  key: discordSecret
 ---
 apiVersion: apps/v1
 kind: Deployment

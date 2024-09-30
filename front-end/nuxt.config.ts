@@ -9,8 +9,10 @@ export default defineNuxtConfig({
       public: {
         BNET_CLIENT_ID: process.env.BNET_CLIENT_ID,
         BNET_REDIRECT_URI: process.env.BNET_REDIRECT_URI,
+        BNET_SCOPE: 'openid wow.profile',
         DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
         DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
+        DISCORD_SCOPE: 'identify+email+openid',
       },
     },
   },
@@ -20,8 +22,10 @@ export default defineNuxtConfig({
       public: {
         BNET_CLIENT_ID: process.env.BNET_CLIENT_ID,
         BNET_REDIRECT_URI: process.env.BNET_REDIRECT_URI,
+        BNET_SCOPE: 'openid wow.profile',
         DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
         DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
+        DISCORD_SCOPE: 'identify+email+openid',
       },
     },
   },
@@ -58,6 +62,7 @@ export default defineNuxtConfig({
     'nuxt-gtag',
     '@nuxtjs/seo',
     '@vueuse/motion/nuxt',
+    '@nuxtjs/ngrok',
   ],
   icon: {
     provider: 'server',
@@ -84,5 +89,8 @@ export default defineNuxtConfig({
   plugins: ['~/plugins/draggable.ts'],
   gtag: {
     id: process.env.GOOGLE_TAG_ID,
+  },
+  ngrok: {
+    authtoken_from_env: true,
   },
 });

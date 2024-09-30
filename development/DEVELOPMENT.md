@@ -47,6 +47,7 @@ docker run -p 8888:8888/tcp \
 -e BATTLE_NET_CLIENT_ID=clientId \
 -e BATTLE_NET_CLIENT_SECRET=clientSecret \
 -e GITHUB_TOKEN=githubPersonalToken \
+-e JWT_SECRET_KEY="nptOqeOBZXJ3/T0KKAX6MO5rObFIV4qTOZ7EuALGqOE=" \
 wowcollector.io-server
 ```
 

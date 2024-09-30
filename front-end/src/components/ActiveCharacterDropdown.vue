@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { Icons } from '~/constants';
 
+import type { DropdownItem } from '#ui/types';
+
+const { atCookie, logout } = useAuth();
 const characterStore = useCharacterStore();
 const { character } = storeToRefs(characterStore);
 
@@ -14,13 +17,19 @@ const items = computed(() => [
     },
   ],
   [
-    {
-      label: 'Change character',
+    atCookie.value && {
+      label: 'Change account',
       icon: 'material-symbols:logout',
+      slot: 'logout',
+    },
+    character.value && {
+      label: 'Change character',
+      icon: 'basil:exchange-outline',
       to: '/search',
+      slot: 'change-character',
     },
   ],
-]);
+]) as ComputedRef<DropdownItem[][]>;
 </script>
 
 <template>
@@ -37,10 +46,18 @@ const items = computed(() => [
       inset
       :ui="{ base: '-mx-2 rounded-none ring-0', background: '' }"
     >
-      <UAvatar :src="character?.assets?.avatar" size="md" alt="Avatar" />
+      <UAvatar
+        :src="character?.assets?.avatar"
+        :icon="
+          !character?.assets?.avatar
+            ? 'material-symbols:account-circle-full'
+            : undefined
+        "
+        size="md"
+        alt="Avatar"
+      />
 
-      <!-- When logged in with Bnet -->
-      <!-- <template #content>
+      <template #content>
         <UAvatar
           :icon="Icons.BATTLENET"
           alt="Avatar"
@@ -53,7 +70,7 @@ const items = computed(() => [
           }"
           class="shadow-md"
         />
-      </template> -->
+      </template>
     </UChip>
 
     <template #account="{ item }">
@@ -63,13 +80,24 @@ const items = computed(() => [
       </div>
     </template>
 
-    <template #item="{ item }">
+    <template #logout="{ item }">
+      <UButton
+        :icon="item.icon"
+        :disabled="item.disabled"
+        variant="ghost"
+        color="red"
+        class="w-full"
+        @click="logout"
+        >{{ item.label }}</UButton
+      >
+    </template>
+    <template #change-character="{ item }">
       <UButton
         :icon="item.icon"
         :to="item.to"
         :disabled="item.disabled"
         variant="ghost"
-        color="red"
+        color="white"
         class="w-full"
         @click="characterStore.clearCharacter"
         >{{ item.label }}</UButton

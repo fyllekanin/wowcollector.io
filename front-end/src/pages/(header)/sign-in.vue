@@ -5,19 +5,43 @@ definePageMeta({
   layout: 'signin',
 });
 
+const toast = useToast();
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const loading = ref(false);
 
 const route = useRoute();
 const oauthCode = route.query.code as string | undefined;
+const provider = route.query.state as string | undefined;
+
+const { login } = useAuth();
 
 if (oauthCode) {
   loading.value = true;
-  console.log('OAuth code:', oauthCode);
-  setTimeout(() => {
+
+  const redirect_uri =
+    provider === 'bnet'
+      ? runtimeConfig.public.BNET_REDIRECT_URI
+      : runtimeConfig.public.DISCORD_REDIRECT_URI;
+  const scope =
+    provider === 'bnet'
+      ? runtimeConfig.public.BNET_SCOPE
+      : runtimeConfig.public.DISCORD_SCOPE;
+
+  try {
+    await login(oauthCode, redirect_uri, scope);
+
+    navigateTo('/');
+  } catch (error) {
+    console.error('OAuth error:', error);
+    toast.add({
+      title: 'Error',
+      description: 'An error occurred while signing in. Please try again.',
+      color: 'red',
+    });
+  } finally {
     loading.value = false;
-  }, 3000);
+  }
 }
 </script>
 
@@ -40,7 +64,7 @@ if (oauthCode) {
               base: 'bg-blue-500',
             },
           }"
-          :to="`https://oauth.battle.net/authorize?response_type=code&scope=openid wow.profile&state=AbCdEfG&redirect_uri=${runtimeConfig.public.BNET_REDIRECT_URI}&client_id=${runtimeConfig.public.BNET_CLIENT_ID}`"
+          :to="`https://oauth.battle.net/authorize?response_type=code&state=bnet&scope=${runtimeConfig.public.BNET_SCOPE}&redirect_uri=${runtimeConfig.public.BNET_REDIRECT_URI}&client_id=${runtimeConfig.public.BNET_CLIENT_ID}`"
         >
           Battle.net
         </UButton>
@@ -49,7 +73,7 @@ if (oauthCode) {
           :icon="Icons.DISCORD_COLOR"
           color="gray"
           size="lg"
-          :to="`https://discord.com/oauth2/authorize?client_id=${runtimeConfig.public.DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${runtimeConfig.public.DISCORD_REDIRECT_URI}&scope=identify+email+openid`"
+          :to="`https://discord.com/oauth2/authorize?client_id=${runtimeConfig.public.DISCORD_CLIENT_ID}&state=discord&response_type=code&redirect_uri=${runtimeConfig.public.DISCORD_REDIRECT_URI}&scope=${runtimeConfig.public.DISCORD_SCOPE}`"
         >
           Discord
         </UButton>
