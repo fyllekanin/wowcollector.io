@@ -18,6 +18,7 @@ type Authorization struct {
 	DisplayName string                     `json:"displayName"`
 	Tokens      *AuthorizationTokens       `json:"tokens"`
 	Connections *documents.UserConnections `json:"connections"`
+	Avatar      string                     `json:"avatar"`
 }
 
 func GetJwt(userId string, validFor time.Duration) string {

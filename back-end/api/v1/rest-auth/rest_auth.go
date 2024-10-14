@@ -167,6 +167,7 @@ func getAuthorizationBody(user *documents.UserDocument) *authorization.Authoriza
 		Id:          user.ObjectID.Hex(),
 		DisplayName: user.DisplayName,
 		Connections: user.Connections,
+		Avatar:      "https://wow.zamimg.com/uploads/screenshots/small/661494.jpg",
 		Tokens: &authorization.AuthorizationTokens{
 			AccessToken:  authorization.GetJwt(user.ObjectID.Hex(), time.Hour*8),
 			RefreshToken: authorization.GetJwt(user.ObjectID.Hex(), time.Hour*48),
